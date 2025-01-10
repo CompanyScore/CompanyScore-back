@@ -8,7 +8,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
-import { Company } from '../entities/company.entity';
+import { Company } from './entities/company.entity';
+import { CreateCompanyDto } from './dto/create-company.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Controller('companies')
 export class CompaniesController {
@@ -25,16 +27,16 @@ export class CompaniesController {
   }
 
   @Post()
-  create(@Body() company: Partial<Company>): Promise<Company> {
-    return this.companiesService.create(company);
+  create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
+    return this.companiesService.create(createCompanyDto);
   }
 
   @Put(':id')
   update(
     @Param('id') id: string,
-    @Body() company: Partial<Company>,
+    @Body() updateCompanyDto: UpdateCompanyDto,
   ): Promise<Company> {
-    return this.companiesService.update(+id, company);
+    return this.companiesService.update(+id, updateCompanyDto);
   }
 
   @Delete(':id')

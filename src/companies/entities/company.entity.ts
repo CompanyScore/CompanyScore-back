@@ -9,8 +9,17 @@ export class Company {
   name: string;
 
   @Column()
+  country: string;
+
+  @Column()
+  city: string;
+
+  @Column()
   address: string;
 
-  @Column({ nullable: true })
-  phone?: string;
+  @Column()
+  rating: number;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 }

@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Company } from '../entities/company.entity';
+import { Company } from './entities/company.entity';
+import { CreateCompanyDto } from './dto/create-company.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Injectable()
 export class CompaniesService {
@@ -10,20 +12,23 @@ export class CompaniesService {
     private companyRepository: Repository<Company>,
   ) {}
 
-  findAll(): Promise<Company[]> {
+  async create(createCompanyDto: CreateCompanyDto) {
+    return this.companyRepository.save(createCompanyDto);
+  }
+
+  async findAll(): Promise<Company[]> {
     return this.companyRepository.find();
   }
 
-  findOne(id: number): Promise<Company> {
+  async findOne(id: number): Promise<Company> {
     return this.companyRepository.findOneBy({ id });
   }
 
-  create(company: Partial<Company>): Promise<Company> {
-    return this.companyRepository.save(company);
-  }
-
-  async update(id: number, company: Partial<Company>): Promise<Company> {
-    await this.companyRepository.update(id, company);
+  async update(
+    id: number,
+    updateCompanyDto: UpdateCompanyDto,
+  ): Promise<Company> {
+    await this.companyRepository.update(id, updateCompanyDto);
     return this.findOne(id);
   }
 
