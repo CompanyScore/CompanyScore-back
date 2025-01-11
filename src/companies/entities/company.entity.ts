@@ -15,9 +15,6 @@ export class Company {
   city: string;
 
   @Column()
-  address: string;
-
-  @Column()
   rating: number;
 
   @Column({ default: false })
