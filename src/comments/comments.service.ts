@@ -33,8 +33,11 @@ export class CommentsService {
     return this.commentRepository.save(comment);
   }
 
-  async findAll(): Promise<Comment[]> {
+  async findAll(userId: number): Promise<Comment[]> {
     return this.commentRepository.find({
+      where: {
+        user: { id: userId },
+      },
       relations: ['user'], // Загружаем связанный объект User
     });
   }
