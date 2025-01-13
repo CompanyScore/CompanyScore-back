@@ -16,17 +16,39 @@ export class UsersService {
     return this.userRepository.save(createUserDto);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find({
-      relations: ['comments'], // Загружаем связанные комментарии
+  async findAll(): Promise<any[]> {
+    const users = await this.userRepository.find({
+      relations: ['comments'],
     });
+
+    return users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      photo: user.photo,
+      commentsIds: user.comments.map((comment) => comment.id.toString()),
+    }));
   }
 
-  async findOne(userId: number): Promise<User> {
-    return this.userRepository.findOne({
+  async findOne(userId: number): Promise<any> {
+    const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['comments'], // Загружаем связанные комментарии
     });
+
+    if (!user) {
+      throw new Error('User not found'); // Обработка ситуации, если пользователь не найден
+    }
+
+    // Преобразуем комментарии в массив строк id
+    return {
+      createDate: user.createDate,
+      deleteDate: user.deleteDate,
+      id: user.id,
+      isDeleted: user.isDeleted,
+      name: user.name,
+      photo: user.photo,
+      commentsIds: user.comments.map((comment) => comment.id.toString()),
+    };
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

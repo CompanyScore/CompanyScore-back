@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   Query,
+  UsePipes,
+  ValidationPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -17,16 +20,27 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(
-    @Param('userId') userId: number,
-    @Body() createCommentDto: CreateCommentDto,
-  ) {
-    return this.commentsService.createCommentToUser(userId, createCommentDto);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  create(@Body() createCommentDto: CreateCommentDto) {
+    const { userId, companyId } = createCommentDto;
+
+    if (!userId || !companyId) {
+      throw new BadRequestException('userId and companyId are required');
+    }
+
+    return this.commentsService.createCommentToUser(
+      userId,
+      companyId,
+      createCommentDto,
+    );
   }
 
   @Get()
-  findAll(@Query('userId') userId: number) {
-    return this.commentsService.findAll(userId);
+  findAll(
+    @Query('userId') userId: number,
+    @Query('companyId') companyId: number,
+  ) {
+    return this.commentsService.findAll(userId, companyId);
   }
 
   @Get(':id')

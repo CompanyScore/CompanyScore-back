@@ -16,12 +16,39 @@ export class CompaniesService {
     return this.companyRepository.save(createCompanyDto);
   }
 
-  async findAll(): Promise<Company[]> {
-    return this.companyRepository.find();
+  async findAll(): Promise<any> {
+    const companies = await this.companyRepository.find({
+      relations: ['comments'],
+    });
+
+    return companies.map((company) => ({
+      id: company.id,
+      name: company.name,
+      logo: company.logo,
+      description: company.description,
+      country: company.country,
+      city: company.city,
+      rating: company.rating,
+      commentsIds: company.comments.map((comment) => comment.id.toString()),
+    }));
   }
 
-  async findOne(id: number): Promise<Company> {
-    return this.companyRepository.findOneBy({ id });
+  async findOne(id: number): Promise<any> {
+    const company = await this.companyRepository.findOne({
+      where: { id },
+      relations: ['comments'],
+    });
+
+    return {
+      id: company.id,
+      name: company.name,
+      logo: company.logo,
+      description: company.description,
+      country: company.country,
+      city: company.city,
+      rating: company.rating,
+      commentsIds: company.comments.map((comment) => comment.id.toString()),
+    };
   }
 
   async update(

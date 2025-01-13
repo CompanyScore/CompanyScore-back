@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Comment } from '../../comments/entities/comment.entity';
 
 @Entity()
 export class Company {
@@ -7,6 +8,12 @@ export class Company {
 
   @Column()
   name: string;
+
+  @Column()
+  logo: string;
+
+  @Column()
+  description: string;
 
   @Column()
   country: string;
@@ -19,4 +26,8 @@ export class Company {
 
   @Column({ default: false })
   isDeleted: boolean;
+
+  // Связь с комментариями
+  @OneToMany(() => Comment, (comment) => comment.company)
+  comments: Comment[];
 }

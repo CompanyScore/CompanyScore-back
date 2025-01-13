@@ -1,15 +1,15 @@
-import { IsString, IsNotEmpty, IsBoolean, IsDate } from 'class-validator';
+import { IsString, IsNotEmpty, IsInt } from 'class-validator';
 
 export class CreateCommentDto {
   @IsNotEmpty()
   @IsString()
-  description: string;
+  text: string;
 
   @IsNotEmpty()
-  @IsDate()
-  createDate: Date;
+  @IsInt()
+  userId: number;
 
   @IsNotEmpty()
-  @IsBoolean()
-  isDeleted: boolean;
+  @IsInt()
+  companyId: number;
 }

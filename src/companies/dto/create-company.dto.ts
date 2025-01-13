@@ -7,15 +7,19 @@ export class CreateCompanyDto {
 
   @IsNotEmpty()
   @IsString()
+  logo: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
   country: string;
 
   @IsNotEmpty()
   @IsString()
   city: string;
-
-  @IsNotEmpty()
-  @IsString()
-  address: string;
 
   @IsNotEmpty()
   @IsNumber()
