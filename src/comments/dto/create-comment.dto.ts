@@ -7,6 +7,10 @@ export class CreateCommentDto {
 
   @IsNotEmpty()
   @IsInt()
+  rating: number;
+
+  @IsNotEmpty()
+  @IsInt()
   userId: number;
 
   @IsNotEmpty()

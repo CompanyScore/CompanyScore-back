@@ -58,6 +58,7 @@ export class CommentsService {
       text: comment.text,
       createDate: comment.createDate,
       isDeleted: comment.isDeleted,
+      rating: comment.rating,
       user: {
         id: comment.user.id,
         name: comment.user.name,
