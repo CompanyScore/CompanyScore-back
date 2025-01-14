@@ -16,8 +16,9 @@ export class UsersService {
     return this.userRepository.save(createUserDto);
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(isDeleted: boolean): Promise<any> {
     const users = await this.userRepository.find({
+      where: { isDeleted },
       relations: ['comments'],
     });
 
@@ -25,6 +26,8 @@ export class UsersService {
       id: user.id,
       name: user.name,
       photo: user.photo,
+      createDate: user.createDate,
+      deleteDate: user.deleteDate,
       commentsIds: user.comments.map((comment) => comment.id.toString()),
     }));
   }
@@ -56,7 +59,21 @@ export class UsersService {
     return this.findOne(id);
   }
 
-  async remove(id: number): Promise<void> {
-    this.userRepository.delete(id);
+  async remove(id: number): Promise<string> {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new Error(`User with ID ${id} not found`);
+    }
+
+    const deletedUser = {
+      ...user,
+      isDeleted: true,
+      deleteDate: new Date(),
+    };
+
+    await this.userRepository.update(id, deletedUser);
+
+    return `User ${id} was deleted`;
   }
 }
