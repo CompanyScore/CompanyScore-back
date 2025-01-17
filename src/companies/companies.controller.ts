@@ -22,8 +22,9 @@ export class CompaniesController {
     @Query('name') name: string,
     @Query('country') country: string,
     @Query('city') city: string,
+    @Query('rating') rating: string,
   ): Promise<Company[]> {
-    return this.companiesService.findAll(name, country, city);
+    return this.companiesService.findAll(name, country, city, rating);
   }
 
   @Get(':id')

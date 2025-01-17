@@ -16,15 +16,28 @@ export class CompaniesService {
     return this.companyRepository.save(createCompanyDto);
   }
 
-  async findAll(name: string, country: string, city: string): Promise<any> {
-    let whereCondition = {};
+  async findAll(
+    name: string,
+    country: string,
+    city: string,
+    rating: string,
+  ): Promise<any> {
+    const whereCondition: any = {};
 
-    if (name || country || city) {
-      whereCondition = {
-        name: ILike(`%${name}%`), // Используем ILIKE для регистронезависимого поиска
-        country: Like(`%${country}%`),
-        city: Like(`%${city}%`),
-      };
+    if (name) {
+      whereCondition.name = ILike(`%${name}%`);
+    }
+
+    if (country) {
+      whereCondition.country = Like(`%${country}%`);
+    }
+
+    if (city) {
+      whereCondition.city = Like(`%${city}%`);
+    }
+
+    if (rating) {
+      whereCondition.rating = Number(rating);
     }
 
     const companies = await this.companyRepository.find({
