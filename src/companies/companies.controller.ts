@@ -27,6 +27,11 @@ export class CompaniesController {
     return this.companiesService.findAll(name, country, city, rating);
   }
 
+  @Get('countries-with-cities')
+  async getCountriesWithCities() {
+    return this.companiesService.findCountriesWithCities();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Company> {
     return this.companiesService.findOne(+id);
