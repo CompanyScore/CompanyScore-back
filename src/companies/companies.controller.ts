@@ -19,9 +19,10 @@ export class CompaniesController {
 
   @Get()
   findAll(
-    @Query('searchedCompanyName') searchedCompanyName: string,
+    @Query('name') name: string,
+    @Query('country') country: string,
   ): Promise<Company[]> {
-    return this.companiesService.findAll(searchedCompanyName);
+    return this.companiesService.findAll(name, country);
   }
 
   @Get(':id')

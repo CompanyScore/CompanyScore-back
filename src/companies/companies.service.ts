@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, Like, Repository } from 'typeorm';
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -16,12 +16,13 @@ export class CompaniesService {
     return this.companyRepository.save(createCompanyDto);
   }
 
-  async findAll(searchedCompanyName: string): Promise<any> {
+  async findAll(name: string, country: string): Promise<any> {
     let whereCondition = {};
 
-    if (searchedCompanyName) {
+    if (name || country) {
       whereCondition = {
-        name: ILike(`%${searchedCompanyName}%`), // Используем ILIKE для регистронезависимого поиска
+        name: ILike(`%${name}%`), // Используем ILIKE для регистронезависимого поиска
+        country: Like(`%${country}%`),
       };
     }
 
