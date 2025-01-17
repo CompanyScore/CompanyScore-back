@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { Company } from './entities/company.entity';
@@ -17,8 +18,10 @@ export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Get()
-  findAll(): Promise<Company[]> {
-    return this.companiesService.findAll();
+  findAll(
+    @Query('searchedCompanyName') searchedCompanyName: string,
+  ): Promise<Company[]> {
+    return this.companiesService.findAll(searchedCompanyName);
   }
 
   @Get(':id')
