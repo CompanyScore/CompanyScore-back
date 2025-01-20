@@ -39,8 +39,10 @@ export class CommentsController {
   findAll(
     @Query('userId') userId: number,
     @Query('companyId') companyId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ) {
-    return this.commentsService.findAll(userId, companyId);
+    return this.commentsService.findAll(userId, companyId, page, limit);
   }
 
   @Get(':id')
