@@ -21,6 +21,8 @@ export class CompaniesService {
     country: string,
     city: string,
     rating: string,
+    page: number,
+    limit: number,
   ): Promise<any> {
     const whereCondition: any = {};
 
@@ -40,21 +42,32 @@ export class CompaniesService {
       whereCondition.rating = Number(rating);
     }
 
-    const companies = await this.companyRepository.find({
+    // Убедимся, что лимит и страница имеют значения по умолчанию
+    const take = limit || 10; // количество элементов на странице (по умолчанию 10)
+    const skip = (page - 1) * take || 0; // пропуск элементов (по умолчанию 0)
+
+    const [companies, total] = await this.companyRepository.findAndCount({
       where: whereCondition,
       relations: ['comments'],
+      take,
+      skip,
     });
 
-    return companies.map((company) => ({
-      id: company.id,
-      name: company.name,
-      logo: company.logo,
-      description: company.description,
-      country: company.country,
-      city: company.city,
-      rating: company.rating,
-      commentsIds: company.comments.map((comment) => comment.id.toString()),
-    }));
+    return {
+      data: companies.map((company) => ({
+        id: company.id,
+        name: company.name,
+        logo: company.logo,
+        description: company.description,
+        country: company.country,
+        city: company.city,
+        rating: company.rating,
+        commentsIds: company.comments.map((comment) => comment.id.toString()),
+      })),
+      total, // общее количество элементов
+      page,
+      limit: take,
+    };
   }
 
   async findOne(id: number): Promise<any> {

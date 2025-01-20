@@ -23,8 +23,21 @@ export class CompaniesController {
     @Query('country') country: string,
     @Query('city') city: string,
     @Query('rating') rating: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ): Promise<Company[]> {
-    return this.companiesService.findAll(name, country, city, rating);
+    // Преобразуем параметры в числа с безопасным значением по умолчанию
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 10;
+
+    return this.companiesService.findAll(
+      name,
+      country,
+      city,
+      rating,
+      pageNumber,
+      limitNumber,
+    );
   }
 
   @Get('countries-with-cities')
