@@ -22,6 +22,12 @@ export class User {
   @Column({ nullable: true })
   photo: string;
 
+  @Column({ type: 'varchar', default: '' })
+  position: string;
+
+  @Column({ type: 'varchar', default: '' })
+  description: string;
+
   @CreateDateColumn()
   createDate: Date; // Автоматически заполняется текущей датой при создании записи
 

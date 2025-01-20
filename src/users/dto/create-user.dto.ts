@@ -22,6 +22,14 @@ export class CreateUserDto {
   photo: string;
 
   @IsNotEmpty()
+  @IsString()
+  position: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
   @IsDate()
   createDate: Date;
 

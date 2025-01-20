@@ -50,6 +50,8 @@ export class UsersService {
       isDeleted: user.isDeleted,
       name: user.name,
       photo: user.photo,
+      position: user.position,
+      description: user.description,
       commentsIds: user.comments.map((comment) => comment.id.toString()),
     };
   }
