@@ -19,7 +19,10 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  photo: string;
+  avatarPath: string;
+
+  @IsOptional()
+  avatarFile: Express.Multer.File; // Новый параметр для загрузки файла
 
   @IsNotEmpty()
   @IsString()

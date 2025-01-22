@@ -20,7 +20,7 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  photo: string;
+  avatarPath: string;
 
   @Column({ type: 'varchar', default: '' })
   position: string;

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
@@ -17,9 +19,13 @@ import { CommentsModule } from './comments/comments.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'files', 'users', 'avatars'), // Путь к папке с изображениями
+      serveRoot: '/files/users/avatars', // Путь, по которому будут доступны файлы
+    }),
+    CommentsModule,
     CompaniesModule,
     UsersModule,
-    CommentsModule,
   ],
   controllers: [],
   providers: [],
