@@ -8,14 +8,18 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CompaniesService } from './companies.service';
+import { CompaniesService } from './services/companies.service';
+import { LocationsService } from './services/locations.service';
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Controller('companies')
 export class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) {}
+  constructor(
+    private readonly companiesService: CompaniesService,
+    private readonly locationsService: LocationsService,
+  ) {}
 
   @Get()
   findAll(
@@ -40,9 +44,9 @@ export class CompaniesController {
     );
   }
 
-  @Get('countries-with-cities')
+  @Get('locations')
   async getCountriesWithCities() {
-    return this.companiesService.findCountriesWithCities();
+    return this.locationsService.findLocations();
   }
 
   @Get(':id')
