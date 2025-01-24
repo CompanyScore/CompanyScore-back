@@ -76,6 +76,7 @@ export class CommentsService {
         createDate: comment.createDate, // Дата создания комментария
         isDeleted: comment.isDeleted, // Флаг удаленного комментария
         rating: comment.rating, // Рейтинг комментария
+        position: comment.position,
         user: {
           id: comment.user.id, // ID пользователя
           name: comment.user.name, // Имя пользователя

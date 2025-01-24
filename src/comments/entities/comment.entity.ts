@@ -19,6 +19,9 @@ export class Comment {
   @Column({ type: 'int', default: 0 })
   rating: number;
 
+  @Column()
+  position: string;
+
   @CreateDateColumn()
   createDate: Date; // Автоматически заполняется текущей датой при создании записи
 
