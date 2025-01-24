@@ -3,44 +3,44 @@ import {
   IsNotEmpty,
   IsOptional,
   IsBoolean,
-  Length,
   IsDate,
 } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
   @IsNotEmpty()
-  name: string;
+  githubId: number;
 
-  @IsNotEmpty()
-  @Length(10, 20)
+  // @IsNotEmpty()
+  // linkedinId: number;
+
   @IsString()
-  password: string;
+  @IsOptional()
+  name?: string;
 
   @IsOptional()
   @IsString()
-  avatarPath: string;
+  avatarPath?: string;
 
   @IsOptional()
-  avatarFile: Express.Multer.File; // Новый параметр для загрузки файла
+  avatarFile?: Express.Multer.File; // Новый параметр для загрузки файла
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  position: string;
+  position?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 
   @IsNotEmpty()
   @IsDate()
-  createDate: Date;
+  createDate?: Date;
 
   @IsOptional()
   @IsDate()
-  deleteDate: Date;
+  deleteDate?: Date;
 
   @IsNotEmpty()
   @IsBoolean()
-  isDeleted: boolean;
+  isDeleted?: boolean;
 }

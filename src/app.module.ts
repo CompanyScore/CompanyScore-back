@@ -5,6 +5,7 @@ import * as path from 'path';
 import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CommentsModule } from './comments/comments.module';
     CommentsModule,
     CompaniesModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

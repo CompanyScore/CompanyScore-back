@@ -32,14 +32,22 @@ export class UsersService {
     }));
   }
 
-  async findOne(userId: number): Promise<any> {
+  async findOne(userId?: number, githubId?: number): Promise<any> {
+    const where: any = {};
+    if (userId !== undefined) {
+      where.id = userId;
+    }
+    if (githubId !== undefined) {
+      where.githubId = githubId;
+    }
+
     const user = await this.userRepository.findOne({
-      where: { id: userId },
+      where,
       relations: ['comments'], // Загружаем связанные комментарии
     });
 
     if (!user) {
-      throw new Error('User not found'); // Обработка ситуации, если пользователь не найден
+      return null;
     }
 
     // Преобразуем комментарии в массив строк id

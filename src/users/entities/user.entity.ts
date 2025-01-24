@@ -13,13 +13,16 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
+  githubId: number;
+
+  // @Column({ nullable: true })
+  // linkedinId: number;
+
+  @Column({ default: 'Jon Doe' })
   name: string;
 
-  @Column()
-  password: string;
-
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: '' })
   avatarPath: string;
 
   @Column({ type: 'varchar', default: '' })

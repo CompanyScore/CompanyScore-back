@@ -9,6 +9,6 @@ import { FileService } from 'src/providers/file.service';
   imports: [TypeOrmModule.forFeature([User], 'CompanyScore')],
   controllers: [UsersController],
   providers: [UsersService, FileService],
-  exports: [TypeOrmModule, FileService],
+  exports: [TypeOrmModule, FileService, UsersService],
 })
 export class UsersModule {}
