@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -9,24 +10,20 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async login(user: User) {
+    console.log('User for token:', user); // Убедись, что user не пустой
+    const payload = { sub: user.id };
+    const token = this.jwtService.sign(payload);
+    console.log('Generated token:', token);
+    return { accessToken: token };
+  }
+
   async validateUser(profile: any) {
-    // Ищем пользователя по githubId
     let user = await this.usersService.findOne(null, profile.id);
 
-    // Если пользователь не найден, создаем нового
     if (!user) {
       user = await this.usersService.create({ githubId: profile.id });
     }
-
-    // const accessToken = this.jwtService.sign(
-    //   { id: user.id, githubId: profile.id },
-    //   { expiresIn: '15m' }, // Access Token действует 15 минут
-    // );
-
-    // const refreshToken = this.jwtService.sign(
-    //   { id: user.id, githubId: profile.id },
-    //   { expiresIn: '7d' }, // Refresh Token действует 7 дней
-    // );
 
     return user;
   }

@@ -10,7 +10,7 @@ export class GithubStrategy extends PassportStrategy(Strategy) {
     super({
       clientID: 'Iv23liM30DHX5tyyrujy',
       clientSecret: '56e04317e269cb38317db0a1c09cd72355daf2e9',
-      callbackURL: `http://localhost:3000/auth/github/callback`,
+      callbackURL: `http://localhost:8080/auth/github/callback`,
     });
   }
 
@@ -19,14 +19,8 @@ export class GithubStrategy extends PassportStrategy(Strategy) {
     refreshToken: string,
     profile: Profile,
   ): Promise<any> {
-    // Передаем профиль в AuthService
+    console.log('accessToken', accessToken);
 
-    try {
-      const user = await this.authService.validateUser(profile);
-      return { accessToken, refreshToken, user };
-    } catch (error) {
-      console.error('Error during GitHub authentication:', error);
-      throw new Error('GitHub authentication failed');
-    }
+    return { accessToken, refreshToken, profile };
   }
 }

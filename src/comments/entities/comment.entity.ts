@@ -19,7 +19,7 @@ export class Comment {
   @Column({ type: 'int', default: 0 })
   rating: number;
 
-  @Column()
+  @Column({ default: '' })
   position: string;
 
   @CreateDateColumn()

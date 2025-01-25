@@ -1,4 +1,11 @@
-import { Controller, Get, Response, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Response,
+  Request,
+  UseGuards,
+  Post,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -6,29 +13,49 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('login')
+  login(@Request() req, @Response() res) {
+    console.log('req.user:', req.user); // Проверяем, что приходит в req.user
+
+    if (!req.user) {
+      return res.status(400).json({ message: 'User not found in request' });
+    }
+
+    const token = this.authService.login(req.user);
+    console.log('Generated token:', token); // Проверяем, что токен создается
+
+    return res.json(token);
+  }
+
   @UseGuards(AuthGuard('github'))
   @Get('github')
   github() {
     return 'Redirecting to GitHub...';
   }
 
+  // @UseGuards(AuthGuard('github'))
+  // @Get('github/callback')
+  // async githubCallback(@Request() req, @Response() res) {
+  //   const { accessToken, refreshToken, profile } = req.user;
+  //   const user = await this.authService.validateUser(profile);
+
+  //   return res.json({
+  //     accessToken,
+  //     refreshToken,
+  //     user,
+  //   });
+  // }
+
   @UseGuards(AuthGuard('github'))
   @Get('github/callback')
   async githubCallback(@Request() req, @Response() res) {
-    // Устанавливаем Access Token в обычные куки
-    res.cookie('accessToken', req.accessToken, {
-      httpOnly: true, // Защита от XSS
-      maxAge: 15 * 60 * 1000, // 15 минут
-    });
+    console.log('req.user:', req.user); // Должен быть заполнен данными пользователя
 
-    // Устанавливаем Refresh Token в HttpOnly куки
-    res.cookie('refreshToken', req.refreshToken, {
-      httpOnly: true, // Доступен только серверу
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
-    });
+    const user = await this.authService.validateUser(req.user.profile);
 
-    return res.redirect('/');
-    // return req.user;
+    const token = await this.authService.login(user);
+
+    return res.json({ token });
   }
 
   @Get('logout')

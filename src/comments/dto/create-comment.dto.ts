@@ -9,7 +9,6 @@ export class CreateCommentDto {
   @IsInt()
   rating: number;
 
-  @IsNotEmpty()
   @IsString()
   position: string;
 
