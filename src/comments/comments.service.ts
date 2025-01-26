@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { Comment } from './entities/comment.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/companies/entities/company.entity';
+import { CustomException } from 'src/exceptions/custom.exception';
 
 @Injectable()
 export class CommentsService {
@@ -29,11 +31,19 @@ export class CommentsService {
     companyId: number,
     createCommentDto: CreateCommentDto,
   ): Promise<Comment> {
-    const user = await this.userRepository.findOneBy({ id: userId });
-    if (user) {
-      throw new BadRequestException(
-        `User with ID ${userId} already has comment`,
+    // Проверяем, есть ли уже комментарий от этого пользователя для этой компании
+    const existingComment = await this.commentRepository.findOne({
+      where: { user: { id: userId }, company: { id: companyId } },
+    });
+
+    if (existingComment) {
+      throw new CustomException(
+        `User with ID ${userId} has already left a comment for company with ID ${companyId}`,
+        'comment_already_exists',
       );
+      // throw new BadRequestException(
+      //   `User with ID ${userId} already has comment`,
+      // );
     }
 
     const company = await this.companyRepository.findOneBy({ id: companyId });
@@ -41,6 +51,12 @@ export class CommentsService {
       throw new NotFoundException(`Company with ID ${companyId} not found`);
     }
 
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    // Создаем новый комментарий
     const comment = this.commentRepository.create({
       ...createCommentDto,
       user, // Передаем весь объект User, а не только id
