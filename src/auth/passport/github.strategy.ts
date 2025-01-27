@@ -19,7 +19,7 @@ export class GithubStrategy extends PassportStrategy(Strategy) {
     refreshToken: string,
     profile: Profile,
   ): Promise<any> {
-    console.log('accessToken', accessToken);
+    // console.log('accessToken', accessToken);
 
     return { accessToken, refreshToken, profile };
   }

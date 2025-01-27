@@ -14,7 +14,7 @@ export class AuthService {
     console.log('User for token:', user); // Убедись, что user не пустой
     const payload = { sub: user.id };
     const token = this.jwtService.sign(payload);
-    console.log('Generated token:', token);
+    // console.log('Generated token:', token);
     return { accessToken: token };
   }
 
