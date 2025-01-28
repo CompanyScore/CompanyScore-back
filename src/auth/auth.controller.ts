@@ -25,7 +25,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('linkedin'))
-  @Get('/linkedin')
+  @Get('linkedin')
   async linkedin() {
     return 'Redirecting to linkedin...';
   }
@@ -33,30 +33,30 @@ export class AuthController {
   @UseGuards(AuthGuard('linkedin'))
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
-    console.log(req.user.profile);
+    console.log(req);
 
-    const user = await this.authService.validateUser(req.user.profile);
+    // const user = await this.authService.validateUser(req.user.profile);
 
-    res.cookie('accessToken', req.user.accessToken, {
-      httpOnly: true, // Доступ только через HTTP (JavaScript не сможет читать)
-      secure: false, // Установите true, если используете HTTPS
-      sameSite: 'lax', // Защита от CSRF-атак
-      maxAge: 24 * 60 * 60 * 1000, // Время жизни куки (1 день)
-    });
+    // res.cookie('accessToken', req.user.accessToken, {
+    //   httpOnly: true, // Доступ только через HTTP (JavaScript не сможет читать)
+    //   secure: false, // Установите true, если используете HTTPS
+    //   sameSite: 'lax', // Защита от CSRF-атак
+    //   maxAge: 24 * 60 * 60 * 1000, // Время жизни куки (1 день)
+    // });
 
-    res.cookie('refreshToken', req.user.refreshToken, {
-      httpOnly: true, // Доступ только через HTTP (JavaScript не сможет читать)
-      secure: false, // Установите true, если используете HTTPS
-      sameSite: 'lax', // Защита от CSRF-атак
-      maxAge: 24 * 60 * 60 * 1000, // Время жизни куки (1 день)
-    });
+    // res.cookie('refreshToken', req.user.refreshToken, {
+    //   httpOnly: true, // Доступ только через HTTP (JavaScript не сможет читать)
+    //   secure: false, // Установите true, если используете HTTPS
+    //   sameSite: 'lax', // Защита от CSRF-атак
+    //   maxAge: 24 * 60 * 60 * 1000, // Время жизни куки (1 день)
+    // });
 
-    res.cookie('userId', user.id, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    // res.cookie('userId', user.id, {
+    //   httpOnly: true,
+    //   secure: false,
+    //   sameSite: 'lax',
+    //   maxAge: 24 * 60 * 60 * 1000,
+    // });
 
     return res.redirect(`http://localhost:3000`);
   }
