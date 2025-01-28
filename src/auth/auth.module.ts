@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtStrategy } from './passport/jwt.strategy';
+import { LinkedInStrategy } from './passport/linkedin.strategy';
 
 @Module({
   imports: [
@@ -19,7 +20,13 @@ import { JwtStrategy } from './passport/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GithubStrategy, JwtStrategy, JwtAuthGuard],
+  providers: [
+    AuthService,
+    GithubStrategy,
+    JwtStrategy,
+    LinkedInStrategy,
+    JwtAuthGuard,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
