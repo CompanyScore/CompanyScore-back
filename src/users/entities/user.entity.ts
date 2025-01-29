@@ -13,11 +13,11 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
-  githubId: number;
-
   // @Column({ nullable: true })
-  // linkedinId: number;
+  // githubId: number;
+
+  @Column({ nullable: true })
+  linkedinId: string;
 
   @Column({ default: 'Jon Doe' })
   name: string;

@@ -32,13 +32,13 @@ export class UsersService {
     }));
   }
 
-  async findOne(userId?: number, githubId?: number): Promise<any> {
+  async findOne(userId?: number, linkedinId?: number): Promise<any> {
     const where: any = {};
     if (userId !== undefined) {
       where.id = userId;
     }
-    if (githubId !== undefined) {
-      where.githubId = githubId;
+    if (linkedinId !== undefined) {
+      where.linkedinId = linkedinId;
     }
 
     const user = await this.userRepository.findOne({
