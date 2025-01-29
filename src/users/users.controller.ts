@@ -10,7 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   NotFoundException,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,7 +21,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 // import { v4 as uuidv4 } from 'uuid';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from 'src/providers/file.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+// import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {

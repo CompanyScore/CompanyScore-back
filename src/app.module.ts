@@ -23,8 +23,8 @@ import { CustomExceptionFilter } from './filters/custom-exception.filter';
       synchronize: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', 'files', 'users', 'avatars'), // Путь к папке с изображениями
-      serveRoot: '/files/users/avatars', // Путь, по которому будут доступны файлы
+      rootPath: path.join(__dirname, '..', 'files'), // Путь к папке с изображениями
+      serveRoot: '/files', // Путь, по которому будут доступны файлы
     }),
     CommentsModule,
     CompaniesModule,

@@ -57,7 +57,7 @@ export class CompaniesService {
       data: companies.map((company) => ({
         id: company.id,
         name: company.name,
-        logo: company.logo,
+        logo: company.logoPath,
         description: company.description,
         country: company.country,
         city: company.city,
@@ -79,7 +79,7 @@ export class CompaniesService {
     return {
       id: company.id,
       name: company.name,
-      logo: company.logo,
+      logo: company.logoPath,
       description: company.description,
       country: company.country,
       city: company.city,

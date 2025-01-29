@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -101,7 +96,7 @@ export class CommentsService {
         company: {
           id: comment.company.id, // ID компании
           name: comment.company.name, // Название компании
-          logo: comment.company.logo, // Логотип компании
+          logo: comment.company.logoPath, // Логотип компании
         },
       })),
       total, // Общее количество комментариев

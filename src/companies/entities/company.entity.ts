@@ -7,27 +7,27 @@ export class Company {
   id: number;
 
   @Column()
-  name: string;
+  name?: string;
 
   @Column()
-  logo: string;
+  logoPath?: string;
 
   @Column()
-  description: string;
+  description?: string;
 
   @Column()
-  country: string;
+  country?: string;
 
   @Column()
-  city: string;
+  city?: string;
 
   @Column()
-  rating: number;
+  rating?: number;
 
   @Column({ default: false })
-  isDeleted: boolean;
+  isDeleted?: boolean;
 
   // Связь с комментариями
   @OneToMany(() => Comment, (comment) => comment.company)
-  comments: Comment[];
+  comments?: Comment[];
 }
