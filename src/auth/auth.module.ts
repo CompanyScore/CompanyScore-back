@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { LinkedInStrategy } from './passport/linkedin.strategy';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LinkedInStrategy } from './passport/linkedin.strategy';
     JwtStrategy,
     LinkedInStrategy,
     JwtAuthGuard,
+    UsersService,
   ],
   exports: [AuthService],
 })
