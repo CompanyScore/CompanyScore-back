@@ -41,9 +41,46 @@ export class AuthController {
 
     // return res.json(userWithTokens);
 
-    return res.redirect(
-      `http://localhost:3000?userId=${userWithTokens.user.id}`,
-    );
+    // return res.redirect(
+    //   `http://localhost:3000?userId=${userWithTokens.user.id}`,
+    // );
+
+    res.cookie('accessToken', userWithTokens.accessToken, {
+      httpOnly: true, // Запрещает доступ через JS
+      // secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
+      sameSite: 'lax', // Защита от CSRF
+      maxAge: 24 * 60 * 60 * 1000, // 1 день
+    });
+
+    res.cookie('userId', userWithTokens.user.id, {
+      httpOnly: true,
+      // secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return res.redirect(`http://localhost:3000`);
+
+    // res.send(`
+    //   <script>
+    //     window.opener.postMessage({ userId: "${userWithTokens.user.id}" }, "http://localhost:3000");
+    //     window.close();
+    //   </script>
+    // `);
+  }
+
+  @Get('me')
+  getProfile(@Request() req, @Response() res) {
+    const token = req.cookies; // Читаем куку
+
+    if (!token) {
+      return res.status(401).json({ message: 'Не авторизован' });
+    }
+
+    console.log(token);
+
+    // const userData = this.authService.decodeToken(token); // Декодируем токен
+    return res.json(token);
   }
 
   // @UseGuards(AuthGuard('github'))

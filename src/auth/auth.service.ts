@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { User } from 'src/users/entities/user.entity';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,10 @@ export class AuthService {
   async login(user: User) {
     const payload = { sub: user.id };
     const token = this.jwtService.sign(payload);
-    console.log('Generated token:', token);
     return { accessToken: token, user };
+  }
+
+  decodeToken(token: string) {
+    return jwt.decode(token); // Декодирует payload (но НЕ проверяет подпись)
   }
 }
