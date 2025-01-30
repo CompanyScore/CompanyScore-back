@@ -14,7 +14,13 @@ async function bootstrap() {
 
   app.enableCors({
     origin: 'http://localhost:3000', // Указываем фронтенд
-    allowedHeaders: 'Authorization',
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Cache-Control',
+      'Pragma',
+      'Expires',
+    ],
     credentials: true, // Разрешаем отправку куки
     methods: 'GET, POST, PUT, PATCH, DELETE',
   });
