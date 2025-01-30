@@ -3,26 +3,22 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UsersService } from 'src/users/users.service';
-
-export interface JwtPayload {
-  id: number;
-}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private usersService: UsersService) {
+  constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Извлекаем токен из заголовка Authorization
+      jwtFromRequest: (req) => {
+        console.log(req.headers); // Логируем заголовки
+        return ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+      },
       secretOrKey: 'default_secret', // Используем секрет из .env
     });
   }
 
-  async validate(payload: JwtPayload) {
-    const user = await this.usersService.findOne(payload.id);
-    if (!user) {
-      throw new Error('User not found');
-    }
-    return user; // Возвращаем пользователя, чтобы он был доступен в request.user
+  async validate(payload: any) {
+    console.log('123', payload);
+
+    return payload; // Просто возвращаем payload, который передан в токен
   }
 }
