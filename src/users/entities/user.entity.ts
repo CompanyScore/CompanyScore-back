@@ -13,8 +13,8 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @Column({ nullable: true })
-  // githubId: number;
+  @Column({ nullable: true })
+  refreshToken: string;
 
   @Column({ nullable: true })
   linkedinId: string;

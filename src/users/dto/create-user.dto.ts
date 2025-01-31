@@ -7,8 +7,9 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  // @IsNotEmpty()
-  // githubId: number;
+  @IsString()
+  @IsOptional()
+  refreshToken?: string;
 
   @IsNotEmpty()
   linkedinId: string;

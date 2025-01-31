@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
 import { AuthModule } from './auth/auth.module';
 import { CustomExceptionFilter } from './filters/custom-exception.filter';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -25,6 +27,10 @@ import { CustomExceptionFilter } from './filters/custom-exception.filter';
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'files'), // Путь к папке с изображениями
       serveRoot: '/files', // Путь, по которому будут доступны файлы
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true, // Делаем доступным во всем приложении
+      load: [configuration], // Загружаем наш конфиг
     }),
     CommentsModule,
     CompaniesModule,

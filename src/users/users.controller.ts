@@ -11,7 +11,6 @@ import {
   UploadedFile,
   NotFoundException,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -44,8 +43,7 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  findOne(@Param('id') id: string, @Request() req) {
-    console.log('Пришедшие заголовки:', req.headers);
+  findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id, null);
   }
 

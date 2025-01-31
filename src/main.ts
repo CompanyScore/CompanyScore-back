@@ -1,11 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-// import * as dotenv from 'dotenv';
-
-// Загружаем переменные окружения перед созданием приложения
-
-// console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

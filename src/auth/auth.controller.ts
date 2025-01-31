@@ -5,13 +5,19 @@ import {
   Request,
   UseGuards,
   Post,
+  Body,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('login')
   login(@Request() req, @Response() res) {
@@ -39,14 +45,21 @@ export class AuthController {
       httpOnly: true, // Запрещает доступ через JS
       // secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
       sameSite: 'lax', // Защита от CSRF
-      maxAge: 15 * 60 * 1000, // 15 мин
+      maxAge: 60000, //+this.configService.get<number>('jwt.accessExpiresIn'), // 15 мин
+    });
+
+    res.cookie('refreshToken', userData.refreshToken, {
+      httpOnly: true, // Запрещает доступ через JS
+      // secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
+      sameSite: 'lax', // Защита от CSRF
+      maxAge: 604800000, //+this.configService.get<number>('jwt.refreshExpiresIn'), // 7d // удали из БД
     });
 
     res.cookie('userId', userData.user.id, {
       httpOnly: true,
       // secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // 1 день
+      maxAge: 604800000, //this.configService.get<number>('jwt.accessExpiresIn'), // 1 день
     });
 
     return res.redirect(`http://localhost:3000`);
@@ -63,9 +76,23 @@ export class AuthController {
     return res.json(cookies);
   }
 
+  @Post('refresh')
+  async refreshToken(
+    @Body('refreshToken') refreshToken: string,
+    @Response() res,
+  ) {
+    if (!refreshToken) {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+
+    const result = await this.authService.refreshAccessToken(refreshToken, res);
+    return res.json(result); // Отправляем JSON-ответ
+  }
+
   @Get('logout')
   logout(@Response() res) {
     res.clearCookie('accessToken');
+    res.clearCookie('refreshToken'); // удали из БД
     res.clearCookie('userId');
     return res.json({ message: 'Logged out successfully' });
   }

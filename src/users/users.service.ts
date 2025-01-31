@@ -52,9 +52,10 @@ export class UsersService {
 
     // Преобразуем комментарии в массив строк id
     return {
+      id: user.id,
+      refreshToken: user.refreshToken,
       createDate: user.createDate,
       deleteDate: user.deleteDate,
-      id: user.id,
       isDeleted: user.isDeleted,
       name: user.name,
       avatar: user.avatarPath,
@@ -85,5 +86,15 @@ export class UsersService {
     await this.userRepository.update(id, deletedUser);
 
     return `User ${id} was deleted`;
+  }
+
+  async updateRefreshToken(userId: number, refreshToken: string) {
+    const user: User | undefined = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (user) {
+      this.userRepository.update(userId, { refreshToken: refreshToken });
+    }
   }
 }

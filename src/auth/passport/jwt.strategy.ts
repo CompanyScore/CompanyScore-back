@@ -1,24 +1,17 @@
-// src/auth/passport/jwt.strategy.ts
-
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(configService: ConfigService) {
     super({
-      jwtFromRequest: (req) => {
-        console.log(req.headers); // Логируем заголовки
-        return ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-      },
-      secretOrKey: 'default_secret', // Используем секрет из .env
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: configService.get<string>('jwt.accessSecret'),
     });
   }
 
   async validate(payload: any) {
-    console.log('123', payload);
-
-    return payload; // Просто возвращаем payload, который передан в токен
+    return payload;
   }
 }
