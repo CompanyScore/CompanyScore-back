@@ -61,7 +61,10 @@ export class UsersController {
         throw new NotFoundException('Пользователь не найден');
       }
 
-      if (user.avatar) {
+      if (
+        user.avatar &&
+        user.avatar != '/files/users/avatars/default-ava.jpg'
+      ) {
         await this.fileService.deleteFile(user.avatar);
       }
 
