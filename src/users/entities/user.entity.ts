@@ -8,10 +8,18 @@ import {
 
 import { Comment } from '../../comments/entities/comment.entity';
 
+export enum Role {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ default: Role.USER })
+  role: string;
 
   @Column({ nullable: true })
   refreshToken: string;

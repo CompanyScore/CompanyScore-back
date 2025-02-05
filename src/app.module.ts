@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import * as path from 'path';
 import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { CustomExceptionFilter } from './filters/custom-exception.filter';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { RolesGuard } from './auth/role.guard';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -42,6 +44,14 @@ import configuration from './config/configuration';
     {
       provide: APP_FILTER,
       useClass: CustomExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard, // <-- Добавляем сначала JwtAuthGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

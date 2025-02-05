@@ -24,6 +24,7 @@ export class UsersService {
 
     return users.map((user) => ({
       id: user.id,
+      role: user.role,
       name: user.name,
       avatar: user.avatar,
       createDate: user.createDate,
@@ -53,6 +54,7 @@ export class UsersService {
     // Преобразуем комментарии в массив строк id
     return {
       id: user.id,
+      role: user.role,
       refreshToken: user.refreshToken,
       createDate: user.createDate,
       deleteDate: user.deleteDate,

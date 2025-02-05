@@ -27,7 +27,8 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = { sub: user.id };
+    console.log('User before token generation:', user);
+    const payload = { sub: user.id, role: user.role };
 
     // Генерируем accessToken и refreshToken
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
@@ -53,13 +54,12 @@ export class AuthService {
       const user = await this.usersService.findOne(decoded.sub, null);
 
       if (!user || user.refreshToken !== refreshToken) {
-        console.log(123);
         throw new UnauthorizedException('Invalid refresh token');
       }
 
       // Генерируем новый accessToken
       const newAccessToken = jwt.sign(
-        { sub: user.id },
+        { sub: user.id, role: user.role },
         process.env.JWT_ACCESS_SECRET,
         {
           expiresIn: +process.env.JWT_EXPIRES_IN / 1000,

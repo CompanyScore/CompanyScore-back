@@ -11,7 +11,9 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
+import { Public } from 'src/decorators/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -19,6 +21,7 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
+  @Public()
   @Post('login')
   login(@Request() req, @Response() res) {
     if (!req.user) {
@@ -30,12 +33,14 @@ export class AuthController {
     return res.json(token);
   }
 
+  @Public()
   @UseGuards(AuthGuard('linkedin'))
   @Get('linkedin')
   async linkedin() {
     return 'ok';
   }
 
+  @Public()
   @UseGuards(AuthGuard('linkedin'))
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
@@ -65,6 +70,7 @@ export class AuthController {
     return res.redirect(`http://localhost:3000/profile`);
   }
 
+  @Public()
   @Get('cookies')
   getProfile(@Request() req, @Response() res) {
     const cookies = req.cookies;
@@ -76,6 +82,7 @@ export class AuthController {
     return res.json(cookies);
   }
 
+  @Public()
   @Post('refresh')
   async refreshToken(
     @Body('refreshToken') refreshToken: string,

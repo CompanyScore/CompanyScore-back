@@ -11,25 +11,29 @@ export class CreateUserDto {
   @IsOptional()
   refreshToken?: string;
 
+  @IsString()
+  @IsNotEmpty()
+  role?: string;
+
   @IsNotEmpty()
   linkedinId: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   name?: string;
 
   @IsOptional()
-  @IsString()
+  @IsNotEmpty()
   avatar?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   avatarFile?: Express.Multer.File; // Новый параметр для загрузки файла
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   position?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   description?: string;
 
@@ -37,7 +41,7 @@ export class CreateUserDto {
   @IsDate()
   createDate?: Date;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsDate()
   deleteDate?: Date;
 

@@ -10,7 +10,6 @@ import {
   UseInterceptors,
   UploadedFile,
   NotFoundException,
-  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,7 +20,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 // import { v4 as uuidv4 } from 'uuid';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from 'src/providers/file.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -36,19 +34,16 @@ export class UsersController {
   }
 
   @Get()
-  // @UseGuards(JwtAuthGuard)
   findAll(@Query('isDeleted') isDeleted: boolean) {
     return this.usersService.findAll(isDeleted);
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id, null);
   }
 
   @Patch(':id')
-  // @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('avatarFile'))
   async update(
     @Param('id') id: string,

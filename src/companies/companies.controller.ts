@@ -18,6 +18,9 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { FileService } from 'src/providers/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/users/entities/user.entity';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('companies')
 export class CompaniesController {
@@ -27,6 +30,13 @@ export class CompaniesController {
     private readonly fileService: FileService,
   ) {}
 
+  @Roles(Role.ADMIN)
+  @Post()
+  create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
+    return this.companiesService.create(createCompanyDto);
+  }
+
+  @Public()
   @Get()
   findAll(
     @Query('name') name: string,
@@ -50,21 +60,19 @@ export class CompaniesController {
     );
   }
 
+  @Public()
   @Get('locations')
   async getCountriesWithCities() {
     return this.locationsService.findLocations();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Company> {
     return this.companiesService.findOne(+id);
   }
 
-  @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
-    return this.companiesService.create(createCompanyDto);
-  }
-
+  @Roles(Role.ADMIN)
   @Patch(':id')
   @UseInterceptors(FileInterceptor('logoFile'))
   async update(
@@ -94,6 +102,7 @@ export class CompaniesController {
     return this.companiesService.update(+id, updateCompanyDto);
   }
 
+  @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.companiesService.remove(+id);

@@ -14,6 +14,7 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('comments')
 export class CommentsController {
@@ -35,6 +36,7 @@ export class CommentsController {
     );
   }
 
+  @Public()
   @Get()
   findAll(
     @Query('userId') userId: number,
@@ -45,6 +47,7 @@ export class CommentsController {
     return this.commentsService.findAll(userId, companyId, page, limit);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.commentsService.findOne(+id);
