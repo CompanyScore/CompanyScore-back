@@ -20,7 +20,7 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  avatarPath?: string;
+  avatar?: string;
 
   @IsOptional()
   avatarFile?: Express.Multer.File; // Новый параметр для загрузки файла

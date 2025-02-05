@@ -16,19 +16,22 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column({ nullable: true })
+  @Column()
   linkedinId: string;
 
-  @Column({ default: 'Jon Doe' })
+  @Column({ default: 'BugSlayer9000' })
   name: string;
 
-  @Column({ nullable: true, default: '' })
-  avatarPath: string;
+  @Column({ nullable: true, default: '/files/users/avatars/default-ava.jpg' })
+  avatar: string;
 
-  @Column({ type: 'varchar', default: '' })
+  @Column({ default: 'fullstack' })
   position: string;
 
-  @Column({ type: 'varchar', default: '' })
+  @Column({
+    default:
+      'Работаю в IT уже 10 лет, но до сих пор не понимаю, как одна строчка кода может сломать весь прод. Люблю писать код, который потом сам же и переписываю. Считаю, что комментарии в коде — это для слабаков, ведь настоящий разработчик должен страдать. Обожаю митинги, особенно те, на которых мог бы просто получить письмо.',
+  })
   description: string;
 
   @CreateDateColumn()

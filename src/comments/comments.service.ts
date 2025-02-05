@@ -91,7 +91,7 @@ export class CommentsService {
         user: {
           id: comment.user.id, // ID пользователя
           name: comment.user.name, // Имя пользователя
-          avatar: comment.user.avatarPath, // Фото пользователя
+          avatar: comment.user.avatar, // Фото пользователя
         },
         company: {
           id: comment.company.id, // ID компании

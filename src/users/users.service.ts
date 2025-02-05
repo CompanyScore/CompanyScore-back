@@ -25,7 +25,7 @@ export class UsersService {
     return users.map((user) => ({
       id: user.id,
       name: user.name,
-      avatar: user.avatarPath,
+      avatar: user.avatar,
       createDate: user.createDate,
       deleteDate: user.deleteDate,
       commentsIds: user.comments.map((comment) => comment.id.toString()),
@@ -58,7 +58,7 @@ export class UsersService {
       deleteDate: user.deleteDate,
       isDeleted: user.isDeleted,
       name: user.name,
-      avatar: user.avatarPath,
+      avatar: user.avatar,
       position: user.position,
       description: user.description,
       commentsIds: user.comments.map((comment) => comment.id.toString()),

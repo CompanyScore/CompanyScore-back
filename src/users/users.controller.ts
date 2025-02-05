@@ -65,13 +65,13 @@ export class UsersController {
         await this.fileService.deleteFile(user.avatar);
       }
 
-      const avatarPath = await this.fileService.saveFile(
+      const avatar = await this.fileService.saveFile(
         avatarFile.buffer,
         'users/avatars',
         avatarFile.originalname,
       );
 
-      updateUserDto.avatarPath = avatarPath;
+      updateUserDto.avatar = avatar;
     }
     return this.usersService.update(+id, updateUserDto);
   }

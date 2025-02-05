@@ -62,7 +62,7 @@ export class AuthController {
       maxAge: 604800000, //this.configService.get<number>('jwt.accessExpiresIn'), // 1 день
     });
 
-    return res.redirect(`http://localhost:3000`);
+    return res.redirect(`http://localhost:3000/profile`);
   }
 
   @Get('cookies')
