@@ -30,10 +30,10 @@ export class User {
   @Column({ default: 'BugSlayer9000' })
   name: string;
 
-  @Column({ nullable: true, default: '/files/users/avatars/default-ava.jpg' })
+  @Column({ default: '/files/users/avatars/default-ava.jpg' })
   avatar: string;
 
-  @Column({ default: 'fullstack' })
+  @Column({ default: 'Full-stack' })
   position: string;
 
   @Column({
