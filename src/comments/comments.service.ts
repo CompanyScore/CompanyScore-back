@@ -18,8 +18,28 @@ export class CommentsService {
     private readonly userRepository: Repository<User>,
 
     @InjectRepository(Company, 'CompanyScore')
-    private readonly companyRepository: Repository<User>,
+    private readonly companyRepository: Repository<Company>,
   ) {}
+
+  async updateCompanyRating(companyId: number): Promise<void> {
+    const company = await this.companyRepository.findOne({
+      where: { id: companyId },
+      relations: ['comments'],
+    });
+
+    if (!company) return;
+
+    const ratings = company.comments
+      .map((comment) => comment.rating)
+      .filter((rating) => rating !== null);
+
+    const averageRating =
+      ratings.length > 0
+        ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+        : 0;
+
+    await this.companyRepository.update(companyId, { rating: averageRating });
+  }
 
   async createCommentToUser(
     userId: number,
@@ -41,7 +61,11 @@ export class CommentsService {
       // );
     }
 
-    const company = await this.companyRepository.findOneBy({ id: companyId });
+    const company = await this.companyRepository.findOne({
+      where: { id: companyId },
+      relations: ['comments'],
+    });
+
     if (!company) {
       throw new NotFoundException(`Company with ID ${companyId} not found`);
     }
@@ -58,7 +82,12 @@ export class CommentsService {
       company,
     });
 
-    return this.commentRepository.save(comment);
+    const savedComment = await this.commentRepository.save(comment);
+
+    // Обновляем рейтинг компании
+    await this.updateCompanyRating(companyId);
+
+    return savedComment;
   }
 
   async findAll(
@@ -124,6 +153,18 @@ export class CommentsService {
   }
 
   async remove(id: number): Promise<void> {
-    this.commentRepository.delete(id);
+    const comment = await this.commentRepository.findOne({
+      where: { id },
+      relations: ['company'],
+    });
+
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID ${id} not found`);
+    }
+
+    await this.commentRepository.delete(id);
+
+    // Обновляем рейтинг компании после удаления комментария
+    await this.updateCompanyRating(comment.company.id);
   }
 }

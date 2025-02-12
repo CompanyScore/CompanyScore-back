@@ -21,8 +21,8 @@ export class Company {
   @Column()
   city?: string;
 
-  @Column()
-  rating?: number;
+  @Column({ type: 'float', default: 0 })
+  rating: number;
 
   @Column({ default: false })
   isDeleted?: boolean;

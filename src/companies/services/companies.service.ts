@@ -76,6 +76,19 @@ export class CompaniesService {
       relations: ['comments'],
     });
 
+    // Рассчитываем средний рейтинг
+    const ratings = company.comments
+      .map((comment) => comment.rating)
+      .filter((rating) => rating !== null);
+
+    const averageRating =
+      ratings.length > 0
+        ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+        : 0;
+
+    // Обновляем рейтинг в базе
+    await this.companyRepository.update(id, { rating: averageRating });
+
     return {
       id: company.id,
       name: company.name,
@@ -83,7 +96,7 @@ export class CompaniesService {
       description: company.description,
       country: company.country,
       city: company.city,
-      rating: company.rating,
+      rating: averageRating,
       commentsIds: company.comments.map((comment) => comment.id.toString()),
     };
   }
