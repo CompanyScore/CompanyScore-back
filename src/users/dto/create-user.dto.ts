@@ -26,8 +26,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   avatar?: string;
 
-  @IsNotEmpty()
-  avatarFile?: Express.Multer.File; // Новый параметр для загрузки файла
+  // @IsNotEmpty() // Файлы не должны быть частью DTO, потому что class-validator не может их валидировать.
+  // avatarFile?: Express.Multer.File;
 
   @IsNotEmpty()
   @IsString()

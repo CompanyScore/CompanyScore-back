@@ -83,8 +83,9 @@ export class CompaniesService {
 
     const averageRating =
       ratings.length > 0
-        ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+        ? Math.ceil(ratings.reduce((sum, r) => sum + r, 0) / ratings.length)
         : 0;
+    console.log(averageRating);
 
     // Обновляем рейтинг в базе
     await this.companyRepository.update(id, { rating: averageRating });
