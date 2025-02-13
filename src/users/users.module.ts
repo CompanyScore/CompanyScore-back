@@ -6,7 +6,7 @@ import { User } from './entities/user.entity';
 import { FileService } from 'src/providers/file.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User], 'CompanyScore')],
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService, FileService],
   exports: [TypeOrmModule, FileService, UsersService],

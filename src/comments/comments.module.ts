@@ -7,11 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { CompaniesModule } from 'src/companies/companies.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Comment], 'CompanyScore'),
-    UsersModule,
-    CompaniesModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Comment]), UsersModule, CompaniesModule],
   controllers: [CommentsController],
   providers: [CommentsService],
 })

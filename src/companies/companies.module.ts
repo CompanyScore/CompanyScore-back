@@ -7,7 +7,7 @@ import { LocationsService } from './services/locations.service';
 import { FileService } from 'src/providers/file.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Company], 'CompanyScore')],
+  imports: [TypeOrmModule.forFeature([Company])],
   controllers: [CompaniesController],
   providers: [CompaniesService, LocationsService, FileService],
   exports: [TypeOrmModule],

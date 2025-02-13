@@ -12,6 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
 import { Public } from 'src/decorators/public.decorator';
+import * as ms from 'ms';
 
 @Public()
 @Controller('auth')
@@ -48,23 +49,23 @@ export class AuthController {
 
     res.cookie('accessToken', userData.accessToken, {
       httpOnly: true, // Запрещает доступ через JS
-      // secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
+      secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
       sameSite: 'lax', // Защита от CSRF
-      maxAge: 60000, //+this.configService.get<number>('jwt.accessExpiresIn'), // 15 мин
+      maxAge: ms('15m'), //+this.configService.get<number>('jwt.accessExpiresIn'), // 15 мин
     });
 
     res.cookie('refreshToken', userData.refreshToken, {
       httpOnly: true, // Запрещает доступ через JS
-      // secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
+      secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
       sameSite: 'lax', // Защита от CSRF
-      maxAge: 604800000, //+this.configService.get<number>('jwt.refreshExpiresIn'), // 7d // удали из БД
+      maxAge: ms('7d'),
     });
 
     res.cookie('userId', userData.user.id, {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 604800000, //this.configService.get<number>('jwt.accessExpiresIn'), // 1 день
+      maxAge: ms('7d'),
     });
 
     return res.redirect(`http://localhost:3000/profile`);

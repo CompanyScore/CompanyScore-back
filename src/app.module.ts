@@ -8,31 +8,28 @@ import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
 import { AuthModule } from './auth/auth.module';
 import { CustomExceptionFilter } from './filters/custom-exception.filter';
-import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesGuard } from './auth/role.guard';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
+import { getDatabaseConfig } from './config/database.config';
+
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      name: 'CompanyScore',
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1234',
-      database: 'CompanyScore',
-      autoLoadEntities: true,
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      envFilePath: '.env',
+    }),
+    // TypeOrmModule.forRootAsync(databaseConfig.asProvider()),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: getDatabaseConfig,
     }),
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'files'), // Путь к папке с изображениями
       serveRoot: '/files', // Путь, по которому будут доступны файлы
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true, // Делаем доступным во всем приложении
-      load: [configuration], // Загружаем наш конфиг
     }),
     CommentsModule,
     CompaniesModule,

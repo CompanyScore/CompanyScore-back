@@ -8,7 +8,7 @@ import { UpdateCompanyDto } from '../dto/update-company.dto';
 @Injectable()
 export class CompaniesService {
   constructor(
-    @InjectRepository(Company, 'CompanyScore')
+    @InjectRepository(Company)
     private companyRepository: Repository<Company>,
   ) {}
 

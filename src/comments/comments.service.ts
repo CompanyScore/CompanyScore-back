@@ -11,13 +11,13 @@ import { CustomException } from 'src/exceptions/custom.exception';
 @Injectable()
 export class CommentsService {
   constructor(
-    @InjectRepository(Comment, 'CompanyScore')
-    private commentRepository: Repository<Comment>,
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
 
-    @InjectRepository(User, 'CompanyScore')
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
 
-    @InjectRepository(Company, 'CompanyScore')
+    @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
 

@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-linkedin-oauth2';
 import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class LinkedInStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     super({
-      clientID: '7865ifc7jv2fh4',
-      clientSecret: 'WPL_AP1.yijh9pslALa7F3va.+aTiQw==',
-      callbackURL: 'http://localhost:8080/auth/linkedin/callback',
+      clientID: configService.get<string>('LINKEDIN_CLIENT_ID'), // '7865ifc7jv2fh4',
+      clientSecret: configService.get<string>('LINKEDIN_CLIENT_SECRET'), // 'WPL_AP1.yijh9pslALa7F3va.+aTiQw==',
+      callbackURL: configService.get<string>('LINKEDIN_CALLBACK_URL'), // 'http://localhost:8080/auth/linkedin/callback',
       scope: ['openid', 'profile', 'email'],
     });
   }
