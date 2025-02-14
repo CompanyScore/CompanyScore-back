@@ -21,6 +21,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { Public } from 'src/decorators/public.decorator';
+import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
+import { FileSizeValidationPipe } from 'src/pipes/file-size-validation.pipe';
+import * as multer from 'multer';
 
 @Controller('companies')
 export class CompaniesController {
@@ -31,8 +34,28 @@ export class CompaniesController {
   ) {}
 
   @Roles(Role.ADMIN)
+  @UseInterceptors(
+    FileInterceptor('logoFile', {
+      storage: multer.memoryStorage(),
+      limits: { fileSize: 2 * 1024 * 1024 },
+    }),
+    ImageFormatInterceptor,
+  )
   @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
+  async create(
+    @Body() createCompanyDto: CreateCompanyDto,
+    @UploadedFile(new FileSizeValidationPipe()) logoFile: Express.Multer.File,
+  ): Promise<Company> {
+    if (logoFile) {
+      const logoPath = await this.fileService.saveFile(
+        logoFile.buffer,
+        'companies/logos',
+        logoFile.originalname,
+      );
+
+      createCompanyDto.logoPath = logoPath;
+    }
+
     return this.companiesService.create(createCompanyDto);
   }
 
@@ -74,11 +97,17 @@ export class CompaniesController {
 
   @Roles(Role.ADMIN)
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('logoFile'))
+  @UseInterceptors(
+    FileInterceptor('logoFile', {
+      storage: multer.memoryStorage(),
+      limits: { fileSize: 2 * 1024 * 1024 },
+    }),
+    ImageFormatInterceptor,
+  )
   async update(
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
-    @UploadedFile() logoFile: Express.Multer.File,
+    @UploadedFile(new FileSizeValidationPipe()) logoFile: Express.Multer.File,
   ): Promise<Company> {
     if (logoFile) {
       const company = await this.companiesService.findOne(+id);
