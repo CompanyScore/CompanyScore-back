@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -52,13 +52,13 @@ export class CommentsService {
     });
 
     if (existingComment) {
-      throw new CustomException(
-        `User with ID ${userId} has already left a comment for company with ID ${companyId}`,
-        'comment_already_exists',
-      );
-      // throw new BadRequestException(
-      //   `User with ID ${userId} already has comment`,
+      // throw new CustomException(
+      //   `User with ID ${userId} has already left a comment for company with ID ${companyId}`,
+      //   'comment_already_exists',
       // );
+      throw new BadRequestException(
+        `User with ID ${userId} already has comment`,
+      );
     }
 
     const company = await this.companyRepository.findOne({
