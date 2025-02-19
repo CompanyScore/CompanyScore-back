@@ -19,6 +19,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from 'src/providers/file.service';
 import * as multer from 'multer';
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -78,8 +80,8 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @Roles(Role.ADMIN)
   @Delete(':id')
-  // @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

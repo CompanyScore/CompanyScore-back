@@ -1,4 +1,11 @@
-import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsBoolean,
+  IsNotEmpty,
+  IsDate,
+} from 'class-validator';
 
 export class CreateCompanyDto {
   @IsString()
@@ -7,23 +14,19 @@ export class CreateCompanyDto {
 
   @IsOptional()
   @IsString()
-  logoPath?: string;
+  logo?: string;
 
   @IsOptional()
   @IsString()
   description?: string;
 
   @IsOptional()
-  @IsString()
-  country?: string;
-
-  @IsOptional()
-  @IsString()
-  city?: string;
-
-  @IsOptional()
   @IsNumber()
   rating?: number;
+
+  @IsNotEmpty()
+  @IsDate()
+  createDate?: Date;
 
   @IsBoolean()
   isDeleted?: boolean;

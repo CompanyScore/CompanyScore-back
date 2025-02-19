@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Company } from '../entities/company.entity';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
@@ -18,8 +18,6 @@ export class CompaniesService {
 
   async findAll(
     name: string,
-    country: string,
-    city: string,
     rating: string,
     page: number,
     limit: number,
@@ -28,14 +26,6 @@ export class CompaniesService {
 
     if (name) {
       whereCondition.name = ILike(`%${name}%`);
-    }
-
-    if (country) {
-      whereCondition.country = Like(`%${country}%`);
-    }
-
-    if (city) {
-      whereCondition.city = Like(`%${city}%`);
     }
 
     if (rating) {
@@ -57,10 +47,8 @@ export class CompaniesService {
       data: companies.map((company) => ({
         id: company.id,
         name: company.name,
-        logo: company.logoPath,
+        logo: company.logo,
         description: company.description,
-        country: company.country,
-        city: company.city,
         rating: company.rating,
         commentsIds: company.comments.map((comment) => comment.id.toString()),
       })),
@@ -93,10 +81,8 @@ export class CompaniesService {
     return {
       id: company.id,
       name: company.name,
-      logo: company.logoPath,
+      logo: company.logo,
       description: company.description,
-      country: company.country,
-      city: company.city,
       rating: averageRating,
       commentsIds: company.comments.map((comment) => comment.id.toString()),
     };
@@ -112,26 +98,5 @@ export class CompaniesService {
 
   async remove(id: string): Promise<void> {
     await this.companyRepository.delete(id);
-  }
-
-  async findCountriesWithCities(): Promise<Record<string, string[]>> {
-    const companies = await this.companyRepository.find({
-      select: ['country', 'city'],
-    });
-
-    const result: Record<string, string[]> = {};
-
-    companies.forEach((company) => {
-      if (!result[company.country]) {
-        result[company.country] = [];
-      }
-
-      // Добавляем только уникальные города
-      if (!result[company.country].includes(company.city)) {
-        result[company.country].push(company.city);
-      }
-    });
-
-    return result;
   }
 }

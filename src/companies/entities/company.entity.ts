@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+} from 'typeorm';
 import { Comment } from '../../comments/entities/comment.entity';
 
 @Entity()
@@ -10,19 +16,16 @@ export class Company {
   name?: string;
 
   @Column()
-  logoPath?: string;
+  logo?: string;
 
   @Column()
   description?: string;
 
-  @Column()
-  country?: string;
-
-  @Column()
-  city?: string;
-
   @Column({ type: 'float', default: 0 })
   rating: number;
+
+  @CreateDateColumn()
+  createDate: Date;
 
   @Column({ default: false })
   isDeleted?: boolean;

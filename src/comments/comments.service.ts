@@ -128,7 +128,7 @@ export class CommentsService {
         company: {
           id: comment.company.id, // ID компании
           name: comment.company.name, // Название компании
-          logo: comment.company.logoPath, // Логотип компании
+          logo: comment.company.logo, // Логотип компании
         },
       })),
       total, // Общее количество комментариев

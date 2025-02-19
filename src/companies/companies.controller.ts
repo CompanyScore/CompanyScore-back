@@ -12,7 +12,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { CompaniesService } from './services/companies.service';
-import { LocationsService } from './services/locations.service';
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -23,12 +22,13 @@ import { Role } from 'src/users/entities/user.entity';
 import { Public } from 'src/decorators/public.decorator';
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
 import * as multer from 'multer';
+import { CompaniesNewService } from './services/companies-new.service';
 
 @Controller('companies')
 export class CompaniesController {
   constructor(
     private readonly companiesService: CompaniesService,
-    private readonly locationsService: LocationsService,
+    private readonly companiesNewService: CompaniesNewService,
     private readonly fileService: FileService,
   ) {}
 
@@ -45,13 +45,13 @@ export class CompaniesController {
     @UploadedFile() logoFile: Express.Multer.File,
   ): Promise<Company> {
     if (logoFile) {
-      const logoPath = await this.fileService.saveFile(
+      const logo = await this.fileService.saveFile(
         logoFile.buffer,
         'companies/logos',
         logoFile.originalname,
       );
 
-      createCompanyDto.logoPath = logoPath;
+      createCompanyDto.logo = logo;
     }
 
     return this.companiesService.create(createCompanyDto);
@@ -61,8 +61,6 @@ export class CompaniesController {
   @Get()
   findAll(
     @Query('name') name: string,
-    @Query('country') country: string,
-    @Query('city') city: string,
     @Query('rating') rating: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
@@ -71,20 +69,13 @@ export class CompaniesController {
     const pageNumber = Number(page) || 1;
     const limitNumber = Number(limit) || 10;
 
-    return this.companiesService.findAll(
-      name,
-      country,
-      city,
-      rating,
-      pageNumber,
-      limitNumber,
-    );
+    return this.companiesService.findAll(name, rating, pageNumber, limitNumber);
   }
 
   @Public()
-  @Get('locations')
-  async getCountriesWithCities() {
-    return this.locationsService.findLocations();
+  @Get('new')
+  async getCompaniesNew() {
+    return this.companiesNewService.findCompaniesNew();
   }
 
   @Public()
@@ -116,13 +107,13 @@ export class CompaniesController {
         await this.fileService.deleteFile(company.logo);
       }
 
-      const logoPath = await this.fileService.saveFile(
+      const logo = await this.fileService.saveFile(
         logoFile.buffer,
         'companies/logos',
         logoFile.originalname,
       );
 
-      updateCompanyDto.logoPath = logoPath;
+      updateCompanyDto.logo = logo;
     }
 
     return this.companiesService.update(id, updateCompanyDto);
