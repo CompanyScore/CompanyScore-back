@@ -39,7 +39,7 @@ export class CommentsController {
   @Public()
   @Get()
   findAll(
-    @Query('userId') userId: number,
+    @Query('userId') userId: string,
     @Query('companyId') companyId: number,
     @Query('page') page: number,
     @Query('limit') limit: number,

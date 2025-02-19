@@ -33,7 +33,7 @@ export class UsersService {
     }));
   }
 
-  async findOne(userId?: number, linkedinId?: number): Promise<any> {
+  async findOne(userId?: string, linkedinId?: number): Promise<any> {
     const where: any = {};
     if (userId !== undefined) {
       where.id = userId;
@@ -63,16 +63,16 @@ export class UsersService {
       avatar: user.avatar,
       position: user.position,
       description: user.description,
-      commentsIds: user.comments.map((comment) => comment.id.toString()),
+      commentsIds: user.comments.map((comment) => comment.id),
     };
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.userRepository.update(id, updateUserDto);
     return this.findOne(id);
   }
 
-  async remove(id: number): Promise<string> {
+  async remove(id: string): Promise<string> {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
@@ -90,7 +90,7 @@ export class UsersService {
     return `User ${id} was deleted`;
   }
 
-  async updateRefreshToken(userId: number, refreshToken: string) {
+  async updateRefreshToken(userId: string, refreshToken: string) {
     const user: User | undefined = await this.userRepository.findOne({
       where: { id: userId },
     });

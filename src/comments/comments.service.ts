@@ -45,7 +45,7 @@ export class CommentsService {
   }
 
   async createCommentToUser(
-    userId: number,
+    userId: string,
     companyId: number,
     createCommentDto: CreateCommentDto,
   ): Promise<Comment> {
@@ -94,7 +94,7 @@ export class CommentsService {
   }
 
   async findAll(
-    userId: number,
+    userId: string,
     companyId: number,
     page: number = 1,
     limit: number = 10,

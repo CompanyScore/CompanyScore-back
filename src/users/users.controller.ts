@@ -10,15 +10,11 @@ import {
   UseInterceptors,
   UploadedFile,
   NotFoundException,
-  // UseFilters,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-// import * as path from 'path';
-// import * as fs from 'fs';
-// import { v4 as uuidv4 } from 'uuid';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from 'src/providers/file.service';
 import * as multer from 'multer';
@@ -43,7 +39,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id, null);
+    return this.usersService.findOne(id, null);
   }
 
   @Patch(':id')
@@ -59,7 +55,7 @@ export class UsersController {
     @UploadedFile() avatarFile: Express.Multer.File,
   ) {
     if (avatarFile) {
-      const user = await this.usersService.findOne(+id);
+      const user = await this.usersService.findOne(id);
       if (!user) {
         throw new NotFoundException('Пользователь не найден!');
       }
@@ -79,12 +75,12 @@ export class UsersController {
 
       updateUserDto.avatar = avatar;
     }
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   // @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }
