@@ -22,8 +22,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from 'src/providers/file.service';
 import * as multer from 'multer';
-// import { MulterExceptionFilter } from 'src/exceptions/multer.exception';
-import { FileSizeValidationPipe } from '../pipes/file-size-validation.pipe';
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
 
 @Controller('users')
@@ -52,19 +50,18 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('avatarFile', {
       storage: multer.memoryStorage(),
-      limits: { fileSize: 2 * 1024 * 1024 },
     }),
     ImageFormatInterceptor,
   )
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile(new FileSizeValidationPipe()) avatarFile: Express.Multer.File,
+    @UploadedFile() avatarFile: Express.Multer.File,
   ) {
     if (avatarFile) {
       const user = await this.usersService.findOne(+id);
       if (!user) {
-        throw new NotFoundException('Пользователь не найден');
+        throw new NotFoundException('Пользователь не найден!');
       }
 
       if (

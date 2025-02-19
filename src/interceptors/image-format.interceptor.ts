@@ -19,7 +19,7 @@ export class ImageFormatInterceptor implements NestInterceptor {
     const file = req.file;
 
     if (!file) {
-      throw new BadRequestException('Файл не загружен');
+      return;
     }
 
     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -31,18 +31,18 @@ export class ImageFormatInterceptor implements NestInterceptor {
     }
 
     try {
-      // Конвертируем изображение в WebP
-      const webpBuffer = await sharp(file.buffer)
-        .toFormat('webp', { quality: 80 }) // Сжатие 80% (можно изменить)
-        .toBuffer();
+      // Настройки изменения размера
+      const maxWidth = 300;
+      const maxHeight = 300;
 
-      // Обновляем файл в запросе
-      file.buffer = webpBuffer;
-      file.mimetype = 'image/webp';
-      file.originalname = file.originalname.replace(
-        /\.(jpg|jpeg|png)$/,
-        '.webp',
-      );
+      file.buffer = await sharp(file.buffer)
+        .resize({
+          width: maxWidth,
+          height: maxHeight,
+          fit: 'outside', // Сохраняем пропорции
+        })
+        .toFormat('webp', { quality: 90 })
+        .toBuffer();
 
       return next.handle().pipe(map((data) => data));
     } catch (error) {

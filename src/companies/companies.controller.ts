@@ -22,7 +22,6 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { Public } from 'src/decorators/public.decorator';
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
-import { FileSizeValidationPipe } from 'src/pipes/file-size-validation.pipe';
 import * as multer from 'multer';
 
 @Controller('companies')
@@ -37,14 +36,13 @@ export class CompaniesController {
   @UseInterceptors(
     FileInterceptor('logoFile', {
       storage: multer.memoryStorage(),
-      limits: { fileSize: 2 * 1024 * 1024 },
     }),
     ImageFormatInterceptor,
   )
   @Post()
   async create(
     @Body() createCompanyDto: CreateCompanyDto,
-    @UploadedFile(new FileSizeValidationPipe()) logoFile: Express.Multer.File,
+    @UploadedFile() logoFile: Express.Multer.File,
   ): Promise<Company> {
     if (logoFile) {
       const logoPath = await this.fileService.saveFile(
@@ -100,14 +98,13 @@ export class CompaniesController {
   @UseInterceptors(
     FileInterceptor('logoFile', {
       storage: multer.memoryStorage(),
-      limits: { fileSize: 2 * 1024 * 1024 },
     }),
     ImageFormatInterceptor,
   )
   async update(
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
-    @UploadedFile(new FileSizeValidationPipe()) logoFile: Express.Multer.File,
+    @UploadedFile() logoFile: Express.Multer.File,
   ): Promise<Company> {
     if (logoFile) {
       const company = await this.companiesService.findOne(+id);
