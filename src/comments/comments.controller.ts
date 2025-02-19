@@ -26,7 +26,7 @@ export class CommentsController {
     const { userId, companyId } = createCommentDto;
 
     if (!userId || !companyId) {
-      throw new BadRequestException('userId and companyId are required');
+      throw new BadRequestException('userId and companyId обязательны!');
     }
 
     return this.commentsService.createCommentToUser(
