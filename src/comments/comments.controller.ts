@@ -40,7 +40,7 @@ export class CommentsController {
   @Get()
   findAll(
     @Query('userId') userId: string,
-    @Query('companyId') companyId: number,
+    @Query('companyId') companyId: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
@@ -50,16 +50,16 @@ export class CommentsController {
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(+id);
+    return this.commentsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
+    return this.commentsService.update(id, updateCommentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+    return this.commentsService.remove(id);
   }
 }

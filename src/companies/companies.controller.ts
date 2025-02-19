@@ -90,7 +90,7 @@ export class CompaniesController {
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Company> {
-    return this.companiesService.findOne(+id);
+    return this.companiesService.findOne(id);
   }
 
   @Roles(Role.ADMIN)
@@ -107,7 +107,7 @@ export class CompaniesController {
     @UploadedFile() logoFile: Express.Multer.File,
   ): Promise<Company> {
     if (logoFile) {
-      const company = await this.companiesService.findOne(+id);
+      const company = await this.companiesService.findOne(id);
       if (!company) {
         throw new NotFoundException('Компания не найдена');
       }
@@ -125,12 +125,12 @@ export class CompaniesController {
       updateCompanyDto.logoPath = logoPath;
     }
 
-    return this.companiesService.update(+id, updateCompanyDto);
+    return this.companiesService.update(id, updateCompanyDto);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
-    return this.companiesService.remove(+id);
+    return this.companiesService.remove(id);
   }
 }

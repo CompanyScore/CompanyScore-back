@@ -24,7 +24,7 @@ export class CommentsService {
     private readonly companyRepository: Repository<Company>,
   ) {}
 
-  async updateCompanyRating(companyId: number): Promise<void> {
+  async updateCompanyRating(companyId: string): Promise<void> {
     const company = await this.companyRepository.findOne({
       where: { id: companyId },
       relations: ['comments'],
@@ -46,7 +46,7 @@ export class CommentsService {
 
   async createCommentToUser(
     userId: string,
-    companyId: number,
+    companyId: string,
     createCommentDto: CreateCommentDto,
   ): Promise<Comment> {
     // Проверяем, есть ли уже комментарий от этого пользователя для этой компании
@@ -95,7 +95,7 @@ export class CommentsService {
 
   async findAll(
     userId: string,
-    companyId: number,
+    companyId: string,
     page: number = 1,
     limit: number = 10,
   ): Promise<any> {
@@ -137,7 +137,7 @@ export class CommentsService {
     };
   }
 
-  async findOne(id: number): Promise<Comment[]> {
+  async findOne(id: string): Promise<Comment[]> {
     return this.commentRepository.find({
       where: { id },
       relations: ['user', 'company'],
@@ -145,7 +145,7 @@ export class CommentsService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateCommentDto: UpdateCommentDto,
   ): Promise<Comment> {
     await this.commentRepository.update(id, updateCommentDto);
@@ -155,7 +155,7 @@ export class CommentsService {
     return updatedComment;
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const comment = await this.commentRepository.findOne({
       where: { id },
       relations: ['company'],

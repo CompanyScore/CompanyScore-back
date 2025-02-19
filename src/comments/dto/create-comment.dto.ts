@@ -18,5 +18,5 @@ export class CreateCommentDto {
 
   @IsNotEmpty()
   @IsInt()
-  companyId: number;
+  companyId: string;
 }

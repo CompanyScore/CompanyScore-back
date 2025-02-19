@@ -10,8 +10,8 @@ import { Company } from 'src/companies/entities/company.entity';
 
 @Entity()
 export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   text: string;

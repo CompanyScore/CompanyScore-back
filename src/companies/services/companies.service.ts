@@ -70,7 +70,7 @@ export class CompaniesService {
     };
   }
 
-  async findOne(id: number): Promise<any> {
+  async findOne(id: string): Promise<any> {
     const company = await this.companyRepository.findOne({
       where: { id },
       relations: ['comments'],
@@ -103,14 +103,14 @@ export class CompaniesService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateCompanyDto: UpdateCompanyDto,
   ): Promise<Company> {
     await this.companyRepository.update(id, updateCompanyDto);
     return this.findOne(id);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await this.companyRepository.delete(id);
   }
 

@@ -3,8 +3,8 @@ import { Comment } from '../../comments/entities/comment.entity';
 
 @Entity()
 export class Company {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name?: string;
