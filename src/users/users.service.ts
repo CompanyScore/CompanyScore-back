@@ -1,15 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { FileService } from 'src/providers/file.service';
 
 @Injectable()
 export class UsersService {
+  private readonly DEFAULT_AVATAR = '/files/users/avatars/default-ava.jpg';
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private readonly fileService: FileService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -22,52 +26,67 @@ export class UsersService {
       relations: ['comments'],
     });
 
-    return users.map((user) => ({
-      id: user.id,
-      role: user.role,
-      name: user.name,
-      avatar: user.avatar,
-      createDate: user.createDate,
-      deleteDate: user.deleteDate,
-      commentsIds: user.comments.map((comment) => comment.id.toString()),
-    }));
+    return users.map((user) => {
+      const { comments, ...userData } = user;
+      return {
+        ...userData,
+        commentsIds: comments.map(({ id }) => id),
+      };
+    });
   }
 
-  async findOne(userId?: string, linkedinId?: number): Promise<any> {
+  async findOne(userId?: string, linkedinId?: string): Promise<any> {
     const where: any = {};
-    if (userId !== undefined) {
+
+    if (userId) {
       where.id = userId;
     }
-    if (linkedinId !== undefined) {
+
+    if (linkedinId) {
       where.linkedinId = linkedinId;
     }
 
     const user = await this.userRepository.findOne({
       where,
-      relations: ['comments'], // Загружаем связанные комментарии
+      relations: ['comments'],
     });
 
     if (!user) {
-      return null;
+      return null; // нужно именно null, потому что проверка нужна для create
     }
 
-    // Преобразуем комментарии в массив строк id
+    const { comments, ...userData } = user;
     return {
-      id: user.id,
-      role: user.role,
-      refreshToken: user.refreshToken,
-      createDate: user.createDate,
-      deleteDate: user.deleteDate,
-      isDeleted: user.isDeleted,
-      name: user.name,
-      avatar: user.avatar,
-      position: user.position,
-      description: user.description,
-      commentsIds: user.comments.map((comment) => comment.id),
+      ...userData,
+      commentsIds: comments.map(({ id }) => id),
     };
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+    avatarFile: Express.Multer.File,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new BadRequestException(`Пользователь не найден!`);
+    }
+
+    if (avatarFile) {
+      if (user.avatar && user.avatar != this.DEFAULT_AVATAR) {
+        await this.fileService.deleteFile(user.avatar);
+      }
+
+      const avatar = await this.fileService.saveFile(
+        avatarFile.buffer,
+        'users/avatars',
+        avatarFile.originalname,
+      );
+
+      updateUserDto.avatar = avatar;
+    }
+
     await this.userRepository.update(id, updateUserDto);
     return this.findOne(id);
   }
@@ -76,7 +95,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
-      throw new Error(`User with ID ${id} not found`);
+      throw new BadRequestException(`Пользователь не найден!`);
     }
 
     const deletedUser = {
@@ -87,16 +106,14 @@ export class UsersService {
 
     await this.userRepository.update(id, deletedUser);
 
-    return `User ${id} was deleted`;
+    return `Пользователь удален!`;
   }
 
-  async updateRefreshToken(userId: string, refreshToken: string) {
-    const user: User | undefined = await this.userRepository.findOne({
-      where: { id: userId },
-    });
+  async updateRefreshToken(id: string, refreshToken: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (user) {
-      this.userRepository.update(userId, { refreshToken: refreshToken });
+      this.userRepository.update(id, { refreshToken: refreshToken });
     }
   }
 }

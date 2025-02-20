@@ -16,7 +16,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FileService } from 'src/providers/file.service';
+
 import * as multer from 'multer';
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -24,24 +24,27 @@ import { Role } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly fileService: FileService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll(@Query('isDeleted') isDeleted: boolean) {
+  async findAll(@Query('isDeleted') isDeleted: boolean) {
     return this.usersService.findAll(isDeleted);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id, null);
+  async findOne(@Param('id') id: string) {
+    const user = await this.usersService.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден!');
+    }
+
+    return user;
   }
 
   @Patch(':id')
@@ -56,33 +59,12 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() avatarFile: Express.Multer.File,
   ) {
-    if (avatarFile) {
-      const user = await this.usersService.findOne(id);
-      if (!user) {
-        throw new NotFoundException('Пользователь не найден!');
-      }
-
-      if (
-        user.avatar &&
-        user.avatar != '/files/users/avatars/default-ava.jpg'
-      ) {
-        await this.fileService.deleteFile(user.avatar);
-      }
-
-      const avatar = await this.fileService.saveFile(
-        avatarFile.buffer,
-        'users/avatars',
-        avatarFile.originalname,
-      );
-
-      updateUserDto.avatar = avatar;
-    }
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update(id, updateUserDto, avatarFile);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
 }
