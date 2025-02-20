@@ -8,29 +8,25 @@ import {
   Patch,
   Query,
   UploadedFile,
-  NotFoundException,
   UseInterceptors,
 } from '@nestjs/common';
-import { CompaniesService } from './services/companies.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import * as multer from 'multer';
+
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { FileService } from 'src/providers/file.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { CompaniesService } from './companies.service';
+
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { Public } from 'src/decorators/public.decorator';
+
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
-import * as multer from 'multer';
-import { CompaniesNewService } from './services/companies-new.service';
 
 @Controller('companies')
 export class CompaniesController {
-  constructor(
-    private readonly companiesService: CompaniesService,
-    private readonly companiesNewService: CompaniesNewService,
-    private readonly fileService: FileService,
-  ) {}
+  constructor(private readonly companiesService: CompaniesService) {}
 
   @Roles(Role.ADMIN)
   @UseInterceptors(
@@ -44,17 +40,7 @@ export class CompaniesController {
     @Body() createCompanyDto: CreateCompanyDto,
     @UploadedFile() logoFile: Express.Multer.File,
   ): Promise<Company> {
-    if (logoFile) {
-      const logo = await this.fileService.saveFile(
-        logoFile.buffer,
-        'companies/logos',
-        logoFile.originalname,
-      );
-
-      createCompanyDto.logo = logo;
-    }
-
-    return this.companiesService.create(createCompanyDto);
+    return this.companiesService.create(createCompanyDto, logoFile);
   }
 
   @Public()
@@ -75,7 +61,7 @@ export class CompaniesController {
   @Public()
   @Get('new')
   async getCompaniesNew() {
-    return this.companiesNewService.findCompaniesNew();
+    return this.companiesService.findNewCompanies();
   }
 
   @Public()
@@ -97,26 +83,7 @@ export class CompaniesController {
     @Body() updateCompanyDto: UpdateCompanyDto,
     @UploadedFile() logoFile: Express.Multer.File,
   ): Promise<Company> {
-    if (logoFile) {
-      const company = await this.companiesService.findOne(id);
-      if (!company) {
-        throw new NotFoundException('Компания не найдена');
-      }
-
-      if (company.logo) {
-        await this.fileService.deleteFile(company.logo);
-      }
-
-      const logo = await this.fileService.saveFile(
-        logoFile.buffer,
-        'companies/logos',
-        logoFile.originalname,
-      );
-
-      updateCompanyDto.logo = logo;
-    }
-
-    return this.companiesService.update(id, updateCompanyDto);
+    return this.companiesService.update(id, updateCompanyDto, logoFile);
   }
 
   @Roles(Role.ADMIN)

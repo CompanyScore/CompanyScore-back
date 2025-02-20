@@ -1,18 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
+
 import { Company } from '../entities/company.entity';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
+
+import { FileService } from 'src/providers/file.service';
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private companyRepository: Repository<Company>,
+    private readonly fileService: FileService,
   ) {}
 
-  async create(createCompanyDto: CreateCompanyDto) {
+  async create(
+    createCompanyDto: CreateCompanyDto,
+    logoFile: Express.Multer.File,
+  ): Promise<Company> {
+    if (logoFile) {
+      const logo = await this.fileService.saveFile(
+        logoFile.buffer,
+        'companies/logos',
+        logoFile.originalname,
+      );
+
+      createCompanyDto.logo = logo;
+    }
+
     return this.companyRepository.save(createCompanyDto);
   }
 
@@ -44,18 +61,37 @@ export class CompaniesService {
     });
 
     return {
-      data: companies.map((company) => ({
-        id: company.id,
-        name: company.name,
-        logo: company.logo,
-        description: company.description,
-        rating: company.rating,
-        commentsIds: company.comments.map((comment) => comment.id.toString()),
-      })),
+      data: companies.map((company) => {
+        const { comments, ...companyData } = company;
+        return {
+          ...companyData,
+          commentsIds: comments.map(({ id }) => id),
+        };
+      }),
       total, // общее количество элементов
       page,
       limit: take,
     };
+  }
+
+  async findNewCompanies(): Promise<any> {
+    const whereCondition: any = { isDeleted: false };
+
+    const [companies] = await this.companyRepository.findAndCount({
+      where: whereCondition,
+      relations: ['comments'],
+      take: 7, // Ограничиваем выборку 7 записями
+      order: { createDate: 'DESC' }, // Сортировка по дате создания (от новых к старым)
+    });
+
+    return companies.map((company) => ({
+      id: company.id,
+      name: company.name,
+      logo: company.logo,
+      description: company.description,
+      rating: company.rating,
+      commentsIds: company.comments.map((comment) => comment.id),
+    }));
   }
 
   async findOne(id: string): Promise<any> {
@@ -78,25 +114,53 @@ export class CompaniesService {
     // Обновляем рейтинг в базе
     await this.companyRepository.update(id, { rating: averageRating });
 
+    const { comments, name, logo, description } = company;
     return {
-      id: company.id,
-      name: company.name,
-      logo: company.logo,
-      description: company.description,
+      id,
+      name,
+      logo,
+      description,
       rating: averageRating,
-      commentsIds: company.comments.map((comment) => comment.id.toString()),
+      commentsIds: comments.map(({ id }) => id.toString()),
     };
   }
 
   async update(
     id: string,
     updateCompanyDto: UpdateCompanyDto,
+    logoFile: Express.Multer.File,
   ): Promise<Company> {
+    const company = await this.findOne(id);
+
+    if (!company) {
+      throw new BadRequestException('Компания не найдена!');
+    }
+
+    if (logoFile) {
+      if (company.logo) {
+        await this.fileService.deleteFile(company.logo);
+      }
+
+      const logo = await this.fileService.saveFile(
+        logoFile.buffer,
+        'companies/logos',
+        logoFile.originalname,
+      );
+
+      updateCompanyDto.logo = logo;
+    }
+
     await this.companyRepository.update(id, updateCompanyDto);
     return this.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
+    const company = await this.findOne(id);
+
+    if (!company) {
+      throw new BadRequestException('Компания не найдена!');
+    }
+
     await this.companyRepository.delete(id);
   }
 }
