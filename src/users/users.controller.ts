@@ -10,16 +10,17 @@ import {
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import * as multer from 'multer';
-import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
-import { Roles } from 'src/decorators/roles.decorator';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
+
 import { Role } from './entities/user.entity';
+import { Roles } from 'src/decorators/roles.decorator';
+import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
+
+import * as multer from 'multer';
 
 @Controller('users')
 export class UsersController {
