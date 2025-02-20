@@ -13,10 +13,10 @@ export class CreateCommentDto {
   position: string;
 
   @IsNotEmpty()
-  @IsInt()
+  @IsString()
   userId: string;
 
   @IsNotEmpty()
-  @IsInt()
+  @IsString()
   companyId: string;
 }
