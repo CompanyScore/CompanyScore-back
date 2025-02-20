@@ -9,7 +9,6 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
-  BadRequestException,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -24,10 +23,6 @@ export class CommentsController {
   @UsePipes(new ValidationPipe({ transform: true }))
   create(@Body() createCommentDto: CreateCommentDto) {
     const { userId, companyId } = createCommentDto;
-
-    if (!userId || !companyId) {
-      throw new BadRequestException('userId and companyId обязательны!');
-    }
 
     return this.commentsService.createCommentToUser(
       userId,

@@ -61,13 +61,14 @@ export class CompaniesService {
     });
 
     return {
-      data: companies.map((company) => {
-        const { comments, ...companyData } = company;
-        return {
-          ...companyData,
-          commentsIds: comments.map(({ id }) => id),
-        };
-      }),
+      data: companies.map((company) => ({
+        id: company.id,
+        name: company.name,
+        logo: company.logo,
+        description: company.description,
+        rating: company.rating,
+        commentsIds: company.comments.map((comment) => comment.id.toString()),
+      })),
       total, // общее количество элементов
       page,
       limit: take,
@@ -114,14 +115,13 @@ export class CompaniesService {
     // Обновляем рейтинг в базе
     await this.companyRepository.update(id, { rating: averageRating });
 
-    const { comments, name, logo, description } = company;
     return {
-      id,
-      name,
-      logo,
-      description,
+      id: company.id,
+      name: company.name,
+      logo: company.logo,
+      description: company.description,
       rating: averageRating,
-      commentsIds: comments.map(({ id }) => id.toString()),
+      commentsIds: company.comments.map((comment) => comment.id),
     };
   }
 

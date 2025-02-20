@@ -28,13 +28,15 @@ export class UsersService {
       relations: ['comments'],
     });
 
-    return users.map((user) => {
-      const { comments, ...userData } = user;
-      return {
-        ...userData,
-        commentsIds: comments.map(({ id }) => id),
-      };
-    });
+    return users.map((user) => ({
+      id: user.id,
+      role: user.role,
+      name: user.name,
+      avatar: user.avatar,
+      createDate: user.createDate,
+      deleteDate: user.deleteDate,
+      commentsIds: user.comments.map((comment) => comment.id),
+    }));
   }
 
   async findOneByLinkedin(linkedinId: string): Promise<User> {
@@ -51,10 +53,18 @@ export class UsersService {
       throw new BadRequestException(`Пользователь не найден!`);
     }
 
-    const { comments, ...userData } = user;
     return {
-      ...userData,
-      commentsIds: comments.map(({ id }) => id),
+      id: user.id,
+      role: user.role,
+      refreshToken: user.refreshToken,
+      createDate: user.createDate,
+      deleteDate: user.deleteDate,
+      isDeleted: user.isDeleted,
+      name: user.name,
+      avatar: user.avatar,
+      position: user.position,
+      description: user.description,
+      commentsIds: user.comments.map((comment) => comment.id),
     };
   }
 
