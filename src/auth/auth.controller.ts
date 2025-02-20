@@ -6,7 +6,7 @@ import {
   UseGuards,
   Post,
   Body,
-  UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -25,10 +25,6 @@ export class AuthController {
   @Public()
   @Post('login')
   login(@Request() req, @Response() res) {
-    if (!req.user) {
-      return res.status(400).json({ message: 'User not found in request' });
-    }
-
     const token = this.authService.login(req.user);
 
     return res.json(token);
@@ -77,7 +73,7 @@ export class AuthController {
     const cookies = req.cookies;
 
     if (!cookies) {
-      return res.status(401).json({ message: 'Не авторизован' });
+      throw new BadRequestException(`Не авторизован!`);
     }
 
     return res.json(cookies);
@@ -89,19 +85,15 @@ export class AuthController {
     @Body('refreshToken') refreshToken: string,
     @Response() res,
   ) {
-    if (!refreshToken) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
-    }
-
     const result = await this.authService.refreshAccessToken(refreshToken, res);
-    return res.json(result); // Отправляем JSON-ответ
+    return res.json(result);
   }
 
   @Get('logout')
   logout(@Response() res) {
     res.clearCookie('accessToken');
-    res.clearCookie('refreshToken'); // удали из БД
+    res.clearCookie('refreshToken'); // !надо сделать удаление из БД
     res.clearCookie('userId');
-    return res.json({ message: 'Logged out successfully' });
+    return res.json({ message: 'До скорого свидания!' });
   }
 }

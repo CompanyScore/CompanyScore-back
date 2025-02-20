@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Response as ExpressResponse } from 'express';
 import { UsersService } from '../users/users.service';
 import { User } from 'src/users/entities/user.entity';
@@ -26,6 +30,10 @@ export class AuthService {
   }
 
   async login(user: User) {
+    if (!user) {
+      throw new BadRequestException(`Пользователь не найден!`);
+    }
+
     const payload = { sub: user.id, role: user.role };
 
     // Генерируем accessToken и refreshToken
@@ -81,7 +89,9 @@ export class AuthService {
 
       return { accessToken: newAccessToken };
     } catch (error) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
+      throw new UnauthorizedException(
+        'Недействительный или просроченный токен обновления!',
+      );
     }
   }
 
