@@ -14,7 +14,7 @@ export class AuthService {
   ) {}
 
   async validateUser(profile: any) {
-    let user = await this.usersService.findOne(null, profile.sub);
+    let user = await this.usersService.findOneByLinkedin(profile.sub);
 
     if (!user) {
       user = await this.usersService.create({ linkedinId: profile.sub });
@@ -58,9 +58,9 @@ export class AuthService {
         this.configService.get<string>('JWT_REFRESH_SECRET'),
       );
 
-      const user = await this.usersService.findOne(decoded.sub, null);
+      const user = await this.usersService.findOne(decoded.sub);
 
-      if (!user || user.refreshToken !== refreshToken) {
+      if (user.refreshToken !== refreshToken) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 

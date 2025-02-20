@@ -35,24 +35,18 @@ export class UsersService {
     });
   }
 
-  async findOne(userId?: string, linkedinId?: string): Promise<any> {
-    const where: any = {};
+  async findOneByLinkedin(linkedinId: string): Promise<User> {
+    return this.userRepository.findOne({ where: { linkedinId } });
+  }
 
-    if (userId) {
-      where.id = userId;
-    }
-
-    if (linkedinId) {
-      where.linkedinId = linkedinId;
-    }
-
+  async findOne(id: string): Promise<any> {
     const user = await this.userRepository.findOne({
-      where,
+      where: { id },
       relations: ['comments'],
     });
 
     if (!user) {
-      return null; // нужно именно null, потому что проверка нужна для create
+      throw new BadRequestException(`Пользователь не найден!`);
     }
 
     const { comments, ...userData } = user;
