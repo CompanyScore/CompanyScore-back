@@ -92,7 +92,7 @@ export class AuthController {
   @Get('logout')
   logout(@Response() res) {
     res.clearCookie('accessToken');
-    res.clearCookie('refreshToken'); // !надо сделать удаление из БД
+    res.clearCookie('refreshToken');
     res.clearCookie('userId');
     return res.json({ message: 'До скорого свидания!' });
   }
