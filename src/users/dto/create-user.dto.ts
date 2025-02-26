@@ -4,8 +4,11 @@ import {
   IsOptional,
   IsBoolean,
   IsDate,
+  IsIn,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Position } from 'src/constants';
+
 export class CreateUserDto {
   @IsString()
   @IsOptional()
@@ -42,7 +45,14 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({ example: 'Software Engineer', description: 'User position' })
+  @IsIn(Position, {
+    message: `Должность должна быть: ${Position.join(', ')}`,
+  })
+  @ApiProperty({
+    example: 'Full-stack',
+    enum: Position,
+    description: 'User position',
+  })
   position?: string;
 
   @IsNotEmpty()
