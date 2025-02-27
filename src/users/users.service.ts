@@ -22,23 +22,35 @@ export class UsersService {
     return this.userRepository.save(createUserDto);
   }
 
-  async findAll(isDeleted: boolean): Promise<any> {
-    const users = await this.userRepository.find({
-      where: { isDeleted },
+  async findAll(isDeleted: boolean, page: number, limit: number): Promise<any> {
+    const whereCondition: any = { isDeleted };
+
+    const take = limit || 10;
+    const skip = (page - 1) * take || 0;
+
+    const [users, total] = await this.userRepository.findAndCount({
+      where: whereCondition,
       relations: ['comments'],
+      take,
+      skip,
     });
 
-    return users.map((user) => ({
-      id: user.id,
-      role: user.role,
-      name: user.name,
-      avatar: user.avatar,
-      createDate: user.createDate,
-      deleteDate: user.deleteDate,
-      commentsIds: user.comments.map((comment) => comment.id),
-    }));
+    return {
+      data: users.map((user) => ({
+        id: user.id,
+        role: user.role,
+        name: user.name,
+        avatar: user.avatar,
+        position: user.position,
+        createDate: user.createDate,
+        deleteDate: user.deleteDate,
+        commentsIds: user.comments.map((comment) => comment.id),
+      })),
+      total,
+      page,
+      limit: take,
+    };
   }
-
   async findOneByLinkedin(linkedinId: string): Promise<User> {
     return this.userRepository.findOne({ where: { linkedinId } });
   }

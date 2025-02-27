@@ -45,8 +45,12 @@ export class UsersController {
     description: 'Users list',
     ...USERS_RESPONSE,
   })
-  async findAll(@Query('isDeleted') isDeleted: boolean) {
-    return this.usersService.findAll(isDeleted);
+  async findAll(
+    @Query('isDeleted') isDeleted: boolean,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.usersService.findAll(isDeleted, page, limit);
   }
 
   @Get(':id')
@@ -54,7 +58,6 @@ export class UsersController {
     status: 200,
     description: 'User detail',
     ...USER_RESPONSE,
-
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
   async findOne(@Param('id') id: string) {
@@ -85,7 +88,6 @@ export class UsersController {
     status: 200,
     description: 'Deleted user',
     ...USER_RESPONSE,
-
   })
   async remove(@Param('id') id: string) {
     return this.usersService.remove(id);

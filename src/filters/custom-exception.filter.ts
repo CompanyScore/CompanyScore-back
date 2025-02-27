@@ -19,15 +19,13 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const exceptionResponse = exception.getResponse();
 
-    const errorCode =
-      typeof exceptionResponse === 'object' && exceptionResponse['errorCode']
-        ? exceptionResponse['errorCode']
-        : 'UNKNOWN_ERROR';
+    const errorCode = exceptionResponse['errorCode']
+      ? exceptionResponse['errorCode']
+      : 'UNKNOWN_ERROR';
 
-    const message =
-      typeof exceptionResponse === 'object' && exceptionResponse['message']
-        ? exceptionResponse['message']
-        : exception.message;
+    const message = exceptionResponse['message']
+      ? exceptionResponse['message']
+      : exception.message;
 
     response.status(status).json({
       statusCode: status,
