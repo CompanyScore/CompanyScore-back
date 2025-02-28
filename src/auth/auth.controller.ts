@@ -81,10 +81,12 @@ export class AuthController {
 
   @Public()
   @Post('refresh')
-  async refreshToken(
-    @Body('refreshToken') refreshToken: string,
-    @Response() res,
-  ) {
+  async refreshToken(@Request() req, @Response() res) {
+    // Извлекаем refreshToken из cookies
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new BadRequestException('Refresh token отсутствует');
+    }
     const result = await this.authService.refreshAccessToken(refreshToken, res);
     return res.json(result);
   }
