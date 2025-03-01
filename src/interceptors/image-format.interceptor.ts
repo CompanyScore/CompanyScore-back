@@ -19,7 +19,7 @@ export class ImageFormatInterceptor implements NestInterceptor {
     const file = req.file;
 
     if (!file) {
-      return;
+      return next.handle();
     }
 
     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];

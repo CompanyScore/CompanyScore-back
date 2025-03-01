@@ -14,6 +14,7 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Public } from 'src/decorators/public.decorator';
+import { UserId } from 'src/decorators/user-id.decorator';
 
 @Controller('comments')
 export class CommentsController {
@@ -21,8 +22,8 @@ export class CommentsController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  create(@Body() createCommentDto: CreateCommentDto) {
-    const { userId, companyId } = createCommentDto;
+  create(@Body() createCommentDto: CreateCommentDto, @UserId() userId: string) {
+    const { companyId } = createCommentDto;
 
     return this.commentsService.createCommentToUser(
       userId,
@@ -34,7 +35,7 @@ export class CommentsController {
   @Public()
   @Get()
   findAll(
-    @Query('userId') userId: string,
+    @UserId() userId: string,
     @Query('companyId') companyId: string,
     @Query('page') page: number,
     @Query('limit') limit: number,

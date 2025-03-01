@@ -23,6 +23,7 @@ import { ImageFormatInterceptor } from 'src/interceptors/image-format.intercepto
 import * as multer from 'multer';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { USER_RESPONSE, USERS_RESPONSE } from './user.swagger.responses';
+import { UserId } from 'src/decorators/user-id.decorator';
 
 @ApiTags('users') // This tag will appear in the Swagger UI
 @Controller('users')
@@ -34,7 +35,6 @@ export class UsersController {
     status: 201,
     description: 'The user has been successfully created.',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
@@ -53,18 +53,17 @@ export class UsersController {
     return this.usersService.findAll(isDeleted, page, limit);
   }
 
-  @Get(':id')
+  @Get("/detail")
   @ApiResponse({
     status: 200,
     description: 'User detail',
     ...USER_RESPONSE,
   })
-  @ApiResponse({ status: 404, description: 'User not found.' })
-  async findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  async findOne(@UserId() userId: string) {
+    return this.usersService.findOne(userId);
   }
 
-  @Patch(':id')
+  @Patch()
   @ApiResponse({
     status: 200,
     description: 'Updated user',
@@ -75,21 +74,21 @@ export class UsersController {
     ImageFormatInterceptor,
   )
   async update(
-    @Param('id') id: string,
+    @UserId() userId: string,
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() avatarFile: Express.Multer.File,
   ) {
-    return this.usersService.update(id, updateUserDto, avatarFile);
+    return this.usersService.update(userId, updateUserDto, avatarFile);
   }
 
   @Roles(Role.ADMIN)
-  @Delete(':id')
+  @Delete()
   @ApiResponse({
     status: 200,
     description: 'Deleted user',
     ...USER_RESPONSE,
   })
-  async remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  async remove(@UserId() userId: string) {
+    return this.usersService.remove(userId);
   }
 }

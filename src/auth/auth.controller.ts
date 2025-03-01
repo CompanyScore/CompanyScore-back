@@ -67,17 +67,17 @@ export class AuthController {
     return res.redirect(`http://localhost:3000/profile`);
   }
 
-  @Public()
-  @Get('cookies')
-  getProfile(@Request() req, @Response() res) {
-    const cookies = req.cookies;
+  // @Public()
+  // @Get('cookies')
+  // getProfile(@Request() req, @Response() res) {
+  //   const cookies = req.cookies;
 
-    if (!cookies) {
-      throw new BadRequestException(`Не авторизован!`);
-    }
+  //   if (!cookies) {
+  //     throw new BadRequestException(`Не авторизован!`);
+  //   }
 
-    return res.json(cookies);
-  }
+  //   return res.json(cookies);
+  // }
 
   @Public()
   @Post('refresh')
