@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Response as ExpressResponse } from 'express';
+import { Response, Request } from 'express';
 import { UsersService } from '../users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
@@ -59,7 +59,7 @@ export class AuthService {
     return { accessToken, refreshToken, user };
   }
 
-  async refreshAccessToken(refreshToken: string, res: ExpressResponse) {
+  async refreshAccessToken(refreshToken: string, res: Response) {
     try {
       const decoded: any = jwt.verify(
         refreshToken,

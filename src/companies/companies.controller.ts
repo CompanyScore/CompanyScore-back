@@ -20,7 +20,6 @@ import { CompaniesService } from './companies.service';
 
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
-import { Public } from 'src/decorators/public.decorator';
 
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
 
@@ -43,7 +42,6 @@ export class CompaniesController {
     return this.companiesService.create(createCompanyDto, logoFile);
   }
 
-  @Public()
   @Get()
   findAll(
     @Query('name') name: string,
@@ -58,13 +56,11 @@ export class CompaniesController {
     return this.companiesService.findAll(name, rating, pageNumber, limitNumber);
   }
 
-  @Public()
   @Get('new')
   async getCompaniesNew() {
     return this.companiesService.findNewCompanies();
   }
 
-  @Public()
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Company> {
     return this.companiesService.findOne(id);

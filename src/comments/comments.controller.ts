@@ -13,7 +13,6 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Public } from 'src/decorators/public.decorator';
 import { UserId } from 'src/decorators/user-id.decorator';
 
 @Controller('comments')
@@ -32,7 +31,6 @@ export class CommentsController {
     );
   }
 
-  @Public()
   @Get()
   findAll(
     @UserId() userId: string,
@@ -43,7 +41,6 @@ export class CommentsController {
     return this.commentsService.findAll(userId, companyId, page, limit);
   }
 
-  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.commentsService.findOne(id);

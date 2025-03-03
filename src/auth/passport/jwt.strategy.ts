@@ -3,21 +3,33 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { AuthService } from '../auth.service';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private authService: AuthService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => {
-          return request?.cookies?.accessToken;
-        },
+        (request: Request) => request?.cookies?.accessToken || null,
       ]),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_ACCESS_SECRET'),
+      passReqToCallback: true, // Передаем request в validate
     });
   }
 
-  async validate(payload: any) {
+  async validate(request: Request & { res?: Response }, payload: any) {
+    if (!payload && request.cookies.refreshToken) {
+      const newAccessToken = await this.authService.refreshAccessToken(
+        request.cookies.refreshToken,
+        request.res,
+      );
+      console.log('New access token generated:', newAccessToken);
+      return this.authService.decodeToken(newAccessToken.accessToken);
+    }
+
     return payload;
   }
 }
