@@ -53,14 +53,24 @@ export class UsersController {
     return this.usersService.findAll(isDeleted, page, limit);
   }
 
-  @Get("/detail")
+  @Get('/profile')
   @ApiResponse({
     status: 200,
     description: 'User detail',
     ...USER_RESPONSE,
   })
-  async findOne(@UserId() userId: string) {
+  async findProfile(@UserId() userId: string) {
     return this.usersService.findOne(userId);
+  }
+
+  @Get('/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'User detail',
+    ...USER_RESPONSE,
+  })
+  async findOne(@Query('id') id: string) {
+    return this.usersService.findOne(id);
   }
 
   @Patch()

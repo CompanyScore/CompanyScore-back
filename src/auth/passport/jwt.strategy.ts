@@ -26,7 +26,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         request.cookies.refreshToken,
         request.res,
       );
-      console.log('New access token generated:', newAccessToken);
       return this.authService.decodeToken(newAccessToken.accessToken);
     }
 
