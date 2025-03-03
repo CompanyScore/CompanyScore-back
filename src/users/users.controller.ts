@@ -56,7 +56,7 @@ export class UsersController {
   @Get('/profile')
   @ApiResponse({
     status: 200,
-    description: 'User detail',
+    description: 'User profile',
     ...USER_RESPONSE,
   })
   async findProfile(@UserId() userId: string) {
