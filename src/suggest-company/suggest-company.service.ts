@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { SuggestCompany } from './entities/suggest-company.entity';
 import { CreateSuggestCompanyDto } from './dto/create-suggest-company.dto';
 import { UpdateSuggestCompanyDto } from './dto/update-suggest-company.dto';
-import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class SuggestCompanyService {
@@ -28,19 +27,19 @@ export class SuggestCompanyService {
     return this.suggestCompanyRepository.find();
   }
 
-  async findOne(id: number): Promise<SuggestCompany | null> {
+  async findOne(id: string): Promise<SuggestCompany | null> {
     return this.suggestCompanyRepository.findOne({ where: { id } });
   }
 
   async update(
-    id: number,
+    id: string,
     updateSuggestCompanyDto: UpdateSuggestCompanyDto,
   ): Promise<SuggestCompany | null> {
     await this.suggestCompanyRepository.update(id, updateSuggestCompanyDto);
     return this.findOne(id);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await this.suggestCompanyRepository.delete(id);
   }
 }

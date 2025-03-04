@@ -19,12 +19,10 @@ export class SuggestCompanyController {
   constructor(private readonly suggestCompanyService: SuggestCompanyService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ transform: true }))
   create(
     @Body() createSuggestCompanyDto: CreateSuggestCompanyDto,
     @UserId() userId: string,
   ) {
-    console.log('UserId:', userId);
     return this.suggestCompanyService.create(userId, createSuggestCompanyDto);
   }
 
@@ -37,12 +35,12 @@ export class SuggestCompanyController {
   @Roles(Role.ADMIN)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.suggestCompanyService.findOne(+id);
+    return this.suggestCompanyService.findOne(id);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.suggestCompanyService.remove(+id);
+    return this.suggestCompanyService.remove(id);
   }
 }

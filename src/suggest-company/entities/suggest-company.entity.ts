@@ -3,8 +3,8 @@ import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class SuggestCompany {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
