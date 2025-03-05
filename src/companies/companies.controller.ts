@@ -38,8 +38,8 @@ export class CompaniesController {
   async create(
     @Body() createCompanyDto: CreateCompanyDto,
     @UploadedFile() logoFile: Express.Multer.File,
-  ): Promise<Company> {
-    return this.companiesService.create(createCompanyDto, logoFile);
+  ) {
+    this.companiesService.create(createCompanyDto, logoFile);
   }
 
   @Get()
@@ -78,13 +78,13 @@ export class CompaniesController {
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
     @UploadedFile() logoFile: Express.Multer.File,
-  ): Promise<Company> {
-    return this.companiesService.update(id, updateCompanyDto, logoFile);
+  ) {
+    this.companiesService.update(id, updateCompanyDto, logoFile);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.companiesService.remove(id);
+  remove(@Param('id') id: string) {
+    this.companiesService.remove(id);
   }
 }
