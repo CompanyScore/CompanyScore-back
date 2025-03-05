@@ -36,7 +36,7 @@ export class UsersController {
     description: 'The user has been successfully created.',
   })
   async create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    this.usersService.create(createUserDto);
   }
 
   @Get()
@@ -88,7 +88,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() avatarFile: Express.Multer.File,
   ) {
-    return this.usersService.update(userId, updateUserDto, avatarFile);
+    this.usersService.update(userId, updateUserDto, avatarFile);
   }
 
   @Roles(Role.ADMIN)
@@ -99,6 +99,6 @@ export class UsersController {
     ...USER_RESPONSE,
   })
   async remove(@UserId() userId: string) {
-    return this.usersService.remove(userId);
+    this.usersService.remove(userId);
   }
 }

@@ -51,6 +51,7 @@ export class UsersService {
       limit: take,
     };
   }
+
   async findOneByLinkedin(linkedinId: string): Promise<User> {
     return this.userRepository.findOne({ where: { linkedinId } });
   }
@@ -84,7 +85,7 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
     avatarFile: Express.Multer.File,
-  ): Promise<User> {
+  ) {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
@@ -106,10 +107,9 @@ export class UsersService {
     }
 
     await this.userRepository.update(id, updateUserDto);
-    return this.findOne(id);
   }
 
-  async remove(id: string): Promise<string> {
+  async remove(id: string) {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
@@ -123,8 +123,6 @@ export class UsersService {
     };
 
     await this.userRepository.update(id, deletedUser);
-
-    return `Пользователь удален!`;
   }
 
   async updateRefreshToken(id: string, refreshToken: string) {
