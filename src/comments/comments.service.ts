@@ -48,7 +48,7 @@ export class CommentsService {
     userId: string,
     companyId: string,
     createCommentDto: CreateCommentDto,
-  ): Promise<Comment> {
+  ) {
     if (!userId || !companyId) {
       throw new BadRequestException('userId и companyId обязательны!');
     }
@@ -86,12 +86,10 @@ export class CommentsService {
       company,
     });
 
-    const savedComment = await this.commentRepository.save(comment);
+    await this.commentRepository.save(comment);
 
     // Обновляем рейтинг компании
     await this.updateCompanyRating(companyId);
-
-    return savedComment;
   }
 
   async findAll(
@@ -138,8 +136,8 @@ export class CommentsService {
     };
   }
 
-  async findOne(id: string): Promise<Comment> {
-    const comment = this.commentRepository.findOne({
+  async findOne(id: string): Promise<any> {
+    const comment = await this.commentRepository.findOne({
       where: { id },
       relations: ['user', 'company'],
     });
@@ -148,13 +146,27 @@ export class CommentsService {
       throw new BadRequestException(`Комментарий не найден!`);
     }
 
-    return comment;
+    return {
+      id: comment.id,
+      text: comment.text, // Текст комментария
+      createDate: comment.createDate, // Дата создания комментария
+      isDeleted: comment.isDeleted, // Флаг удаленного комментария
+      rating: comment.rating, // Рейтинг комментария
+      position: comment.position,
+      user: {
+        id: comment.user.id, // ID пользователя
+        name: comment.user.name, // Имя пользователя
+        avatar: comment.user.avatar, // Фото пользователя
+      },
+      company: {
+        id: comment.company.id,
+        name: comment.company.name,
+        logo: comment.company.logo,
+      },
+    };
   }
 
-  async update(
-    id: string,
-    updateCommentDto: UpdateCommentDto,
-  ): Promise<Comment> {
+  async update(id: string, updateCommentDto: UpdateCommentDto) {
     const comment = this.commentRepository.find({
       where: { id },
       relations: ['user', 'company'],
@@ -165,11 +177,9 @@ export class CommentsService {
     }
 
     await this.commentRepository.update(id, updateCommentDto);
-
-    return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string) {
     const comment = await this.commentRepository.findOne({
       where: { id },
       relations: ['company'],
