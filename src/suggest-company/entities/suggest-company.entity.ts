@@ -13,7 +13,6 @@ export class SuggestCompany {
   description: string;
 
   @ManyToOne(() => User, (user) => user.suggestedCompanies, {
-    eager: true,
     nullable: false,
   })
   user: User;

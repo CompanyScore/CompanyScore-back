@@ -23,7 +23,7 @@ export class SuggestCompanyController {
     @Body() createSuggestCompanyDto: CreateSuggestCompanyDto,
     @UserId() userId: string,
   ) {
-    return this.suggestCompanyService.create(userId, createSuggestCompanyDto);
+    this.suggestCompanyService.create(userId, createSuggestCompanyDto);
   }
 
   @Roles(Role.ADMIN)
@@ -41,6 +41,6 @@ export class SuggestCompanyController {
   @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.suggestCompanyService.remove(id);
+    this.suggestCompanyService.remove(id);
   }
 }

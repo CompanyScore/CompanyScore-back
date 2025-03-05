@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SuggestCompany } from './entities/suggest-company.entity';
 import { CreateSuggestCompanyDto } from './dto/create-suggest-company.dto';
-import { UpdateSuggestCompanyDto } from './dto/update-suggest-company.dto';
 
 @Injectable()
 export class SuggestCompanyService {
@@ -15,31 +14,51 @@ export class SuggestCompanyService {
   async create(
     userId: string,
     createSuggestCompanyDto: CreateSuggestCompanyDto,
-  ): Promise<SuggestCompany> {
+  ) {
     const newCompany = this.suggestCompanyRepository.create({
       ...createSuggestCompanyDto,
       user: { id: userId },
     });
-    return this.suggestCompanyRepository.save(newCompany);
+
+    this.suggestCompanyRepository.save(newCompany);
   }
 
-  async findAll(): Promise<SuggestCompany[]> {
-    return this.suggestCompanyRepository.find();
+  async findAll(): Promise<any> {
+    const suggestedCompanies = await this.suggestCompanyRepository.find({
+      relations: ['user'],
+    });
+
+    return suggestedCompanies.map((suggestedCompany) => ({
+      id: suggestedCompany.id,
+      name: suggestedCompany.name,
+      description: suggestedCompany.description,
+      user: {
+        id: suggestedCompany.user.id,
+        name: suggestedCompany.user.name,
+        avatar: suggestedCompany.user.avatar,
+      },
+    }));
   }
 
-  async findOne(id: string): Promise<SuggestCompany | null> {
-    return this.suggestCompanyRepository.findOne({ where: { id } });
+  async findOne(id: string): Promise<any> {
+    const suggestedCompanies = await this.suggestCompanyRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+
+    return {
+      id: suggestedCompanies.id,
+      name: suggestedCompanies.name,
+      description: suggestedCompanies.description,
+      user: {
+        id: suggestedCompanies.user.id,
+        name: suggestedCompanies.user.name,
+        avatar: suggestedCompanies.user.avatar,
+      },
+    };
   }
 
-  async update(
-    id: string,
-    updateSuggestCompanyDto: UpdateSuggestCompanyDto,
-  ): Promise<SuggestCompany | null> {
-    await this.suggestCompanyRepository.update(id, updateSuggestCompanyDto);
-    return this.findOne(id);
-  }
-
-  async remove(id: string): Promise<void> {
+  async remove(id: string) {
     await this.suggestCompanyRepository.delete(id);
   }
 }
