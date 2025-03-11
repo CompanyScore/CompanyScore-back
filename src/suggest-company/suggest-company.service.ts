@@ -14,13 +14,15 @@ export class SuggestCompanyService {
   async create(
     userId: string,
     createSuggestCompanyDto: CreateSuggestCompanyDto,
-  ) {
+  ): Promise<string> {
     const newCompany = this.suggestCompanyRepository.create({
       ...createSuggestCompanyDto,
       user: { id: userId },
     });
 
     this.suggestCompanyRepository.save(newCompany);
+
+    return 'Предложенная компания создана';
   }
 
   async findAll(): Promise<any> {
@@ -58,7 +60,9 @@ export class SuggestCompanyService {
     };
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<string> {
     await this.suggestCompanyRepository.delete(id);
+
+    return 'Предложенная компания удалена';
   }
 }

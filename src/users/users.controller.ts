@@ -30,15 +30,6 @@ import { UserId } from 'src/decorators/user-id.decorator';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  @ApiResponse({
-    status: 201,
-    description: 'The user has been successfully created.',
-  })
-  async create(@Body() createUserDto: CreateUserDto) {
-    this.usersService.create(createUserDto);
-  }
-
   @Get()
   @ApiResponse({
     status: 200,
@@ -88,7 +79,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() avatarFile: Express.Multer.File,
   ) {
-    this.usersService.update(userId, updateUserDto, avatarFile);
+    return this.usersService.update(userId, updateUserDto, avatarFile);
   }
 
   @Roles(Role.ADMIN)
@@ -99,6 +90,6 @@ export class UsersController {
     ...USER_RESPONSE,
   })
   async remove(@UserId() userId: string) {
-    this.usersService.remove(userId);
+    return this.usersService.remove(userId);
   }
 }

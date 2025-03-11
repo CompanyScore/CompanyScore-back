@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { SuggestCompanyService } from './suggest-company.service';
 import { CreateSuggestCompanyDto } from './dto/create-suggest-company.dto';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -23,7 +14,7 @@ export class SuggestCompanyController {
     @Body() createSuggestCompanyDto: CreateSuggestCompanyDto,
     @UserId() userId: string,
   ) {
-    this.suggestCompanyService.create(userId, createSuggestCompanyDto);
+    return this.suggestCompanyService.create(userId, createSuggestCompanyDto);
   }
 
   @Roles(Role.ADMIN)
@@ -41,6 +32,6 @@ export class SuggestCompanyController {
   @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    this.suggestCompanyService.remove(id);
+    return this.suggestCompanyService.remove(id);
   }
 }

@@ -24,7 +24,7 @@ export class CommentsService {
     private readonly companyRepository: Repository<Company>,
   ) {}
 
-  async updateCompanyRating(companyId: string): Promise<void> {
+  async updateCompanyRating(companyId: string): Promise<string> {
     const company = await this.companyRepository.findOne({
       where: { id: companyId },
       relations: ['comments'],
@@ -42,13 +42,15 @@ export class CommentsService {
         : 0;
 
     await this.companyRepository.update(companyId, { rating: averageRating });
+
+    return 'Рэйтинг обновлен';
   }
 
   async createCommentToUser(
     userId: string,
     companyId: string,
     createCommentDto: CreateCommentDto,
-  ) {
+  ): Promise<string> {
     if (!userId || !companyId) {
       throw new BadRequestException('userId и companyId обязательны!');
     }
@@ -90,6 +92,8 @@ export class CommentsService {
 
     // Обновляем рейтинг компании
     await this.updateCompanyRating(companyId);
+
+    return 'Отзыв создан';
   }
 
   async findAll(
@@ -166,7 +170,7 @@ export class CommentsService {
     };
   }
 
-  async update(id: string, updateCommentDto: UpdateCommentDto) {
+  async update(id: string, updateCommentDto: UpdateCommentDto): Promise<string> {
     const comment = this.commentRepository.find({
       where: { id },
       relations: ['user', 'company'],
@@ -177,9 +181,11 @@ export class CommentsService {
     }
 
     await this.commentRepository.update(id, updateCommentDto);
+
+    return 'Отзыв обновлен';
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<string> {
     const comment = await this.commentRepository.findOne({
       where: { id },
       relations: ['company'],
@@ -193,5 +199,7 @@ export class CommentsService {
 
     // Обновляем рейтинг компании после удаления комментария
     await this.updateCompanyRating(comment.company.id);
+
+    return 'Отзыв удален';
   }
 }

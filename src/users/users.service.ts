@@ -85,7 +85,7 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
     avatarFile: Express.Multer.File,
-  ) {
+  ): Promise<string> {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
@@ -107,9 +107,11 @@ export class UsersService {
     }
 
     await this.userRepository.update(id, updateUserDto);
+
+    return 'Пользователь обновлен';
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<string> {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
@@ -123,13 +125,17 @@ export class UsersService {
     };
 
     await this.userRepository.update(id, deletedUser);
+
+    return 'Пользователь удален';
   }
 
-  async updateRefreshToken(id: string, refreshToken: string) {
+  async updateRefreshToken(id: string, refreshToken: string): Promise<string> {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (user) {
       this.userRepository.update(id, { refreshToken: refreshToken });
+
+      return 'Пользователь обновлен';
     }
   }
 }

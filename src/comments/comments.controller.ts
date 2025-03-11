@@ -24,7 +24,7 @@ export class CommentsController {
   create(@Body() createCommentDto: CreateCommentDto, @UserId() userId: string) {
     const { companyId } = createCommentDto;
 
-    this.commentsService.createCommentToUser(
+    return this.commentsService.createCommentToUser(
       userId,
       companyId,
       createCommentDto,
@@ -48,11 +48,11 @@ export class CommentsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    this.commentsService.update(id, updateCommentDto);
+    return this.commentsService.update(id, updateCommentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    this.commentsService.remove(id);
+    return this.commentsService.remove(id);
   }
 }

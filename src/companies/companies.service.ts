@@ -19,7 +19,7 @@ export class CompaniesService {
   async create(
     createCompanyDto: CreateCompanyDto,
     logoFile: Express.Multer.File,
-  ) {
+  ): Promise<string> {
     if (logoFile) {
       const logo = await this.fileService.saveFile(
         logoFile.buffer,
@@ -31,6 +31,8 @@ export class CompaniesService {
     }
 
     this.companyRepository.save(createCompanyDto);
+
+    return 'Компания создана';
   }
 
   async findAll(
@@ -129,7 +131,7 @@ export class CompaniesService {
     id: string,
     updateCompanyDto: UpdateCompanyDto,
     logoFile: Express.Multer.File,
-  ) {
+  ): Promise<string> {
     const company = await this.findOne(id);
 
     if (!company) {
@@ -151,9 +153,11 @@ export class CompaniesService {
     }
 
     await this.companyRepository.update(id, updateCompanyDto);
+
+    return 'Компания обновлена';
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<string> {
     const company = await this.findOne(id);
 
     if (!company) {
@@ -161,5 +165,7 @@ export class CompaniesService {
     }
 
     await this.companyRepository.delete(id);
+
+    return 'Компания удалена';
   }
 }

@@ -39,7 +39,7 @@ export class CompaniesController {
     @Body() createCompanyDto: CreateCompanyDto,
     @UploadedFile() logoFile: Express.Multer.File,
   ) {
-    this.companiesService.create(createCompanyDto, logoFile);
+    return this.companiesService.create(createCompanyDto, logoFile);
   }
 
   @Get()
@@ -79,12 +79,12 @@ export class CompaniesController {
     @Body() updateCompanyDto: UpdateCompanyDto,
     @UploadedFile() logoFile: Express.Multer.File,
   ) {
-    this.companiesService.update(id, updateCompanyDto, logoFile);
+    return this.companiesService.update(id, updateCompanyDto, logoFile);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    this.companiesService.remove(id);
+    return this.companiesService.remove(id);
   }
 }
