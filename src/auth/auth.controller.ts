@@ -42,6 +42,7 @@ export class AuthController {
       httpOnly: true, // Запрещает доступ через JS
       secure: false, // Только HTTPS в проде
       sameSite: 'none', // Защита от CSRF
+      domain: 'companyscore-backend-g8l6t5-e829ed-94-228-170-7.traefik.me',
       maxAge: ms('15m'), // 15 мин
     });
 
@@ -49,6 +50,7 @@ export class AuthController {
       httpOnly: true, // Запрещает доступ через JS
       secure: false, // Только HTTPS в проде
       sameSite: 'none', // Защита от CSRF
+      domain: 'companyscore-backend-g8l6t5-e829ed-94-228-170-7.traefik.me',
       maxAge: ms('7d'),
     });
 
@@ -56,6 +58,7 @@ export class AuthController {
       httpOnly: true,
       secure: false,
       sameSite: 'none',
+      domain: 'companyscore-backend-g8l6t5-e829ed-94-228-170-7.traefik.me',
       maxAge: ms('7d'),
     });
 
