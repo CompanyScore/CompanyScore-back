@@ -59,7 +59,7 @@ export class AuthController {
       maxAge: ms('7d'),
     });
 
-    return res.redirect(`http://localhost:3000/profile`);
+    return res.redirect(`${process.env.FRONT_URL}/profile`);
   }
 
   @Public()
