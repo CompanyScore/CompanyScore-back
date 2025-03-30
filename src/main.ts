@@ -10,8 +10,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin:
-      'http://companyscore-frontend-82dtnh-f7227f-94-228-170-7.traefik.me',
+    origin: process.env.FRONT_URL,
     // Указываем фронтенд
     allowedHeaders: [
       'Content-Type',
