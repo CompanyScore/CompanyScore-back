@@ -14,7 +14,7 @@ export const getDatabaseConfig = (
     password: configService.get<string>('DATABASE_PASSWORD'),
     database: configService.get<string>('DATABASE'),
     autoLoadEntities: true,
-    synchronize: !isProduction, // В продакшене отключаем synchronize
+    synchronize: isProduction, // В продакшене отключаем synchronize
     entities: [__dirname + '/../**/*.entity.{ts,js}'],
   };
 };
