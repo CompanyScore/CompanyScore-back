@@ -11,7 +11,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'https://companyscore-frontend-82dtnh-f7227f-94-228-170-7.traefik.me',
+      'http://companyscore-frontend-82dtnh-f7227f-94-228-170-7.traefik.me',
       'http://localhost:3000',
     ], // Указываем фронтенд
     allowedHeaders: [
