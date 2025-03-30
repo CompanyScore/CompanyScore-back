@@ -41,12 +41,12 @@ import { getDatabaseConfig } from './config/database.config';
   controllers: [],
   providers: [
     {
-      provide: APP_FILTER,
-      useClass: CustomExceptionFilter,
-    },
-    {
       provide: APP_GUARD,
       useClass: JwtAuthGuard, // <-- Добавляем сначала JwtAuthGuard
+    },
+    {
+      provide: APP_FILTER,
+      useClass: CustomExceptionFilter,
     },
     {
       provide: APP_GUARD,
