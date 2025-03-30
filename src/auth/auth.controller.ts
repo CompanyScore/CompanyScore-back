@@ -41,21 +41,21 @@ export class AuthController {
     res.cookie('accessToken', userData.accessToken, {
       httpOnly: true, // Запрещает доступ через JS
       secure: false, // Только HTTPS в проде
-      sameSite: 'lax', // Защита от CSRF
+      sameSite: 'none', // Защита от CSRF
       maxAge: ms('15m'), // 15 мин
     });
 
     res.cookie('refreshToken', userData.refreshToken, {
       httpOnly: true, // Запрещает доступ через JS
       secure: false, // Только HTTPS в проде
-      sameSite: 'lax', // Защита от CSRF
+      sameSite: 'none', // Защита от CSRF
       maxAge: ms('7d'),
     });
 
     res.cookie('userId', userData.user.id, {
       httpOnly: true,
       secure: false,
-      sameSite: 'lax',
+      sameSite: 'none',
       maxAge: ms('7d'),
     });
 
