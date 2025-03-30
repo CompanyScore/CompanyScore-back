@@ -15,5 +15,6 @@ export const getDatabaseConfig = (
     database: configService.get<string>('DATABASE'),
     autoLoadEntities: true,
     synchronize: !isProduction, // В продакшене отключаем synchronize
+    entities: [__dirname + '/../**/*.entity.{ts,js}'],
   };
 };
