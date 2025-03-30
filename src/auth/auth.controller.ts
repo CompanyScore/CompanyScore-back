@@ -36,7 +36,11 @@ export class AuthController {
   @UseGuards(AuthGuard('linkedin'))
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
+    console.log('req.user:', req.user);
+
     const userData = await this.authService.validateUser(req.user);
+
+    console.log('userData:', userData);
 
     res.cookie('accessToken', userData.accessToken, {
       httpOnly: true, // Запрещает доступ через JS
@@ -61,6 +65,8 @@ export class AuthController {
       domain: 'companyscore-backend-g8l6t5-e829ed-94-228-170-7.traefik.me',
       maxAge: ms('7d'),
     });
+
+    console.log('Куки установлены!');
 
     return res.redirect(`${process.env.FRONT_URL}/profile`);
   }
