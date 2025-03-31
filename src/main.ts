@@ -11,7 +11,19 @@ async function bootstrap() {
 
   console.log('CORS ORIGIN:', process.env.FRONT_URL);
 
-  app.enableCors();
+  app.enableCors({
+    origin: 'https://companyscore.net',
+    // Указываем фронтенд
+    credentials: true, // Разрешаем отправку куки
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Cache-Control',
+      'Pragma',
+      'Expires',
+    ],
+    methods: 'GET, POST, PUT, PATCH, DELETE',
+  });
 
   const config = new DocumentBuilder()
     .setTitle('CompanyScore')

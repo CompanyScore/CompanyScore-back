@@ -46,6 +46,7 @@ export class AuthController {
       httpOnly: true, // Запрещает доступ через JS
       secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
       sameSite: 'none', // Разрешает отправку между доменами
+      domain: '.companyscore.net',
       maxAge: ms('15m'), // 15 мин
     });
 
@@ -53,6 +54,7 @@ export class AuthController {
       httpOnly: true, // Запрещает доступ через JS
       secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
       sameSite: 'none', // Разрешает отправку между доменами
+      domain: '.companyscore.net',
       maxAge: ms('7d'),
     });
 
@@ -60,6 +62,7 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none', // Разрешает отправку между доменами
+      domain: '.companyscore.net',
       maxAge: ms('7d'),
     });
 
