@@ -23,7 +23,7 @@ async function bootstrap() {
   // });
 
   app.enableCors({
-    origin: '*',
+    origin: 'https://companyscore.net',
     // Указываем фронтенд
     // allowedHeaders: [
     //   'Content-Type',
