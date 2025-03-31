@@ -29,6 +29,11 @@ async function bootstrap() {
   //   }),
   // );
 
+  app.enableCors({
+    origin: 'https://companyscore.net',
+    credentials: true,
+  });
+
   // app.enableCors({
   //   origin: true,
   // Указываем фронтенд
