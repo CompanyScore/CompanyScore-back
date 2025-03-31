@@ -7,14 +7,21 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  console.log('CORS ORIGIN:', process.env.FRONT_URL);
+  app.use(cookieParser());
 
   app.enableCors({
-    origin: 'https://companyscore.net',
-    credentials: true,
+    origin: process.env.FRONT_URL,
+    // Указываем фронтенд
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Cache-Control',
+      'Pragma',
+      'Expires',
+    ],
+    credentials: true, // Разрешаем отправку куки
+    methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   });
-
-  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('CompanyScore')
