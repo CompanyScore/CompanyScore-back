@@ -45,7 +45,7 @@ export class AuthController {
     res.cookie('accessToken', userData.accessToken, {
       httpOnly: true, // Запрещает доступ через JS
       secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
-      sameSite: 'lax', // Защита от CSRF
+      sameSite: 'none', // Разрешает отправку между доменами
       domain: 'companyscore.net',
       maxAge: ms('15m'), // 15 мин
     });
@@ -53,7 +53,7 @@ export class AuthController {
     res.cookie('refreshToken', userData.refreshToken, {
       httpOnly: true, // Запрещает доступ через JS
       secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
-      sameSite: 'lax', // Защита от CSRF
+      sameSite: 'none', // Разрешает отправку между доменами
       domain: 'companyscore.net',
       maxAge: ms('7d'),
     });
@@ -61,7 +61,7 @@ export class AuthController {
     res.cookie('userId', userData.user.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none', // Разрешает отправку между доменами
       domain: 'companyscore.net',
       maxAge: ms('7d'),
     });
