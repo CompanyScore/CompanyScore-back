@@ -38,14 +38,14 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  const config = new DocumentBuilder()
-    .setTitle('CompanyScore')
-    .setDescription('The CompanyScore API description')
-    .setVersion('1.0')
-    .addTag('CompanyScore')
-    .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  // const config = new DocumentBuilder()
+  //   .setTitle('CompanyScore')
+  //   .setDescription('The CompanyScore API description')
+  //   .setVersion('1.0')
+  //   .addTag('CompanyScore')
+  //   .build();
+  // const documentFactory = () => SwaggerModule.createDocument(app, config);
+  // SwaggerModule.setup('api', app, documentFactory);
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 8080);
