@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 // import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
+// import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -32,11 +32,11 @@ async function bootstrap() {
     //   'Pragma',
     //   'Expires',
     // ],
-    credentials: true, // Разрешаем отправку куки
+    // credentials: true, // Разрешаем отправку куки
     // methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   });
 
-  app.use(cookieParser());
+  // app.use(cookieParser());
 
   // const config = new DocumentBuilder()
   //   .setTitle('CompanyScore')
