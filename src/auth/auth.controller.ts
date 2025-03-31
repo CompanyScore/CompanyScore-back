@@ -43,23 +43,26 @@ export class AuthController {
     console.log('userData:', userData);
 
     res.cookie('accessToken', userData.accessToken, {
-      // httpOnly: true, // Запрещает доступ через JS
-      // secure: false, // Только HTTPS в проде
-      // sameSite: 'lax', // Защита от CSRF
+      httpOnly: true, // Запрещает доступ через JS
+      secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
+      sameSite: 'none', // Защита от CSRF
+      domain: '.companyscore.net',
       maxAge: ms('15m'), // 15 мин
     });
 
     res.cookie('refreshToken', userData.refreshToken, {
-      // httpOnly: true, // Запрещает доступ через JS
-      // secure: false, // Только HTTPS в проде
-      // sameSite: 'lax', // Защита от CSRF
+      httpOnly: true, // Запрещает доступ через JS
+      secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
+      sameSite: 'none', // Защита от CSRF
+      domain: '.companyscore.net',
       maxAge: ms('7d'),
     });
 
     res.cookie('userId', userData.user.id, {
-      // httpOnly: true,
-      // secure: false,
-      // sameSite: 'lax',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      domain: '.companyscore.net',
       maxAge: ms('7d'),
     });
 
