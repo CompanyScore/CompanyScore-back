@@ -8,32 +8,32 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Обрабатываем preflight-запросы (OPTIONS)
-  app.use((req, res, next) => {
-    if (req.method === 'OPTIONS') {
-      res.header('Access-Control-Allow-Origin', process.env.FRONT_URL);
-      res.header(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-      );
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.status(200).send();
-    } else {
-      next();
-    }
-  });
+  // app.use((req, res, next) => {
+  //   if (req.method === 'OPTIONS') {
+  //     res.header('Access-Control-Allow-Origin', process.env.FRONT_URL);
+  //     res.header(
+  //       'Access-Control-Allow-Methods',
+  //       'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  //     );
+  //     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  //     res.status(200).send();
+  //   } else {
+  //     next();
+  //   }
+  // });
 
   app.enableCors({
-    origin: process.env.FRONT_URL,
+    origin: '*',
     // Указываем фронтенд
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Cache-Control',
-      'Pragma',
-      'Expires',
-    ],
+    // allowedHeaders: [
+    //   'Content-Type',
+    //   'Authorization',
+    //   'Cache-Control',
+    //   'Pragma',
+    //   'Expires',
+    // ],
     credentials: true, // Разрешаем отправку куки
-    methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    // methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   });
 
   app.use(cookieParser());
