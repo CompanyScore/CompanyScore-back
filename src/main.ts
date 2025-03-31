@@ -9,6 +9,8 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  console.log('CORS ORIGIN:', process.env.FRONT_URL);
+
   app.enableCors({
     origin: process.env.FRONT_URL,
     // Указываем фронтенд
