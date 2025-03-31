@@ -1,31 +1,58 @@
 import { NestFactory } from '@nestjs/core';
+// import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
-import helmet from 'helmet';
-import * as cors from 'cors';
+// import helmet from 'helmet';
 
 async function bootstrap() {
-  const server = express();
+  const app = await NestFactory.create(AppModule);
 
-  // Настраиваем CORS до инициализации NestJS
-  server.use(
-    cors({
-      origin: 'https://companyscore.net',
-      credentials: true,
-    }),
-  );
+  // Обрабатываем preflight-запросы (OPTIONS)
+  // app.use((req, res, next) => {
+  //   if (req.method === 'OPTIONS') {
+  //     res.header('Access-Control-Allow-Origin', process.env.FRONT_URL);
+  //     res.header(
+  //       'Access-Control-Allow-Methods',
+  //       'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  //     );
+  //     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  //     res.status(200).send();
+  //   } else {
+  //     next();
+  //   }
+  // });
 
-  server.use(cookieParser());
-  server.use(
-    helmet({
-      crossOriginResourcePolicy: { policy: 'cross-origin' },
-    }),
-  );
+  // app.use(
+  //   helmet({
+  //     crossOriginResourcePolicy: { policy: 'cross-origin' },
+  //   }),
+  // );
 
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  // app.enableCors({
+  //   origin: true,
+  // Указываем фронтенд
+  // allowedHeaders: [
+  //   'Content-Type',
+  //   'Authorization',
+  //   'Cache-Control',
+  //   'Pragma',
+  //   'Expires',
+  // ],
+  // credentials: true, // Разрешаем отправку куки
+  // methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  // });
+
+  app.use(cookieParser());
+
+  // const config = new DocumentBuilder()
+  //   .setTitle('CompanyScore')
+  //   .setDescription('The CompanyScore API description')
+  //   .setVersion('1.0')
+  //   .addTag('CompanyScore')
+  //   .build();
+  // const documentFactory = () => SwaggerModule.createDocument(app, config);
+  // SwaggerModule.setup('api', app, documentFactory);
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 8080);
