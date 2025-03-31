@@ -23,6 +23,12 @@ async function bootstrap() {
   //   }
   // });
 
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
+
   app.enableCors({
     origin: true,
     // Указываем фронтенд
@@ -36,12 +42,6 @@ async function bootstrap() {
     credentials: true, // Разрешаем отправку куки
     // methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   });
-
-  app.use(
-    helmet({
-      crossOriginResourcePolicy: { policy: 'cross-origin' },
-    }),
-  );
 
   app.use(cookieParser());
 
