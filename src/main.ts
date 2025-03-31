@@ -20,7 +20,7 @@ async function bootstrap() {
       'Expires',
     ],
     credentials: true, // Разрешаем отправку куки
-    methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    methods: 'GET, POST, PUT, PATCH, DELETE',
   });
 
   const config = new DocumentBuilder()
