@@ -91,7 +91,7 @@ export class AuthService {
       res.cookie('accessToken', newAccessToken, {
         httpOnly: true, // Запрещает доступ через JS
         secure: process.env.NODE_ENV === 'production', // Только HTTPS в
-        domain: '.companyscore.net',
+        domain: 'companyscore.net',
         sameSite: 'none', // Защита от CSRF
         maxAge: ms('15m'),
       });
