@@ -12,8 +12,9 @@ async function bootstrap() {
   console.log('CORS ORIGIN:', process.env.FRONT_URL);
 
   app.enableCors({
-    origin: process.env.FRONT_URL,
+    origin: 'https://companyscore.net',
     // Указываем фронтенд
+    credentials: true, // Разрешаем отправку куки
     allowedHeaders: [
       'Content-Type',
       'Authorization',
@@ -21,7 +22,6 @@ async function bootstrap() {
       'Pragma',
       'Expires',
     ],
-    credentials: true, // Разрешаем отправку куки
     methods: 'GET, POST, PUT, PATCH, DELETE',
   });
 
