@@ -18,7 +18,7 @@ async function bootstrap() {
       'Expires',
     ],
     credentials: true, // Разрешаем отправку куки
-    methods: 'GET, POST, PUT, PATCH, DELETE',
+    methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   });
 
   app.use(cookieParser());
