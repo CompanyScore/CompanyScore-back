@@ -32,7 +32,7 @@ async function bootstrap() {
     //   'Pragma',
     //   'Expires',
     // ],
-    // credentials: true, // Разрешаем отправку куки
+    credentials: true, // Разрешаем отправку куки
     // methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   });
 
