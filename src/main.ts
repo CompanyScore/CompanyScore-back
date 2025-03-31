@@ -7,11 +7,18 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  console.log('CORS ORIGIN:', process.env.FRONT_URL);
-
   app.enableCors({
-    origin: 'https://companyscore.net',
-    credentials: true,
+    origin: process.env.FRONT_URL,
+    // Указываем фронтенд
+    credentials: true, // Разрешаем отправку куки
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Cache-Control',
+      'Pragma',
+      'Expires',
+    ],
+    methods: 'GET, POST, PUT, PATCH, DELETE',
   });
 
   app.use(cookieParser());
