@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   // Обрабатываем preflight-запросы (OPTIONS)
   // app.use((req, res, next) => {
