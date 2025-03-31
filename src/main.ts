@@ -7,8 +7,6 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(cookieParser());
-
   app.enableCors({
     origin: process.env.FRONT_URL,
     // Указываем фронтенд
@@ -22,6 +20,8 @@ async function bootstrap() {
     credentials: true, // Разрешаем отправку куки
     methods: 'GET, POST, PUT, PATCH, DELETE',
   });
+
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('CompanyScore')
