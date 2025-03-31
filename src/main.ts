@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 // import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-// import * as cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -36,7 +37,13 @@ async function bootstrap() {
     // methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
   });
 
-  // app.use(cookieParser());
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
+
+  app.use(cookieParser());
 
   // const config = new DocumentBuilder()
   //   .setTitle('CompanyScore')
