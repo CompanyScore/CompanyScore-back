@@ -10,9 +10,11 @@ async function bootstrap() {
 
   // Обрабатываем preflight-запросы (OPTIONS) https://companyscore.net/
   app.use((req, res, next) => {
+    console.log('Origin:', req.headers.origin); // Добавьте это для проверки
+
     const allowedOrigins = [
-      'https://companyscore.net/',
-      'https://api.companyscore.net/',
+      'https://companyscore.net',
+      'https://api.companyscore.net',
     ];
     const origin = req.headers.origin;
 
@@ -25,7 +27,7 @@ async function bootstrap() {
       'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     );
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true'); // Разрешаем передавать куки
+    res.header('Access-Control-Allow-Credentials', 'true');
 
     if (req.method === 'OPTIONS') {
       res.status(200).send();
