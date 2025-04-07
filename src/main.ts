@@ -29,24 +29,23 @@ async function bootstrap() {
   //   }),
   // );
 
-  app.enableCors({
-    origin: 'https://companyscore.net',
-    credentials: true,
-  });
-
   // app.enableCors({
-  //   origin: true,
-  // Указываем фронтенд
-  // allowedHeaders: [
-  //   'Content-Type',
-  //   'Authorization',
-  //   'Cache-Control',
-  //   'Pragma',
-  //   'Expires',
-  // ],
-  // credentials: true, // Разрешаем отправку куки
-  // methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  //   origin: 'https://companyscore.net',
+  //   credentials: true,
   // });
+
+  app.enableCors({
+    origin: true,
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Cache-Control',
+      'Pragma',
+      'Expires',
+    ],
+    credentials: true, // Разрешаем отправку куки
+    methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  });
 
   app.use(cookieParser());
 
