@@ -35,7 +35,7 @@ async function bootstrap() {
   // });
 
   app.enableCors({
-    origin: true,
+    origin: ['https://companyscore.net', 'https://api.companyscore.net'],
     allowedHeaders: [
       'Content-Type',
       'Authorization',
