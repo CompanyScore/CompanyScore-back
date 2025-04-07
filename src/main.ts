@@ -8,11 +8,11 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Обрабатываем preflight-запросы (OPTIONS)
+  // Обрабатываем preflight-запросы (OPTIONS) https://companyscore.net/
   app.use((req, res, next) => {
     const allowedOrigins = [
-      'https://companyscore.net',
-      'https://api.companyscore.net',
+      'https://companyscore.net/',
+      'https://api.companyscore.net/',
     ];
     const origin = req.headers.origin;
 
@@ -46,7 +46,7 @@ async function bootstrap() {
   // });
 
   app.enableCors({
-    origin: ['https://companyscore.net', 'https://api.companyscore.net'],
+    origin: ['https://companyscore.net/', 'https://api.companyscore.net/'],
     allowedHeaders: [
       'Content-Type',
       'Authorization',
