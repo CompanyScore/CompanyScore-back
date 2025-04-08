@@ -6,14 +6,16 @@ import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
-import { FileService } from 'src/providers/r2.service';
+import { R2Service } from 'src/providers/r2.service';
+import { v4 as uuidv4 } from 'uuid';
+import * as path from 'path';
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private companyRepository: Repository<Company>,
-    private readonly fileService: FileService,
+    private readonly r2Service: R2Service,
   ) {}
 
   async create(
@@ -21,16 +23,18 @@ export class CompaniesService {
     logoFile: Express.Multer.File,
   ): Promise<string> {
     if (logoFile) {
-      const logo = await this.fileService.saveFile(
-        logoFile.buffer,
-        'companies/logos',
-        logoFile.originalname,
-      );
+      // Генерация ключа для R2
+      const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
 
-      createCompanyDto.logo = logo;
+      // Загружаем логотип в R2
+      await this.r2Service.saveFileToR2(logoKey, logoFile.buffer);
+
+      // Указываем путь к файлу в базе данных (используем ссылку на R2)
+      createCompanyDto.logo = `https://images.companyscore.net/${logoKey}`;
     }
 
-    this.companyRepository.save(createCompanyDto);
+    // Сохраняем компанию в базу данных
+    await this.companyRepository.save(createCompanyDto);
 
     return 'Компания создана';
   }
@@ -139,19 +143,26 @@ export class CompaniesService {
     }
 
     if (logoFile) {
+      // Если компания уже имеет логотип, удаляем старое изображение из R2
       if (company.logo) {
-        await this.fileService.deleteFile(company.logo);
+        const oldKey = company.logo.replace(
+          'https://images.companyscore.net/',
+          '',
+        );
+        await this.r2Service.deleteFileFromR2(oldKey);
       }
 
-      const logo = await this.fileService.saveFile(
-        logoFile.buffer,
-        'companies/logos',
-        logoFile.originalname,
-      );
+      // Генерация нового ключа для логотипа в R2
+      const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
 
-      updateCompanyDto.logo = logo;
+      // Загружаем новый логотип в R2
+      await this.r2Service.saveFileToR2(logoKey, logoFile.buffer);
+
+      // Обновляем ссылку на новый логотип в базе данных
+      updateCompanyDto.logo = `https://images.companyscore.net/${logoKey}`;
     }
 
+    // Обновляем информацию о компании в базе данных
     await this.companyRepository.update(id, updateCompanyDto);
 
     return 'Компания обновлена';
