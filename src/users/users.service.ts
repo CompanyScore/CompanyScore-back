@@ -99,7 +99,7 @@ export class UsersService {
       await this.r2Service.deleteFileFromR2(oldKey);
 
       // Загружаем новую аватарку
-      const avatarKey = `users/avatars/${uuidv4()}${path.extname(avatarFile.originalname)}`;
+      const avatarKey = `/users/avatars/${uuidv4()}${path.extname(avatarFile.originalname)}`;
       await this.r2Service.saveFileToR2(avatarKey, avatarFile.buffer);
 
       updateUserDto.avatar = avatarKey;

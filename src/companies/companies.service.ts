@@ -24,7 +24,7 @@ export class CompaniesService {
   ): Promise<string> {
     if (logoFile) {
       // Генерация ключа для R2
-      const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
+      const logoKey = `/companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
 
       // Загружаем логотип в R2
       await this.r2Service.saveFileToR2(logoKey, logoFile.buffer);
@@ -150,7 +150,7 @@ export class CompaniesService {
       }
 
       // Генерация нового ключа для логотипа в R2
-      const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
+      const logoKey = `/companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
 
       // Загружаем новый логотип в R2
       await this.r2Service.saveFileToR2(logoKey, logoFile.buffer);
