@@ -6,16 +6,18 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-import { FileService } from 'src/providers/file.service';
+import { R2Service } from 'src/providers/r2.service';
+import { v4 as uuidv4 } from 'uuid';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
-  private readonly DEFAULT_AVATAR = '/files/users/avatars/default-ava.jpg';
+  // private readonly DEFAULT_AVATAR = '/files/users/avatars/default-ava.jpg';
 
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly fileService: FileService,
+    private readonly r2Service: R2Service,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -93,17 +95,17 @@ export class UsersService {
     }
 
     if (avatarFile) {
-      if (user.avatar && user.avatar != this.DEFAULT_AVATAR) {
-        await this.fileService.deleteFile(user.avatar);
-      }
-
-      const avatar = await this.fileService.saveFile(
-        avatarFile.buffer,
-        'users/avatars',
-        avatarFile.originalname,
+      const oldKey = user.avatar.replace(
+        'https://images.companyscore.net/',
+        '',
       );
+      await this.r2Service.deleteFileFromR2(oldKey);
 
-      updateUserDto.avatar = avatar;
+      // Загружаем новую аватарку
+      const avatarKey = `users/avatars/${uuidv4()}${path.extname(avatarFile.originalname)}`;
+      await this.r2Service.saveFileToR2(avatarKey, avatarFile.buffer);
+
+      updateUserDto.avatar = `https://images.companyscore.net/${avatarKey}`;
     }
 
     await this.userRepository.update(id, updateUserDto);
