@@ -30,7 +30,7 @@ export class CompaniesService {
       await this.r2Service.saveFileToR2(logoKey, logoFile.buffer);
 
       // Указываем путь к файлу в базе данных (используем ссылку на R2)
-      createCompanyDto.logo = `https://images.companyscore.net/${logoKey}`;
+      createCompanyDto.logo = logoKey;
     }
 
     // Сохраняем компанию в базу данных
@@ -145,10 +145,7 @@ export class CompaniesService {
     if (logoFile) {
       // Если компания уже имеет логотип, удаляем старое изображение из R2
       if (company.logo) {
-        const oldKey = company.logo.replace(
-          'https://images.companyscore.net/',
-          '',
-        );
+        const oldKey = company.logo;
         await this.r2Service.deleteFileFromR2(oldKey);
       }
 
@@ -159,7 +156,7 @@ export class CompaniesService {
       await this.r2Service.saveFileToR2(logoKey, logoFile.buffer);
 
       // Обновляем ссылку на новый логотип в базе данных
-      updateCompanyDto.logo = `https://images.companyscore.net/${logoKey}`;
+      updateCompanyDto.logo = logoKey;
     }
 
     // Обновляем информацию о компании в базе данных

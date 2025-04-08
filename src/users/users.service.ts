@@ -95,17 +95,14 @@ export class UsersService {
     }
 
     if (avatarFile) {
-      const oldKey = user.avatar.replace(
-        'https://images.companyscore.net/',
-        '',
-      );
+      const oldKey = user.avatar;
       await this.r2Service.deleteFileFromR2(oldKey);
 
       // Загружаем новую аватарку
       const avatarKey = `users/avatars/${uuidv4()}${path.extname(avatarFile.originalname)}`;
       await this.r2Service.saveFileToR2(avatarKey, avatarFile.buffer);
 
-      updateUserDto.avatar = `https://images.companyscore.net/${avatarKey}`;
+      updateUserDto.avatar = avatarKey;
     }
 
     await this.userRepository.update(id, updateUserDto);
