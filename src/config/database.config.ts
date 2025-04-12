@@ -16,5 +16,8 @@ export const getDatabaseConfig = (
     autoLoadEntities: true,
     synchronize: isProduction, // В продакшене отключаем synchronize
     entities: [__dirname + '/../**/*.entity.{ts,js}'],
+    ssl: {
+      rejectUnauthorized: false,
+    },
   };
 };
