@@ -37,6 +37,7 @@ export class SpacesService {
         Key: key,
         Body: buffer,
         ContentType: this.getContentType(key),
+        ACL: 'public-read',
       });
 
       const result = await this.s3.send(command);
