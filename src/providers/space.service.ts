@@ -11,23 +11,24 @@ import {
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class R2Service {
+export class SpacesService {
   constructor(private readonly configService: ConfigService) {}
 
-  private readonly logger = new Logger(R2Service.name);
+  private readonly logger = new Logger(SpacesService.name);
 
-  private readonly bucketName = 'images';
+  private readonly bucketName =
+    this.configService.get<string>('DO_SPACE_BUCKET_NAME') || 'images';
 
   private readonly s3 = new S3Client({
-    region: 'auto', // обязательно для Cloudflare
-    endpoint: this.configService.get<string>('R2_ENDPOINT'),
+    region: 'ams3', // замените на свой регион
+    endpoint: this.configService.get<string>('DO_SPACE_ENDPOINT'), // например: https://ams3.digitaloceanspaces.com
     credentials: {
-      accessKeyId: this.configService.get<string>('R2_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.get<string>('R2_SECRET_ACCESS_KEY'),
+      accessKeyId: this.configService.get<string>('DO_SPACE_ACCESS_KEY'),
+      secretAccessKey: this.configService.get<string>('DO_SPACE_SECRET_KEY'),
     },
   });
 
-  async saveFileToR2(key: string, buffer: Buffer): Promise<void> {
+  async saveFile(key: string, buffer: Buffer): Promise<void> {
     try {
       const command = new PutObjectCommand({
         Bucket: this.bucketName,
@@ -38,12 +39,15 @@ export class R2Service {
 
       await this.s3.send(command);
     } catch (error) {
-      this.logger.error('Ошибка при загрузке файла в R2', error);
+      this.logger.error(
+        'Ошибка при загрузке файла в DigitalOcean Spaces',
+        error,
+      );
       throw new InternalServerErrorException('Ошибка при сохранении файла');
     }
   }
 
-  async deleteFileFromR2(key: string): Promise<void> {
+  async deleteFile(key: string): Promise<void> {
     try {
       const command = new DeleteObjectCommand({
         Bucket: this.bucketName,
@@ -52,7 +56,10 @@ export class R2Service {
 
       await this.s3.send(command);
     } catch (error) {
-      this.logger.error('Ошибка при удалении файла из R2', error);
+      this.logger.error(
+        'Ошибка при удалении файла из DigitalOcean Spaces',
+        error,
+      );
       throw new InternalServerErrorException('Ошибка при удалении файла');
     }
   }
