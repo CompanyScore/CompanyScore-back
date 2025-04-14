@@ -16,8 +16,9 @@ export class SpacesService {
 
   private readonly logger = new Logger(SpacesService.name);
 
-  private readonly bucketName =
-    this.configService.get<string>('DO_SPACE_BUCKET_NAME');
+  private readonly bucketName = this.configService.get<string>(
+    'DO_SPACE_BUCKET_NAME',
+  );
 
   private readonly s3 = new S3Client({
     region: 'ams3', // замените на свой регион
@@ -30,6 +31,7 @@ export class SpacesService {
 
   async saveFile(key: string, buffer: Buffer): Promise<void> {
     try {
+      this.logger.log(`Сохраняем файл: ${key} в бакет ${this.bucketName}`);
       const command = new PutObjectCommand({
         Bucket: this.bucketName,
         Key: key,
@@ -37,12 +39,11 @@ export class SpacesService {
         ContentType: this.getContentType(key),
       });
 
-      await this.s3.send(command);
-    } catch (error) {
-      this.logger.error(
-        'Ошибка при загрузке файла в DigitalOcean Spaces',
-        error,
-      );
+      const result = await this.s3.send(command);
+      this.logger.log(`Файл сохранён: ${JSON.stringify(result)}`);
+    } catch (error: any) {
+      this.logger.error('❌ Ошибка при загрузке файла в DigitalOcean Spaces');
+      this.logger.error(error.name, error.message, error.stack);
       throw new InternalServerErrorException('Ошибка при сохранении файла');
     }
   }
