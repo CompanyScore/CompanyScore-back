@@ -17,7 +17,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly r2Service: SpacesService,
+    private readonly spacesService: SpacesService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -96,11 +96,13 @@ export class UsersService {
 
     if (avatarFile) {
       const oldKey = user.avatar;
-      await this.r2Service.deleteFile(oldKey);
 
-      // Загружаем новую аватарку
+      if (oldKey) {
+        await this.spacesService.deleteFile(oldKey);
+      }
+
       const avatarKey = `users/avatars/${uuidv4()}${path.extname(avatarFile.originalname)}`;
-      await this.r2Service.saveFile(avatarKey, avatarFile.buffer);
+      await this.spacesService.saveFile(avatarKey, avatarFile.buffer);
 
       updateUserDto.avatar = avatarKey;
     }

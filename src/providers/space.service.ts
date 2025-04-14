@@ -17,7 +17,7 @@ export class SpacesService {
   private readonly logger = new Logger(SpacesService.name);
 
   private readonly bucketName =
-    this.configService.get<string>('DO_SPACE_BUCKET_NAME') || 'images';
+    this.configService.get<string>('DO_SPACE_BUCKET_NAME');
 
   private readonly s3 = new S3Client({
     region: 'ams3', // замените на свой регион
@@ -60,6 +60,7 @@ export class SpacesService {
         'Ошибка при удалении файла из DigitalOcean Spaces',
         error,
       );
+      this.logger.error(error.name, error.message, error.stack);
       throw new InternalServerErrorException('Ошибка при удалении файла');
     }
   }
