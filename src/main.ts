@@ -6,7 +6,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['https://companyscore.net', 'https://api.companyscore.net'],
+    origin: [
+      'https://companyscore.net',
+      'https://api.companyscore.net',
+      'http://localhost:3000',
+    ],
     credentials: true,
     methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     allowedHeaders: [
