@@ -18,6 +18,12 @@ export class Company {
   @Column()
   logo?: string;
 
+  @Column({ nullable: true })
+  country?: string;
+
+  @Column({ nullable: true })
+  city?: string;
+
   @Column()
   description?: string;
 

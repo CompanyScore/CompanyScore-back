@@ -88,11 +88,13 @@ export class AuthService {
         },
       );
 
+      const isProd = process.env.NODE_ENV === 'production';
+
       res.cookie('accessToken', newAccessToken, {
         httpOnly: true, // Запрещает доступ через JS
-        secure: process.env.NODE_ENV === 'production', // Только HTTPS в
-        domain: '.companyscore.net',
-        sameSite: 'none', // Защита от CSRF
+        secure: isProd, // Только HTTPS в проде
+        sameSite: isProd ? 'none' : 'lax',
+        domain: isProd ? '.companyscore.net' : undefined,
         maxAge: ms('15m'),
       });
 

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, Like, Repository } from 'typeorm';
 
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -41,6 +41,8 @@ export class CompaniesService {
 
   async findAll(
     name: string,
+    country: string,
+    city: string,
     rating: string,
     page: number,
     limit: number,
@@ -53,6 +55,14 @@ export class CompaniesService {
 
     if (rating) {
       whereCondition.rating = Number(rating);
+    }
+
+    if (country) {
+      whereCondition.country = Like(`%${country}%`);
+    }
+
+    if (city) {
+      whereCondition.city = Like(`%${city}%`);
     }
 
     // Убедимся, что лимит и страница имеют значения по умолчанию
@@ -70,6 +80,8 @@ export class CompaniesService {
       data: companies.map((company) => ({
         id: company.id,
         name: company.name,
+        country: company.country,
+        city: company.city,
         logo: company.logo,
         description: company.description,
         rating: company.rating,
@@ -94,6 +106,8 @@ export class CompaniesService {
     return companies.map((company) => ({
       id: company.id,
       name: company.name,
+      country: company.country,
+      city: company.city,
       logo: company.logo,
       description: company.description,
       rating: company.rating,
@@ -124,6 +138,8 @@ export class CompaniesService {
     return {
       id: company.id,
       name: company.name,
+      country: company.country,
+      city: company.city,
       logo: company.logo,
       description: company.description,
       rating: averageRating,

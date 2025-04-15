@@ -45,6 +45,8 @@ export class CompaniesController {
   @Get()
   findAll(
     @Query('name') name: string,
+    @Query('country') country: string,
+    @Query('city') city: string,
     @Query('rating') rating: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
@@ -53,7 +55,7 @@ export class CompaniesController {
     const pageNumber = Number(page) || 1;
     const limitNumber = Number(limit) || 10;
 
-    return this.companiesService.findAll(name, rating, pageNumber, limitNumber);
+    return this.companiesService.findAll(name, country, city, rating, pageNumber, limitNumber);
   }
 
   @Get('new')
