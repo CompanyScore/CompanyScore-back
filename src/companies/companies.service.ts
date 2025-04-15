@@ -115,6 +115,27 @@ export class CompaniesService {
     }));
   }
 
+  async findLocations(): Promise<Record<string, string[]>> {
+    const companies = await this.companyRepository.find({
+      select: ['country', 'city'],
+    });
+
+    const result: Record<string, string[]> = {};
+
+    companies.forEach((company) => {
+      if (!result[company.country]) {
+        result[company.country] = [];
+      }
+
+      // Добавляем только уникальные города
+      if (!result[company.country].includes(company.city)) {
+        result[company.country].push(company.city);
+      }
+    });
+
+    return result;
+  }
+
   async findOne(id: string): Promise<any> {
     const company = await this.companyRepository.findOne({
       where: { id },

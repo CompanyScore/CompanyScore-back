@@ -55,12 +55,24 @@ export class CompaniesController {
     const pageNumber = Number(page) || 1;
     const limitNumber = Number(limit) || 10;
 
-    return this.companiesService.findAll(name, country, city, rating, pageNumber, limitNumber);
+    return this.companiesService.findAll(
+      name,
+      country,
+      city,
+      rating,
+      pageNumber,
+      limitNumber,
+    );
   }
 
   @Get('new')
   async getCompaniesNew() {
     return this.companiesService.findNewCompanies();
+  }
+
+  @Get('locations')
+  async getLocations() {
+    return this.companiesService.findLocations();
   }
 
   @Get(':id')
