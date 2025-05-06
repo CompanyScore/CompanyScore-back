@@ -19,9 +19,13 @@ import { getDatabaseConfig } from './config/database.config';
 @Module({
   imports: [
     ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 20,
-    } as any),
+      throttlers: [
+        {
+          ttl: 60,
+          limit: 20,
+        },
+      ],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
