@@ -12,11 +12,16 @@ import { CustomExceptionFilter } from './filters/custom-exception.filter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesGuard } from './auth/role.guard';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { getDatabaseConfig } from './config/database.config';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 20,
+    } as any),
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -45,12 +50,16 @@ import { getDatabaseConfig } from './config/database.config';
       useClass: JwtAuthGuard, // <-- Добавляем сначала JwtAuthGuard
     },
     {
-      provide: APP_FILTER,
-      useClass: CustomExceptionFilter,
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: CustomExceptionFilter,
     },
   ],
 })
