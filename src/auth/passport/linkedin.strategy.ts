@@ -10,7 +10,7 @@ export class LinkedInStrategy extends PassportStrategy(Strategy) {
     super({
       clientID: configService.get<string>('LINKEDIN_CLIENT_ID'), // '7865ifc7jv2fh4',
       clientSecret: configService.get<string>('LINKEDIN_CLIENT_SECRET'), // 'WPL_AP1.yijh9pslALa7F3va.+aTiQw==',
-      callbackURL: configService.get<string>('LINKEDIN_CALLBACK_URL'), // 'http://localhost:8080/auth/linkedin/callback',
+      callbackURL: configService.get<string>('LINKEDIN_CALLBACK_URL'), // 'http://localhost:8000/auth/linkedin/callback',
       scope: ['openid', 'profile', 'email'],
     });
   }
