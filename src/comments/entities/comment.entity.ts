@@ -14,13 +14,73 @@ export class Comment {
   id: string;
 
   @Column()
-  text: string;
-
-  @Column({ type: 'int', default: 0 })
-  rating: number;
-
-  @Column({ default: '' })
   position: string;
+
+  @Column()
+  gradeYear: number;
+
+  @Column()
+  gradeMonth: number;
+
+  @Column()
+  taskText: string;
+
+  @Column()
+  taskRating: number;
+
+  @Column()
+  interviewText: string;
+
+  @Column()
+  interviewRating: number;
+
+  @Column()
+  workRatingTeam: number;
+
+  @Column()
+  workRatingManagement: number;
+
+  @Column()
+  workRatingStack: number;
+
+  @Column()
+  workRatingProject: number;
+
+  @Column()
+  workRatingWorkFormat: number;
+
+  @Column()
+  workRatingFinanceSalary: number;
+
+  @Column()
+  workRatingFinanceMedicine: number;
+
+  @Column()
+  workRatingFinancePremium: number;
+
+  @Column()
+  workRatingFinanceBonuses: number;
+
+  @Column()
+  workRatingFinanceStocks: number;
+
+  @Column()
+  workRatingFinanceDividends: number;
+
+  @Column()
+  workRatingOtherEducation: number;
+
+  @Column()
+  workRatingOtherEvents: number;
+
+  @Column()
+  recommendationIsRecommended: boolean;
+
+  @Column()
+  recommendationReasonJoined: string;
+
+  @Column()
+  recommendationReasonLeft: string;
 
   @CreateDateColumn()
   createDate: Date; // Автоматически заполняется текущей датой при создании записи

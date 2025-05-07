@@ -143,18 +143,18 @@ export class CompaniesService {
     });
 
     // Рассчитываем средний рейтинг
-    const ratings = company.comments
-      .map((comment) => comment.rating)
-      .filter((rating) => rating !== null);
+    // const ratings = company.comments
+    //   .map((comment) => comment.rating)
+    //   .filter((rating) => rating !== null);
 
-    const averageRating =
-      ratings.length > 0
-        ? Math.ceil(ratings.reduce((sum, r) => sum + r, 0) / ratings.length)
-        : 0;
-    console.log(averageRating);
+    // const averageRating =
+    //   ratings.length > 0
+    //     ? Math.ceil(ratings.reduce((sum, r) => sum + r, 0) / ratings.length)
+    //     : 0;
+    // console.log(averageRating);
 
     // Обновляем рейтинг в базе
-    await this.companyRepository.update(id, { rating: averageRating });
+    await this.companyRepository.update(id, { rating: 0 });
 
     return {
       id: company.id,
@@ -163,7 +163,7 @@ export class CompaniesService {
       city: company.city,
       logo: company.logo,
       description: company.description,
-      rating: averageRating,
+      // rating: averageRating,
       commentsIds: company.comments.map((comment) => comment.id),
     };
   }

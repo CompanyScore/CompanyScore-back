@@ -7,7 +7,7 @@ import {
   IsIn,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Position } from 'src/constants';
+import { Positions } from 'src/constants';
 
 export class CreateUserDto {
   @IsString()
@@ -45,12 +45,12 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsIn(Position, {
-    message: `Должность должна быть: ${Position.join(', ')}`,
+  @IsIn(Positions, {
+    message: `Должность должна быть: ${Positions.join(', ')}`,
   })
   @ApiProperty({
     example: 'Full-stack',
-    enum: Position,
+    enum: Positions,
     description: 'User position',
   })
   position?: string;

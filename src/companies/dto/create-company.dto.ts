@@ -7,7 +7,7 @@ import {
   IsDate,
   IsIn,
 } from 'class-validator';
-import { Rating } from 'src/constants';
+import { Ratings } from 'src/constants';
 
 export class CreateCompanyDto {
   @IsString()
@@ -32,7 +32,7 @@ export class CreateCompanyDto {
 
   @IsOptional()
   @IsNumber()
-  @IsIn(Rating, { message: 'Рэйтинг может быть только от 1 до 10' })
+  @IsIn(Ratings, { message: 'Рэйтинг может быть только от 1 до 5' })
   rating?: number;
 
   @IsNotEmpty()

@@ -32,16 +32,16 @@ export class CommentsService {
 
     if (!company) return;
 
-    const ratings = company.comments
-      .map((comment) => comment.rating)
-      .filter((rating) => rating !== null);
+    // const ratings = company.comments
+    //   .map((comment) => comment.rating)
+    //   .filter((rating) => rating !== null);
 
-    const averageRating =
-      ratings.length > 0
-        ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
-        : 0;
+    // const averageRating =
+    //   ratings.length > 0
+    //     ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
+    //     : 0;
 
-    await this.companyRepository.update(companyId, { rating: averageRating });
+    await this.companyRepository.update(companyId, { rating: 0 });
 
     return 'Рэйтинг обновлен';
   }
@@ -91,7 +91,7 @@ export class CommentsService {
     await this.commentRepository.save(comment);
 
     // Обновляем рейтинг компании
-    await this.updateCompanyRating(companyId);
+    // await this.updateCompanyRating(companyId);
 
     return 'Отзыв создан';
   }
@@ -118,11 +118,45 @@ export class CommentsService {
     return {
       data: comments.map((comment) => ({
         id: comment.id,
-        text: comment.text, // Текст комментария
-        createDate: comment.createDate, // Дата создания комментария
-        isDeleted: comment.isDeleted, // Флаг удаленного комментария
-        rating: comment.rating, // Рейтинг комментария
         position: comment.position,
+        grade: {
+          years: comment.gradeYear,
+          months: comment.gradeMonth,
+        },
+        task: {
+          text: comment.taskText,
+          rating: comment.taskRating,
+        },
+        interview: {
+          text: comment.interviewText,
+          rating: comment.interviewRating,
+        },
+        work: {
+          rating: {
+            team: comment.workRatingTeam,
+            management: comment.workRatingManagement,
+            stack: comment.workRatingStack,
+            project: comment.workRatingProject,
+            workFormat: comment.workRatingWorkFormat,
+          },
+          finance: {
+            salary: comment.workRatingFinanceSalary,
+            medicine: comment.workRatingFinanceMedicine,
+            premium: comment.workRatingFinancePremium,
+            bonuses: comment.workRatingFinanceBonuses,
+            stocks: comment.workRatingFinanceStocks,
+            dividends: comment.workRatingFinanceDividends,
+          },
+          other: {
+            education: comment.workRatingOtherEducation,
+            events: comment.workRatingOtherEvents,
+          },
+        },
+        recommendation: {
+          isRecommended: comment.recommendationIsRecommended,
+          reasonJoined: comment.recommendationReasonJoined,
+          reasonLeft: comment.recommendationReasonLeft,
+        },
         user: {
           id: comment.user.id, // ID пользователя
           name: comment.user.name, // Имя пользователя
@@ -152,11 +186,45 @@ export class CommentsService {
 
     return {
       id: comment.id,
-      text: comment.text, // Текст комментария
-      createDate: comment.createDate, // Дата создания комментария
-      isDeleted: comment.isDeleted, // Флаг удаленного комментария
-      rating: comment.rating, // Рейтинг комментария
       position: comment.position,
+      grade: {
+        years: comment.gradeYear,
+        months: comment.gradeMonth,
+      },
+      task: {
+        text: comment.taskText,
+        rating: comment.taskRating,
+      },
+      interview: {
+        text: comment.interviewText,
+        rating: comment.interviewRating,
+      },
+      work: {
+        rating: {
+          team: comment.workRatingTeam,
+          management: comment.workRatingManagement,
+          stack: comment.workRatingStack,
+          project: comment.workRatingProject,
+          workFormat: comment.workRatingWorkFormat,
+        },
+        finance: {
+          salary: comment.workRatingFinanceSalary,
+          medicine: comment.workRatingFinanceMedicine,
+          premium: comment.workRatingFinancePremium,
+          bonuses: comment.workRatingFinanceBonuses,
+          stocks: comment.workRatingFinanceStocks,
+          dividends: comment.workRatingFinanceDividends,
+        },
+        other: {
+          education: comment.workRatingOtherEducation,
+          events: comment.workRatingOtherEvents,
+        },
+      },
+      recommendation: {
+        isRecommended: comment.recommendationIsRecommended,
+        reasonJoined: comment.recommendationReasonJoined,
+        reasonLeft: comment.recommendationReasonLeft,
+      },
       user: {
         id: comment.user.id, // ID пользователя
         name: comment.user.name, // Имя пользователя
@@ -170,7 +238,10 @@ export class CommentsService {
     };
   }
 
-  async update(id: string, updateCommentDto: UpdateCommentDto): Promise<string> {
+  async update(
+    id: string,
+    updateCommentDto: UpdateCommentDto,
+  ): Promise<string> {
     const comment = this.commentRepository.find({
       where: { id },
       relations: ['user', 'company'],
