@@ -28,18 +28,21 @@ export class User {
   @Column()
   linkedinId: string;
 
-  @Column({ default: 'BugSlayer9000' })
+  @Column()
   name: string;
 
-  @Column({ default: '/files/users/avatars/default-ava.jpg' })
+  @Column()
   avatar: string;
 
-  @Column({ default: 'Full-stack' })
+  @Column()
+  email: string;
+
+  @Column({ default: 'Моя должность' })
   position: string;
 
   @Column({
     default:
-      'Работаю в IT уже 10 лет, но до сих пор не понимаю, как одна строчка кода может сломать весь прод. Люблю писать код, который потом сам же и переписываю. Считаю, что комментарии в коде — это для слабаков, ведь настоящий разработчик должен страдать. Обожаю митинги, особенно те, на которых мог бы просто получить письмо.',
+      'Мое краткое описание. Например, я работаю в компании XYZ и занимаюсь разработкой ПО.',
   })
   description: string;
 

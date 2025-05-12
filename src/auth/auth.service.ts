@@ -20,15 +20,14 @@ export class AuthService {
   async validateUser(profile: any) {
     let user = await this.usersService.findOneByLinkedin(profile.sub);
 
-    if (!user) {
-      if (profile.sub === 'f8pgmxKSN7' || profile.sub === 'qfBfw8pn1c') {
-        user = await this.usersService.create({
-          linkedinId: profile.sub,
-          role: 'admin',
-        });
-      }
+    console.log('profile', profile);
 
-      user = await this.usersService.create({ linkedinId: profile.sub });
+    if (!user) {
+      user = await this.usersService.create({
+        linkedinId: profile.sub,
+        name: profile.name,
+        email: profile.email,
+      });
     }
 
     const userWithTokens = await this.login(user);
