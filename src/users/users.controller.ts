@@ -21,21 +21,14 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
 
 import * as multer from 'multer';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { USER_RESPONSE, USERS_RESPONSE } from './user.swagger.responses';
 import { UserId } from 'src/decorators/user-id.decorator';
 
-@ApiTags('users') // This tag will appear in the Swagger UI
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Users list',
-    ...USERS_RESPONSE,
-  })
   async findAll(
     @Query('isDeleted') isDeleted: boolean,
     @Query('page') page: number,
@@ -45,31 +38,16 @@ export class UsersController {
   }
 
   @Get('/profile')
-  @ApiResponse({
-    status: 200,
-    description: 'User profile',
-    ...USER_RESPONSE,
-  })
   async findProfile(@UserId() userId: string) {
     return this.usersService.findOne(userId);
   }
 
   @Get('/:id')
-  @ApiResponse({
-    status: 200,
-    description: 'User detail',
-    ...USER_RESPONSE,
-  })
   async findOne(@Query('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Patch()
-  @ApiResponse({
-    status: 200,
-    description: 'Updated user',
-    ...USER_RESPONSE,
-  })
   @UseInterceptors(
     FileInterceptor('avatarFile', { storage: multer.memoryStorage() }),
     ImageFormatInterceptor,
@@ -84,11 +62,6 @@ export class UsersController {
 
   @Roles(Role.ADMIN)
   @Delete()
-  @ApiResponse({
-    status: 200,
-    description: 'Deleted user',
-    ...USER_RESPONSE,
-  })
   async remove(@UserId() userId: string) {
     return this.usersService.remove(userId);
   }
