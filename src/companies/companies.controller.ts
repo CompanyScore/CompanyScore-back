@@ -27,7 +27,6 @@ import { ImageFormatInterceptor } from 'src/interceptors/image-format.intercepto
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
-  @Roles(Role.ADMIN)
   @UseInterceptors(
     FileInterceptor('logoFile', {
       storage: multer.memoryStorage(),

@@ -13,22 +13,22 @@ export class Company {
   id: string;
 
   @Column()
-  name?: string;
+  name: string;
 
-  @Column()
+  @Column({ nullable: true })
   logo?: string;
 
-  @Column({ nullable: true })
-  country?: string;
-
-  @Column({ nullable: true })
-  city?: string;
+  @Column()
+  country: string;
 
   @Column()
+  city: string;
+
+  @Column({ nullable: true })
   description?: string;
 
   @Column({ type: 'float', default: 0 })
-  rating: number;
+  rating?: number;
 
   @CreateDateColumn()
   createDate: Date;

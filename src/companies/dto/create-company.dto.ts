@@ -18,13 +18,11 @@ export class CreateCompanyDto {
   @IsString()
   logo?: string;
 
-  @IsOptional()
   @IsString()
-  country?: string;
+  country: string;
 
-  @IsOptional()
   @IsString()
-  city?: string;
+  city: string;
 
   @IsOptional()
   @IsString()

@@ -34,9 +34,9 @@ export class CompaniesService {
     }
 
     // Сохраняем компанию в базу данных
-    await this.companyRepository.save(createCompanyDto);
+    const createdCompany = await this.companyRepository.save(createCompanyDto);
 
-    return 'Компания создана';
+    return createdCompany.id;
   }
 
   async findAll(
