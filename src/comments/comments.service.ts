@@ -88,12 +88,12 @@ export class CommentsService {
       company,
     });
 
-    await this.commentRepository.save(comment);
+    const createdComment = await this.commentRepository.save(comment);
 
     // Обновляем рейтинг компании
     // await this.updateCompanyRating(companyId);
 
-    return 'Отзыв создан';
+    return createdComment.id;
   }
 
   async findAll(
