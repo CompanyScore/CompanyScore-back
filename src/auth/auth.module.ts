@@ -10,6 +10,7 @@ import { LinkedInStrategy } from './passport/linkedin.strategy';
 import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { getJwtConfig } from 'src/config/jwt.config';
+import { SpacesService } from 'src/providers/space.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { getJwtConfig } from 'src/config/jwt.config';
     LinkedInStrategy,
     JwtAuthGuard,
     UsersService,
+    SpacesService
   ],
   exports: [AuthService],
 })
