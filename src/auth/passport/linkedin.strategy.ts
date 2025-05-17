@@ -16,14 +16,17 @@ export class LinkedInStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken: string): Promise<any> {
+    let response = null;
+
     try {
-      const response = await axios.get('https://api.linkedin.com/v2/userinfo', {
+      response = await axios.get('https://api.linkedin.com/v2/userinfo', {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       return response.data;
     } catch (error) {
       console.error('Error fetching LinkedIn data:', error.message);
-      return null;
     }
+
+    return response;
   }
 }
