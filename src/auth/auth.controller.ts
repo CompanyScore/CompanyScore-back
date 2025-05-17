@@ -49,6 +49,8 @@ export class AuthController {
     @Response() res,
     @Query('state') state,
   ) {
+    console.log('state from query:', state);
+
     const userData = await this.authService.validateUser(req.user);
     const isProd = process.env.NODE_ENV === 'production';
 
