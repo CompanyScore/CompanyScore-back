@@ -20,6 +20,8 @@ export const getDatabaseConfig = (
       ? {
           rejectUnauthorized: false,
         }
-      : false,
+      : {
+          rejectUnauthorized: false,
+        },
   };
 };

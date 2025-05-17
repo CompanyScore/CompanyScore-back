@@ -7,7 +7,6 @@ import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
 import { AuthModule } from './auth/auth.module';
-import { SuggestCompanyModule } from './suggest-company/suggest-company.module';
 import { CustomExceptionFilter } from './filters/custom-exception.filter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesGuard } from './auth/role.guard';
@@ -45,7 +44,6 @@ import { getDatabaseConfig } from './config/database.config';
     CompaniesModule,
     UsersModule,
     AuthModule,
-    SuggestCompanyModule,
   ],
   controllers: [],
   providers: [
