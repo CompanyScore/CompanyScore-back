@@ -12,21 +12,19 @@ export class LinkedInStrategy extends PassportStrategy(Strategy) {
       clientSecret: configService.get<string>('LINKEDIN_CLIENT_SECRET'), // 'WPL_AP1.yijh9pslALa7F3va.+aTiQw==',
       callbackURL: configService.get<string>('LINKEDIN_CALLBACK_URL'), // 'http://localhost:8000/auth/linkedin/callback',
       scope: ['openid', 'profile', 'email'],
-    });
+      state: true,
+    } as any);
   }
 
   async validate(accessToken: string): Promise<any> {
-    let response = null;
-
     try {
-      response = await axios.get('https://api.linkedin.com/v2/userinfo', {
+      const response = await axios.get('https://api.linkedin.com/v2/userinfo', {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       return response.data;
     } catch (error) {
       console.error('Error fetching LinkedIn data:', error.message);
+      return null;
     }
-
-    return response;
   }
 }
