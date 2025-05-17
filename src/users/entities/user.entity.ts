@@ -7,7 +7,6 @@ import {
 } from 'typeorm';
 
 import { Comment } from '../../comments/entities/comment.entity';
-import { SuggestCompany } from 'src/suggest-company/entities/suggest-company.entity';
 
 export enum Role {
   ADMIN = 'admin',
@@ -34,7 +33,7 @@ export class User {
   @Column({ nullable: true })
   avatar?: string;
 
-  @Column()
+  @Column({ nullable: false })
   email: string;
 
   @Column({ default: 'Моя должность' })
@@ -58,7 +57,4 @@ export class User {
   // Связь с комментариями
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
-
-  @OneToMany(() => SuggestCompany, (suggestCompany) => suggestCompany.user)
-  suggestedCompanies: SuggestCompany[];
 }
