@@ -47,7 +47,7 @@ export class AuthController {
   async linkedinCallback(
     @Request() req,
     @Response() res,
-    @Query('redirect_uri') queryRedirectUri,
+    @Query('state') state,
   ) {
     const userData = await this.authService.validateUser(req.user);
     const isProd = process.env.NODE_ENV === 'production';
@@ -76,14 +76,7 @@ export class AuthController {
       maxAge: ms('7d'),
     });
 
-    const redirectUri =
-      queryRedirectUri ||
-      req.session?.redirect_uri ||
-      process.env.FRONT_URL + '/profile';
-
-    if (req.session) {
-      req.session.redirect_uri = undefined;
-    }
+    const redirectUri = state || process.env.FRONT_URL + '/profile';
 
     return res.redirect(redirectUri);
   }
