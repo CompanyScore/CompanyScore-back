@@ -6,6 +6,7 @@ import {
   UseGuards,
   Post,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -21,21 +22,33 @@ export class AuthController {
   @Post('login')
   login(@Request() req, @Response() res) {
     const token = this.authService.login(req.user);
-
     return res.json(token);
   }
 
   @Public()
   @UseGuards(AuthGuard('linkedin'))
   @Get('linkedin')
-  async linkedin() {
+  async linkedin(
+    @Query('redirect_uri') redirectUri,
+    @Request() req,
+    @Response() res,
+  ) {
+    // Если есть сессии — сохраняем туда
+    if (req.session) {
+      req.session.redirect_uri = redirectUri;
+    }
+    // Можно вернуть любой ответ или ничего не возвращать — Passport всё равно редиректит на LinkedIn
     return 'ok';
   }
 
   @Public()
   @UseGuards(AuthGuard('linkedin'))
   @Get('linkedin/callback')
-  async linkedinCallback(@Request() req, @Response() res) {
+  async linkedinCallback(
+    @Request() req,
+    @Response() res,
+    @Query('redirect_uri') queryRedirectUri,
+  ) {
     const userData = await this.authService.validateUser(req.user);
     const isProd = process.env.NODE_ENV === 'production';
 
@@ -63,7 +76,16 @@ export class AuthController {
       maxAge: ms('7d'),
     });
 
-    return res.redirect(`${process.env.FRONT_URL}/profile`);
+    const redirectUri =
+      queryRedirectUri ||
+      req.session?.redirect_uri ||
+      process.env.FRONT_URL + '/profile';
+
+    if (req.session) {
+      req.session.redirect_uri = undefined;
+    }
+
+    return res.redirect(redirectUri);
   }
 
   @Public()
