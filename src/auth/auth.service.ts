@@ -32,7 +32,8 @@ export class AuthService {
       const createUserData: CreateUserDto = {
         linkedinId: profile.sub,
         name: profile.name,
-        email: profile.email
+        email: profile.email,
+        country: profile.location?.country?.code,
       };
       
       if (profile.picture) {
