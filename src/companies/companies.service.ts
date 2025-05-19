@@ -77,7 +77,7 @@ export class CompaniesService {
     });
 
     return {
-      data: companies.map((company) => ({
+      data: companies.map(company => ({
         id: company.id,
         name: company.name,
         country: company.country,
@@ -85,7 +85,7 @@ export class CompaniesService {
         logo: company.logo,
         description: company.description,
         rating: company.rating,
-        commentsIds: company.comments.map((comment) => comment.id.toString()),
+        commentsIds: company.comments.map(comment => comment.id.toString()),
       })),
       total, // общее количество элементов
       page,
@@ -103,7 +103,7 @@ export class CompaniesService {
       order: { createDate: 'DESC' }, // Сортировка по дате создания (от новых к старым)
     });
 
-    return companies.map((company) => ({
+    return companies.map(company => ({
       id: company.id,
       name: company.name,
       country: company.country,
@@ -111,7 +111,7 @@ export class CompaniesService {
       logo: company.logo,
       description: company.description,
       rating: company.rating,
-      commentsIds: company.comments.map((comment) => comment.id),
+      commentsIds: company.comments.map(comment => comment.id),
     }));
   }
 
@@ -122,7 +122,7 @@ export class CompaniesService {
 
     const result: Record<string, string[]> = {};
 
-    companies.forEach((company) => {
+    companies.forEach(company => {
       if (!result[company.country]) {
         result[company.country] = [];
       }
@@ -164,7 +164,7 @@ export class CompaniesService {
       logo: company.logo,
       description: company.description,
       // rating: averageRating,
-      commentsIds: company.comments.map((comment) => comment.id),
+      commentsIds: company.comments.map(comment => comment.id),
     };
   }
 

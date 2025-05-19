@@ -55,6 +55,6 @@ export class User {
   isDeleted: boolean;
 
   // Связь с комментариями
-  @OneToMany(() => Comment, (comment) => comment.user)
+  @OneToMany(() => Comment, comment => comment.user)
   comments: Comment[];
 }
