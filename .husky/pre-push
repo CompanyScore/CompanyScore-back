@@ -1,0 +1,14 @@
+#!/bin/sh
+
+echo "🚀 Running full checks before push..."
+
+# Юнит-тесты — включим позже, когда появятся
+# npm run test -- --bail || (echo '❌ Tests failed'; false)
+
+# Проверка типизации (если есть TypeScript)
+npx tsc --noEmit || (echo '❌ TypeScript typecheck failed'; false)
+
+# Сборка проекта
+npm run build || (echo '❌ Build failed'; false)
+
+echo "✅ Pre-push checks passed. Pushing..."

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "🔍 Running fast checks before commit..."
+
+# Форматирование и линтинг только стейджнутых файлов
+npx lint-staged || (echo '❌ Lint-staged failed'; false)
+
+echo "✅ Pre-commit checks passed."

@@ -89,9 +89,9 @@ export class Comment {
   isDeleted: boolean;
 
   // Связь с пользователем
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => User, user => user.comments)
   user: User;
 
-  @ManyToOne(() => Company, (company) => company.comments)
+  @ManyToOne(() => Company, company => company.comments)
   company: Company;
 }

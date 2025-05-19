@@ -38,7 +38,7 @@ export class UsersService {
     });
 
     return {
-      data: users.map((user) => ({
+      data: users.map(user => ({
         id: user.id,
         role: user.role,
         name: user.name,
@@ -46,7 +46,7 @@ export class UsersService {
         position: user.position,
         createDate: user.createDate,
         deleteDate: user.deleteDate,
-        commentsIds: user.comments.map((comment) => comment.id),
+        commentsIds: user.comments.map(comment => comment.id),
       })),
       total,
       page,
@@ -79,7 +79,7 @@ export class UsersService {
       avatar: user.avatar,
       position: user.position,
       description: user.description,
-      commentsIds: user.comments.map((comment) => comment.id),
+      commentsIds: user.comments.map(comment => comment.id),
     };
   }
 
@@ -127,7 +127,7 @@ export class UsersService {
 
     await this.userRepository.update(id, deletedUser);
 
-    return 'Пользователь удален';
+    return 'Пользователь удален!';
   }
 
   async updateRefreshToken(id: string, refreshToken: string): Promise<string> {
@@ -136,7 +136,7 @@ export class UsersService {
     if (user) {
       this.userRepository.update(id, { refreshToken: refreshToken });
 
-      return 'Пользователь обновлен';
+      return 'Пользователь обновлен!';
     }
   }
 }
