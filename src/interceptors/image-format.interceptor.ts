@@ -44,8 +44,8 @@ export class ImageFormatInterceptor implements NestInterceptor {
         .toFormat('webp', { quality: 90 })
         .toBuffer();
 
-      return next.handle().pipe(map((data) => data));
-    } catch (error) {
+      return next.handle().pipe(map(data => data));
+    } catch {
       throw new BadRequestException('Ошибка при обработке изображения');
     }
   }
