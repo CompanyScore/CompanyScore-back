@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
@@ -98,7 +98,7 @@ export class AuthService {
       });
 
       return { accessToken: newAccessToken };
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException(
         'Недействительный или просроченный токен обновления!',
       );
