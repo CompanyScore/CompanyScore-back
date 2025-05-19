@@ -1,10 +1,8 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
-  Param,
   Delete,
   Query,
   UseInterceptors,
@@ -12,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -21,7 +18,6 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { ImageFormatInterceptor } from 'src/interceptors/image-format.interceptor';
 
 import * as multer from 'multer';
-import { USER_RESPONSE, USERS_RESPONSE } from './user.swagger.responses';
 import { UserId } from 'src/decorators/user-id.decorator';
 
 @Controller('users')
