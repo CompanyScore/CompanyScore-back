@@ -116,7 +116,7 @@ export class CommentsService {
 
     // Преобразуем комментарии в нужный формат для фронтенда
     return {
-      data: comments.map((comment) => ({
+      data: comments.map(comment => ({
         id: comment.id,
         position: comment.position,
         grade: {

@@ -37,6 +37,6 @@ export class Company {
   isDeleted?: boolean;
 
   // Связь с комментариями
-  @OneToMany(() => Comment, (comment) => comment.company)
+  @OneToMany(() => Comment, comment => comment.company)
   comments?: Comment[];
 }

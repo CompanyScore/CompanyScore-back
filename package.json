@@ -9,7 +9,7 @@
     "build": "nest build",
     "prepare": "husky install",
     "check-format": "prettier --check .",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write .",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "postinstall": "patch-package",
