@@ -28,7 +28,7 @@ import { SpacesService } from 'src/providers/space.service';
     LinkedInStrategy,
     JwtAuthGuard,
     UsersService,
-    SpacesService
+    SpacesService,
   ],
   exports: [AuthService],
 })

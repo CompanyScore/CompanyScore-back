@@ -9,11 +9,10 @@ import { User } from 'src/users/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import * as ms from 'ms';
-import axios from "axios";
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { SpacesService } from 'src/providers/space.service';
-
 
 @Injectable()
 export class AuthService {
@@ -35,9 +34,11 @@ export class AuthService {
         email: profile.email,
         country: profile.location?.country?.code,
       };
-      
+
       if (profile.picture) {
-        const avatarArrayBuffer: ArrayBuffer = (await axios.get(profile.picture, { responseType: 'arraybuffer' })).data;
+        const avatarArrayBuffer: ArrayBuffer = (
+          await axios.get(profile.picture, { responseType: 'arraybuffer' })
+        ).data;
         const avatarBuffer: Buffer = Buffer.from(avatarArrayBuffer);
 
         const avatarKey = `users/avatars/${uuidv4()}.jpg`;
