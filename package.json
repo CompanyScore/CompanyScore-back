@@ -22,8 +22,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "lint-staged": {
-    "**/*.{ts,js,json}": [
+    "**/*.{ts,js}": [
       "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
   },
@@ -82,7 +85,7 @@
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
-    "eslint": "^9.27.0",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "husky": "^9.1.7",
