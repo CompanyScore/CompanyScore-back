@@ -1,8 +1,7 @@
-const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
+const prettier = require('eslint-config-prettier');
 
 module.exports = [
-  js.configs.recommended,
   ...tseslint.configs.recommended,
   {
     files: ['**/*.ts'],
@@ -12,6 +11,7 @@ module.exports = [
       parserOptions: {
         project: './tsconfig.json',
         tsconfigRootDir: __dirname,
+        sourceType: 'module',
       },
     },
     plugins: {
@@ -22,4 +22,5 @@ module.exports = [
       '@typescript-eslint/explicit-function-return-type': 'off',
     },
   },
+  prettier, // отключает конфликтующие правила
 ];
