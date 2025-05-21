@@ -53,4 +53,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsBoolean()
   isDeleted?: boolean;
+
+  @IsString()
+  @IsOptional()
+  country?: string;
 }
