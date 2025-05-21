@@ -25,22 +25,21 @@ export class AuthService {
   async validateUser(profile: any) {
     let user = await this.usersService.findOneByLinkedin(profile.sub);
 
-    console.log('profile', profile);
-
     if (!user) {
       const createUserData: CreateUserDto = {
         linkedinId: profile.sub,
         name: profile.name,
         email: profile.email,
-        country: profile.location?.country?.code,
+        country: profile.locale?.country,
       };
 
       if (profile.picture) {
-        const avatarArrayBuffer: ArrayBuffer = (
-          await axios.get(profile.picture, { responseType: 'arraybuffer' })
-        ).data;
-        const avatarBuffer: Buffer = Buffer.from(avatarArrayBuffer);
+        const { data } = await axios.get(profile.picture, {
+          responseType: 'arraybuffer',
+        });
 
+        const avatarArrayBuffer: ArrayBuffer = data;
+        const avatarBuffer: Buffer = Buffer.from(avatarArrayBuffer);
         const avatarKey = `users/avatars/${uuidv4()}.jpg`;
         await this.spacesService.saveFile(avatarKey, avatarBuffer);
         createUserData.avatar = avatarKey;
