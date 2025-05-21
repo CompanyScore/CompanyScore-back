@@ -54,6 +54,9 @@ export class User {
   @Column({ default: false })
   isDeleted: boolean;
 
+  @Column({ nullable: true })
+  country?: string;
+
   // Связь с комментариями
   @OneToMany(() => Comment, comment => comment.user)
   comments: Comment[];

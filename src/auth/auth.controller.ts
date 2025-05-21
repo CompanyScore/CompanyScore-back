@@ -36,37 +36,32 @@ export class AuthController {
   @UseGuards(AuthGuard('linkedin'))
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
-    console.log('req.user:', req.user);
-
     const userData = await this.authService.validateUser(req.user);
-
-    console.log('userData:', userData);
+    const isProd = process.env.NODE_ENV === 'production';
 
     res.cookie('accessToken', userData.accessToken, {
-      httpOnly: true, // Запрещает доступ через JS
-      secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
-      sameSite: 'none', // Разрешает отправку между доменами
-      domain: '.companyscore.net',
-      maxAge: ms('15m'), // 15 мин
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('15m'),
     });
 
     res.cookie('refreshToken', userData.refreshToken, {
       httpOnly: true, // Запрещает доступ через JS
-      secure: process.env.NODE_ENV === 'production', // Только HTTPS в проде
-      sameSite: 'none', // Разрешает отправку между доменами
-      domain: '.companyscore.net',
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
       maxAge: ms('7d'),
     });
 
     res.cookie('userId', userData.user.id, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none', // Разрешает отправку между доменами
-      domain: '.companyscore.net',
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
       maxAge: ms('7d'),
     });
-
-    console.log('Куки установлены!');
 
     return res.redirect(`${process.env.FRONT_URL}/profile`);
   }
