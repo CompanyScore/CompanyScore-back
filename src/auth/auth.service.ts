@@ -9,25 +9,43 @@ import { User } from 'src/users/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import * as ms from 'ms';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { SpacesService } from 'src/providers/space.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
+    private readonly spacesService: SpacesService,
   ) {}
 
   async validateUser(profile: any) {
     let user = await this.usersService.findOneByLinkedin(profile.sub);
 
-    console.log('profile', profile);
-
     if (!user) {
-      user = await this.usersService.create({
+      const createUserData: CreateUserDto = {
         linkedinId: profile.sub,
         name: profile.name,
         email: profile.email,
-      });
+        country: profile.locale?.country,
+      };
+
+      if (profile.picture) {
+        const { data } = await axios.get(profile.picture, {
+          responseType: 'arraybuffer',
+        });
+
+        const avatarArrayBuffer: ArrayBuffer = data;
+        const avatarBuffer: Buffer = Buffer.from(avatarArrayBuffer);
+        const avatarKey = `users/avatars/${uuidv4()}.jpg`;
+        await this.spacesService.saveFile(avatarKey, avatarBuffer);
+        createUserData.avatar = avatarKey;
+      }
+
+      user = await this.usersService.create(createUserData);
     }
 
     const userWithTokens = await this.login(user);
