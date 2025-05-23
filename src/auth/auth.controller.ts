@@ -6,11 +6,12 @@ import {
   UseGuards,
   Post,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
 import * as ms from 'ms';
+import { LinkedinAuthGuard } from 'src/guards/linkedin-auth.guard';
 
 @Public()
 @Controller('auth')
@@ -26,16 +27,19 @@ export class AuthController {
   }
 
   @Public()
-  @UseGuards(AuthGuard('linkedin'))
+  @UseGuards(LinkedinAuthGuard)
   @Get('linkedin')
-  async linkedin() {
-    return 'ok';
+  async linkedin(@Query('returnUrl') returnUrl?: string) {
+    return { message: 'ok', returnUrl };
   }
 
   @Public()
-  @UseGuards(AuthGuard('linkedin'))
+  @UseGuards(LinkedinAuthGuard)
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
+    const redirectUrl =
+      (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
+
     const userData = await this.authService.validateUser(req.user);
     const isProd = process.env.NODE_ENV === 'production';
 
@@ -63,7 +67,7 @@ export class AuthController {
       maxAge: ms('7d'),
     });
 
-    return res.redirect(`${process.env.FRONT_URL}/profile`);
+    return res.redirect(redirectUrl);
   }
 
   @Public()
