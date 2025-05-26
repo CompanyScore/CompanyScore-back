@@ -29,8 +29,8 @@ export class AuthController {
   @Public()
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin')
-  async linkedin(@Query('returnUrl') returnUrl?: string) {
-    return { message: 'ok', returnUrl };
+  async linkedin(@Query('state') state?: string) {
+    return { message: 'ok', state };
   }
 
   @Public()
