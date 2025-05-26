@@ -29,8 +29,8 @@ export class AuthController {
   @Public()
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin')
-  async linkedin(@Query('state') state?: string) {
-    return { message: 'ok', state };
+  async linkedin(@Query('returnUrl') returnUrl?: string) {
+    return { message: 'ok', returnUrl };
   }
 
   @Public()
@@ -41,6 +41,8 @@ export class AuthController {
       (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
     const userData = await this.authService.validateUser(req.user);
     const isProd = process.env.NODE_ENV === 'production';
+
+    console.log('state from LinkedIn:', req.query.state);
 
     res.cookie('accessToken', userData.accessToken, {
       httpOnly: true,
