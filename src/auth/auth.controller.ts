@@ -6,7 +6,6 @@ import {
   UseGuards,
   Post,
   BadRequestException,
-  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
@@ -29,8 +28,8 @@ export class AuthController {
   @Public()
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin')
-  async linkedin(@Query('returnUrl') returnUrl?: string) {
-    return { message: 'ok', returnUrl };
+  async linkedin() {
+    return 'ok';
   }
 
   @Public()
