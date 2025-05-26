@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class LinkedinAuthGuard extends AuthGuard('linkedin') {
   getAuthenticateOptions(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
-    const returnUrl = req.headers.referer as string;
+    const returnUrl = req.query.returnUrl as string;
     return {
       state: returnUrl || '/',
     };

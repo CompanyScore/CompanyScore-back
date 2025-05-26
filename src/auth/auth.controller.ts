@@ -6,6 +6,7 @@ import {
   UseGuards,
   Post,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
@@ -28,8 +29,8 @@ export class AuthController {
   @Public()
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin')
-  async linkedin() {
-    return 'ok';
+  async linkedin(@Query('returnUrl') returnUrl?: string) {
+    return { message: 'ok', returnUrl };
   }
 
   @Public()
@@ -38,7 +39,6 @@ export class AuthController {
   async linkedinCallback(@Request() req, @Response() res) {
     const redirectUrl =
       (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
-
     const userData = await this.authService.validateUser(req.user);
     const isProd = process.env.NODE_ENV === 'production';
 
