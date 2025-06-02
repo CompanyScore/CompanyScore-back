@@ -40,6 +40,14 @@ export class AuthController {
     const redirectUrl =
       (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
     const userData = await this.authService.validateUser(req.user);
+
+    let domain: string | undefined; // по дефолту domain undefined
+    const host = redirectUrl.split('/')[2]; // получаем хост
+
+    if (host && host.endsWith('companyscore.net')) {
+      domain = '.companyscore.net';
+    }
+
     const isProd = process.env.NODE_ENV === 'production';
 
     console.log('state from LinkedIn:', req.query.state);
@@ -48,7 +56,7 @@ export class AuthController {
       httpOnly: true,
       secure: isProd,
       sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
+      domain,
       maxAge: ms('15m'),
     });
 
@@ -56,7 +64,7 @@ export class AuthController {
       httpOnly: true, // Запрещает доступ через JS
       secure: isProd, // Только HTTPS в проде
       sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
+      domain,
       maxAge: ms('7d'),
     });
 
@@ -64,7 +72,7 @@ export class AuthController {
       httpOnly: true,
       secure: isProd, // Только HTTPS в проде
       sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
+      domain,
       maxAge: ms('7d'),
     });
 
