@@ -25,8 +25,6 @@ export class AuthService {
   async validateUser(profile: any) {
     let user = await this.usersService.findOneByLinkedin(profile.sub);
 
-    console.log(12345);
-
     if (!user) {
       const createUserData: CreateUserDto = {
         linkedinId: profile.sub,
