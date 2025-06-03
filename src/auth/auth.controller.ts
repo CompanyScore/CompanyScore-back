@@ -37,38 +37,63 @@ export class AuthController {
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
-    const redirectUrl =
-      (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
-    const userData = await this.authService.validateUser(req.user);
-    const isProd = process.env.NODE_ENV === 'production';
+    const defaultRedirect = `${process.env.FRONT_URL}/profile`;
+    const redirectUrl = (req.query.state as string) || defaultRedirect;
 
-    console.log('state from LinkedIn:', req.query.state);
+    try {
+      const url = new URL(redirectUrl);
+      const host = url.host;
 
-    res.cookie('accessToken', userData.accessToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
-      maxAge: ms('15m'),
-    });
+      const allowedDomains = [
+        'localhost:3000',
+        'companyscore.net',
+        'admin.companyscore.net',
+      ];
+      const isAllowed = allowedDomains.some(
+        domain => host === domain || host.endsWith(`.${domain}`),
+      );
 
-    res.cookie('refreshToken', userData.refreshToken, {
-      httpOnly: true, // Запрещает доступ через JS
-      secure: isProd, // Только HTTPS в проде
-      sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
-      maxAge: ms('7d'),
-    });
+      if (!isAllowed) {
+        throw new Error('Недопустимый redirect URL');
+      }
 
-    res.cookie('userId', userData.user.id, {
-      httpOnly: true,
-      secure: isProd, // Только HTTPS в проде
-      sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
-      maxAge: ms('7d'),
-    });
+      const userData = await this.authService.validateUser(req.user);
+      const isProd = process.env.NODE_ENV === 'production';
 
-    return res.redirect(redirectUrl);
+      let domain: string | undefined = undefined;
+      if (host.endsWith('companyscore.net')) {
+        domain = '.companyscore.net';
+      }
+
+      res.cookie('accessToken', userData.accessToken, {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        domain,
+        maxAge: ms('15m'),
+      });
+
+      res.cookie('refreshToken', userData.refreshToken, {
+        httpOnly: true, // Запрещает доступ через JS
+        secure: isProd, // Только HTTPS в проде
+        sameSite: isProd ? 'none' : 'lax',
+        domain,
+        maxAge: ms('7d'),
+      });
+
+      res.cookie('userId', userData.user.id, {
+        httpOnly: true,
+        secure: isProd, // Только HTTPS в проде
+        sameSite: isProd ? 'none' : 'lax',
+        domain,
+        maxAge: ms('7d'),
+      });
+
+      return res.redirect(redirectUrl);
+    } catch (error) {
+      console.error('Ошибка редиректа:', error);
+      return res.redirect(defaultRedirect);
+    }
   }
 
   @Public()
