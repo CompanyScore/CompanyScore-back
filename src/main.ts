@@ -5,9 +5,8 @@ import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.use(cookieParser());
   app.use(helmet());
-
   app.enableCors({
     origin: [
       'https://companyscore.net',
@@ -25,8 +24,6 @@ async function bootstrap() {
       'Expires',
     ],
   });
-
-  app.use(cookieParser());
 
   const port = process.env.PORT || 8000;
   await app.listen(port);
