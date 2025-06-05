@@ -10,7 +10,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'https://companyscore.net',
-      'https://localhost:3000',
+      'http://localhost:3000',
       'https://admin.companyscore.net',
       'http://localhost:4000',
     ],

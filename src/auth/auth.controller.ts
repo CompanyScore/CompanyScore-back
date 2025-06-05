@@ -39,61 +39,34 @@ export class AuthController {
   async linkedinCallback(@Request() req, @Response() res) {
     const redirectUrl =
       (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
+    const userData = await this.authService.validateUser(req.user);
+    const isProd = process.env.NODE_ENV === 'production';
 
-    console.log(`redirectUrl = ${redirectUrl}`);
+    res.cookie('accessToken', userData.accessToken, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('15m'),
+    });
 
-    try {
-      const url = new URL(redirectUrl);
-      const host = url.host;
+    res.cookie('refreshToken', userData.refreshToken, {
+      httpOnly: true, // Запрещает доступ через JS
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('7d'),
+    });
 
-      console.log(`url: ${url}`);
-      console.log(`host: ${host}`);
+    res.cookie('userId', userData.user.id, {
+      httpOnly: true,
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('7d'),
+    });
 
-      let domain: string | undefined;
-      let secure: boolean;
-      let sameSite: 'lax' | 'none';
-
-      if (host.endsWith('companyscore.net')) {
-        domain = '.companyscore.net';
-        secure = true;
-        sameSite = 'none';
-      } else {
-        domain = undefined;
-        secure = false;
-        sameSite = 'lax';
-      }
-
-      const userData = await this.authService.validateUser(req.user);
-
-      res.cookie('accessToken', userData.accessToken, {
-        httpOnly: true,
-        secure,
-        sameSite,
-        domain,
-        maxAge: ms('15m'),
-      });
-
-      res.cookie('refreshToken', userData.refreshToken, {
-        httpOnly: true, // Запрещает доступ через JS
-        secure,
-        sameSite,
-        domain,
-        maxAge: ms('7d'),
-      });
-
-      res.cookie('userId', userData.user.id, {
-        httpOnly: true,
-        secure,
-        sameSite,
-        domain,
-        maxAge: ms('7d'),
-      });
-
-      return res.redirect(redirectUrl);
-    } catch (error) {
-      console.error('Ошибка редиректа или парсинга URL:', error);
-      return res.redirect(`${process.env.FRONT_URL}/profile`);
-    }
+    return res.redirect(redirectUrl);
   }
 
   @Public()
