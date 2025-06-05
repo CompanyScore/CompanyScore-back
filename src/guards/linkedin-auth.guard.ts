@@ -7,8 +7,13 @@ export class LinkedinAuthGuard extends AuthGuard('linkedin') {
     const req = context.switchToHttp().getRequest();
     const returnUrl = req.query.returnUrl as string;
 
+    console.log(`LinkedinAuthGuard: returnUrl = ${returnUrl}`);
+
+    const isValidUrl =
+      returnUrl?.startsWith('http://') || returnUrl?.startsWith('https://');
+
     return {
-      state: returnUrl || '/',
+      state: isValidUrl ? returnUrl : `${process.env.FRONT_URL}/profile`,
     };
   }
 }
