@@ -59,8 +59,8 @@ export class AuthController {
         sameSite = 'none';
       } else {
         domain = undefined;
-        secure = false;
-        sameSite = 'lax';
+        secure = true;
+        sameSite = 'none';
       }
 
       const userData = await this.authService.validateUser(req.user);
