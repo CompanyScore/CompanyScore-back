@@ -37,33 +37,27 @@ export class AuthController {
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
-    const defaultRedirect = `${process.env.FRONT_URL}/profile`;
-    const redirectUrl = (req.query.state as string) || defaultRedirect;
+    const redirectUrl =
+      (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
+
+    console.log(`redirectUrl = ${redirectUrl}`);
 
     try {
+      let domain: string | undefined;
       const url = new URL(redirectUrl);
       const host = url.host;
 
-      const allowedDomains = [
-        'localhost:3000',
-        'companyscore.net',
-        'admin.companyscore.net',
-      ];
-      const isAllowed = allowedDomains.some(
-        domain => host === domain || host.endsWith(`.${domain}`),
-      );
+      console.log(`url: ${url}`);
+      console.log(`host: ${host}`);
 
-      if (!isAllowed) {
-        throw new Error('Недопустимый redirect URL');
+      if (host.endsWith('companyscore.net')) {
+        domain = '.companyscore.net';
+      } else {
+        domain = undefined; // localhost: куки ставим без domain
       }
 
       const userData = await this.authService.validateUser(req.user);
       const isProd = process.env.NODE_ENV === 'production';
-
-      let domain: string | undefined = undefined;
-      if (host.endsWith('companyscore.net')) {
-        domain = '.companyscore.net';
-      }
 
       res.cookie('accessToken', userData.accessToken, {
         httpOnly: true,
@@ -91,8 +85,8 @@ export class AuthController {
 
       return res.redirect(redirectUrl);
     } catch (error) {
-      console.error('Ошибка редиректа:', error);
-      return res.redirect(defaultRedirect);
+      console.error('Ошибка редиректа или парсинга URL:', error);
+      return res.redirect(`${process.env.FRONT_URL}/profile`);
     }
   }
 
