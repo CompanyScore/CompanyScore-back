@@ -43,42 +43,48 @@ export class AuthController {
     console.log(`redirectUrl = ${redirectUrl}`);
 
     try {
-      let domain: string | undefined;
       const url = new URL(redirectUrl);
       const host = url.host;
 
       console.log(`url: ${url}`);
       console.log(`host: ${host}`);
 
+      let domain: string | undefined;
+      let secure: boolean;
+      let sameSite: 'lax' | 'none';
+
       if (host.endsWith('companyscore.net')) {
         domain = '.companyscore.net';
+        secure = true;
+        sameSite = 'none';
       } else {
-        domain = undefined; // localhost: куки ставим без domain
+        domain = undefined;
+        secure = false;
+        sameSite = 'lax';
       }
 
       const userData = await this.authService.validateUser(req.user);
-      const isProd = process.env.NODE_ENV === 'production';
 
       res.cookie('accessToken', userData.accessToken, {
         httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
+        secure,
+        sameSite,
         domain,
         maxAge: ms('15m'),
       });
 
       res.cookie('refreshToken', userData.refreshToken, {
         httpOnly: true, // Запрещает доступ через JS
-        secure: isProd, // Только HTTPS в проде
-        sameSite: isProd ? 'none' : 'lax',
+        secure,
+        sameSite,
         domain,
         maxAge: ms('7d'),
       });
 
       res.cookie('userId', userData.user.id, {
         httpOnly: true,
-        secure: isProd, // Только HTTPS в проде
-        sameSite: isProd ? 'none' : 'lax',
+        secure,
+        sameSite,
         domain,
         maxAge: ms('7d'),
       });
