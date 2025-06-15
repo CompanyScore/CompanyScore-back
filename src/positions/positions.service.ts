@@ -12,7 +12,8 @@ export class PositionsService {
     private positionRepository: Repository<Position>,
   ) {}
   async create(createPositionDto: CreatePositionDto) {
-    return this.positionRepository.create(createPositionDto);
+    const position = this.positionRepository.create(createPositionDto);
+    return await this.positionRepository.save(position);
   }
 
   async findAll() {
