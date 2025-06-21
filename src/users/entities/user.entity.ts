@@ -36,6 +36,9 @@ export class User {
   @Column({ nullable: false })
   email: string;
 
+  @Column({ nullable: true })
+  passwordHash?: string;
+
   @Column({ default: 'Моя должность' })
   position: string;
 

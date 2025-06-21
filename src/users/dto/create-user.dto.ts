@@ -28,6 +28,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   email: string;
 
+  @IsString()
+  @IsNotEmpty()
+  passwordHash?: string;
+
   @IsOptional()
   avatar?: string;
 
