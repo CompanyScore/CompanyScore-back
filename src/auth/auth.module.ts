@@ -11,6 +11,7 @@ import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { getJwtConfig } from 'src/config/jwt.config';
 import { SpacesService } from 'src/providers/space.service';
+import { LocalStrategy } from './passport/local.strategy';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { SpacesService } from 'src/providers/space.service';
     AuthService,
     JwtStrategy,
     LinkedInStrategy,
+    LocalStrategy,
     JwtAuthGuard,
     UsersService,
     SpacesService,

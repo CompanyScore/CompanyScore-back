@@ -24,7 +24,7 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column()
+  @Column({ nullable: true })
   linkedinId: string;
 
   @Column()
@@ -33,11 +33,11 @@ export class User {
   @Column({ nullable: true })
   avatar?: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   email: string;
 
   @Column({ nullable: true })
-  passwordHash?: string;
+  password?: string;
 
   @Column({ default: 'Моя должность' })
   position: string;
@@ -56,9 +56,6 @@ export class User {
 
   @Column({ default: false })
   isDeleted: boolean;
-
-  @Column({ nullable: true })
-  country?: string;
 
   // Связь с комментариями
   @OneToMany(() => Comment, comment => comment.user)

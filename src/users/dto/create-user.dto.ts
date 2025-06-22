@@ -18,7 +18,7 @@ export class CreateUserDto {
   role?: string;
 
   @IsNotEmpty()
-  linkedinId: string;
+  linkedinId?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -30,7 +30,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  passwordHash?: string;
+  password?: string;
 
   @IsOptional()
   avatar?: string;
@@ -57,8 +57,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsBoolean()
   isDeleted?: boolean;
-
-  @IsString()
-  @IsOptional()
-  country?: string;
 }

@@ -7,11 +7,16 @@ import {
   Post,
   BadRequestException,
   Query,
+  Body,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
 import * as ms from 'ms';
 import { LinkedinAuthGuard } from 'src/guards/linkedin-auth.guard';
+import { RegisterDto } from './dto/register.dto';
+import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 
 @Public()
 @Controller('auth')
@@ -20,10 +25,73 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  login(@Request() req, @Response() res) {
-    const token = this.authService.login(req.user);
+  @UseGuards(LocalAuthGuard)
+  async login(@Request() req, @Response() res) {
+    const user = req.user;
+    const isProd = process.env.NODE_ENV === 'production';
+    const redirectUrl =
+      (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
 
-    return res.json(token);
+    res.cookie('accessToken', user.accessToken, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('15m'),
+    });
+
+    res.cookie('refreshToken', user.refreshToken, {
+      httpOnly: true, // Запрещает доступ через JS
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('7d'),
+    });
+
+    res.cookie('userId', user.user.id, {
+      httpOnly: true,
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('7d'),
+    });
+
+    return res.redirect(redirectUrl);
+  }
+
+  @Public()
+  @Post('register')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async register(@Body() registerDto: RegisterDto, @Response() res) {
+    const userWithTokens = await this.authService.registerUser(registerDto);
+
+    const isProd = process.env.NODE_ENV === 'production';
+
+    res.cookie('accessToken', userWithTokens.accessToken, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('15m'),
+    });
+
+    res.cookie('refreshToken', userWithTokens.refreshToken, {
+      httpOnly: true, // Запрещает доступ через JS
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('7d'),
+    });
+
+    res.cookie('userId', userWithTokens.user.id, {
+      httpOnly: true,
+      secure: isProd, // Только HTTPS в проде
+      sameSite: isProd ? 'none' : 'lax',
+      domain: isProd ? '.companyscore.net' : undefined,
+      maxAge: ms('7d'),
+    });
+
+    return res.redirect('https://youtube.com');
   }
 
   @Public()
@@ -39,7 +107,7 @@ export class AuthController {
   async linkedinCallback(@Request() req, @Response() res) {
     const redirectUrl =
       (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
-    const userData = await this.authService.validateUser(req.user);
+    const userData = await this.authService.validateUserByLinkedin(req.user);
     const isProd = process.env.NODE_ENV === 'production';
 
     res.cookie('accessToken', userData.accessToken, {
