@@ -14,6 +14,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { getDatabaseConfig } from './config/database.config';
+import { PositionsModule } from './positions/positions.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { getDatabaseConfig } from './config/database.config';
     CompaniesModule,
     UsersModule,
     AuthModule,
+    PositionsModule,
   ],
   controllers: [],
   providers: [
