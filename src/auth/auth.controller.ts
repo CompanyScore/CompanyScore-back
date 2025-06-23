@@ -16,7 +16,7 @@ import { Public } from 'src/decorators/public.decorator';
 import * as ms from 'ms';
 import { LinkedinAuthGuard } from 'src/guards/linkedin-auth.guard';
 import { RegisterDto } from './dto/register.dto';
-import { LocalAuthGuard } from 'src/guards/local-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Public()
 @Controller('auth')
@@ -25,12 +25,10 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(AuthGuard('local'))
   async login(@Request() req, @Response() res) {
     const user = req.user;
     const isProd = process.env.NODE_ENV === 'production';
-    const redirectUrl =
-      (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
 
     res.cookie('accessToken', user.accessToken, {
       httpOnly: true,
@@ -56,7 +54,9 @@ export class AuthController {
       maxAge: ms('7d'),
     });
 
-    return res.redirect(redirectUrl);
+    return res.json({
+      success: true,
+    });
   }
 
   @Public()
@@ -91,7 +91,9 @@ export class AuthController {
       maxAge: ms('7d'),
     });
 
-    return res.redirect('https://youtube.com');
+    return res.json({
+      success: true,
+    });
   }
 
   @Public()
