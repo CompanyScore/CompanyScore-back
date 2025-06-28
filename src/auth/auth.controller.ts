@@ -6,7 +6,6 @@ import {
   UseGuards,
   Post,
   BadRequestException,
-  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
@@ -28,9 +27,7 @@ export class AuthController {
   @Public()
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin')
-  async linkedin(@Query('returnUrl') returnUrl?: string) {
-    return { message: 'ok', returnUrl };
-  }
+  async linkedin() {}
 
   @Public()
   @UseGuards(LinkedinAuthGuard)
@@ -38,20 +35,23 @@ export class AuthController {
   async linkedinCallback(@Request() req, @Response() res) {
     const userData = await this.authService.validateUser(req.user);
 
-    return res.json({
-      accessToken: userData.accessToken,
-      refreshToken: userData.refreshToken,
-      userId: userData.user.id,
-    });
+    const redirectUrl =
+      `https://companyscore.net/auth/success` +
+      `?accessToken=${userData.accessToken}` +
+      `&refreshToken=${userData.refreshToken}` +
+      `&userId=${userData.user.id}`;
+
+    return res.redirect(redirectUrl);
   }
 
   @Public()
   @Post('refresh')
   async refreshToken(@Request() req, @Response() res) {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.body.refreshToken;
     if (!refreshToken) {
       throw new BadRequestException('Refresh token отсутствует');
     }
+
     const result = await this.authService.refreshAccessToken(refreshToken);
     return res.json(result);
   }
