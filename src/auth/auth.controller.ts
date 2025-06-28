@@ -46,7 +46,6 @@ export class AuthController {
       httpOnly: true,
       secure: isProd,
       sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
       maxAge: ms('15m'),
     });
 
@@ -54,7 +53,6 @@ export class AuthController {
       httpOnly: true, // Запрещает доступ через JS
       secure: isProd, // Только HTTPS в проде
       sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
       maxAge: ms('7d'),
     });
 
@@ -62,7 +60,6 @@ export class AuthController {
       httpOnly: true,
       secure: isProd, // Только HTTPS в проде
       sameSite: isProd ? 'none' : 'lax',
-      domain: isProd ? '.companyscore.net' : undefined,
       maxAge: ms('7d'),
     });
 
