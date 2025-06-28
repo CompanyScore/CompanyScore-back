@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
-import * as ms from 'ms';
 import { LinkedinAuthGuard } from 'src/guards/linkedin-auth.guard';
 
 @Public()
@@ -37,33 +36,13 @@ export class AuthController {
   @UseGuards(LinkedinAuthGuard)
   @Get('linkedin/callback')
   async linkedinCallback(@Request() req, @Response() res) {
-    const redirectUrl =
-      (req.query.state as string) || `${process.env.FRONT_URL}/profile`;
     const userData = await this.authService.validateUser(req.user);
-    const isProd = process.env.NODE_ENV === 'production';
 
-    res.cookie('accessToken', userData.accessToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
-      maxAge: ms('15m'),
+    return res.json({
+      accessToken: userData.accessToken,
+      refreshToken: userData.refreshToken,
+      userId: userData.user.id,
     });
-
-    res.cookie('refreshToken', userData.refreshToken, {
-      httpOnly: true, // Запрещает доступ через JS
-      secure: isProd, // Только HTTPS в проде
-      sameSite: isProd ? 'none' : 'lax',
-      maxAge: ms('7d'),
-    });
-
-    res.cookie('userId', userData.user.id, {
-      httpOnly: true,
-      secure: isProd, // Только HTTPS в проде
-      sameSite: isProd ? 'none' : 'lax',
-      maxAge: ms('7d'),
-    });
-
-    return res.redirect(redirectUrl);
   }
 
   @Public()
@@ -73,7 +52,7 @@ export class AuthController {
     if (!refreshToken) {
       throw new BadRequestException('Refresh token отсутствует');
     }
-    const result = await this.authService.refreshAccessToken(refreshToken, res);
+    const result = await this.authService.refreshAccessToken(refreshToken);
     return res.json(result);
   }
 
