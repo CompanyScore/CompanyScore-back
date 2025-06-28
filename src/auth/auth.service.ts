@@ -111,7 +111,6 @@ export class AuthService {
         httpOnly: true, // Запрещает доступ через JS
         secure: isProd, // Только HTTPS в проде
         sameSite: isProd ? 'none' : 'lax',
-        domain: isProd ? '.companyscore.net' : undefined,
         maxAge: ms('15m'),
       });
 
