@@ -18,5 +18,6 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /opt/CompanyScore-back
+            git config pull.rebase false
             git pull origin main
-            docker compose restart backend
+            docker compose up -d --build backend
