@@ -20,4 +20,7 @@ jobs:
             cd /opt/CompanyScore-back
             git config pull.rebase false
             git pull origin main
+            docker compose stop backend
+            docker compose rm -f backend
+            docker rmi $(docker images -q --filter=reference='*backend*') || true
             docker compose up -d --build --pull always backend
