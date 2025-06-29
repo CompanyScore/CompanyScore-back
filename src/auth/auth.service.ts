@@ -112,6 +112,8 @@ export class AuthService {
         secure: isProd, // Только HTTPS в проде
         sameSite: isProd ? 'none' : 'lax',
         maxAge: ms('15m'),
+        path: '/',
+        ...(isProd && { domain: '.companyscore.net' }),
       });
 
       return { accessToken: newAccessToken };
