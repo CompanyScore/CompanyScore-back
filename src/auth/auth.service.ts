@@ -3,10 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import * as ms from 'ms';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -81,7 +83,7 @@ export class AuthService {
     return { accessToken, refreshToken, user };
   }
 
-  async refreshAccessToken(refreshToken: string) {
+  async refreshAccessToken(refreshToken: string, res: Response) {
     try {
       const decoded: any = jwt.verify(
         refreshToken,
@@ -103,14 +105,14 @@ export class AuthService {
         },
       );
 
-      // const isProd = process.env.NODE_ENV === 'production';
+      const isProd = process.env.NODE_ENV === 'production';
 
-      // res.cookie('accessToken', newAccessToken, {
-      //   httpOnly: true, // Запрещает доступ через JS
-      //   secure: isProd, // Только HTTPS в проде
-      //   sameSite: isProd ? 'none' : 'lax',
-      //   maxAge: ms('15m'),
-      // });
+      res.cookie('accessToken', newAccessToken, {
+        httpOnly: true, // Запрещает доступ через JS
+        secure: isProd, // Только HTTPS в проде
+        sameSite: isProd ? 'none' : 'lax',
+        maxAge: ms('15m'),
+      });
 
       return { accessToken: newAccessToken };
     } catch {
