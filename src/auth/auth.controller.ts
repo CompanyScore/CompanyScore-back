@@ -47,8 +47,6 @@ export class AuthController {
       secure: isProd,
       sameSite: isProd ? 'none' : 'lax',
       maxAge: ms('15m'),
-      path: '/',
-      domain: '.companyscore.net',
     });
 
     res.cookie('refreshToken', userData.refreshToken, {
@@ -56,8 +54,6 @@ export class AuthController {
       secure: isProd, // Только HTTPS в проде
       sameSite: isProd ? 'none' : 'lax',
       maxAge: ms('7d'),
-      path: '/',
-      domain: '.companyscore.net',
     });
 
     res.cookie('userId', userData.user.id, {
@@ -65,8 +61,6 @@ export class AuthController {
       secure: isProd, // Только HTTPS в проде
       sameSite: isProd ? 'none' : 'lax',
       maxAge: ms('7d'),
-      path: '/',
-      domain: '.companyscore.net',
     });
 
     return res.redirect(redirectUrl);
