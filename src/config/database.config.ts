@@ -16,12 +16,6 @@ export const getDatabaseConfig = (
     autoLoadEntities: true,
     synchronize: !isProduction,
     entities: [__dirname + '/../**/*.entity.{ts,js}'],
-    ssl: isProduction
-      ? {
-          rejectUnauthorized: false,
-        }
-      : {
-          rejectUnauthorized: false,
-        },
+    ssl: false,
   };
 };
