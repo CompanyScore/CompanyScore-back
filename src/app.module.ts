@@ -15,6 +15,9 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { getDatabaseConfig } from './config/database.config';
 import { PositionsModule } from './positions/positions.module';
+import { InterviewStageModule } from './interview-stage/interview-stage.module';
+import { WorkEducationModule } from './work-education/work-education.module';
+import { WorkSocialBenefitModule } from './work-social-benefit/work-social-benefit.module';
 
 @Module({
   imports: [
@@ -46,6 +49,9 @@ import { PositionsModule } from './positions/positions.module';
     UsersModule,
     AuthModule,
     PositionsModule,
+    InterviewStageModule,
+    WorkEducationModule,
+    WorkSocialBenefitModule,
   ],
   controllers: [],
   providers: [

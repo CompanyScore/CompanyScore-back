@@ -30,7 +30,6 @@ export class AuthService {
         linkedinId: profile.sub,
         name: profile.name,
         email: profile.email,
-        country: profile.locale?.country,
       };
 
       if (profile.picture) {

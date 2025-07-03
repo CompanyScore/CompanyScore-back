@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 export const getDatabaseConfig = (
   configService: ConfigService,
 ): TypeOrmModuleOptions => {
-  const isProduction = configService.get<string>('NODE_ENV') === 'production';
+  // const isProduction = configService.get<string>('NODE_ENV') === 'production';
 
   return {
     type: 'postgres',
@@ -14,7 +14,7 @@ export const getDatabaseConfig = (
     password: configService.get<string>('DATABASE_PASSWORD'),
     database: configService.get<string>('DATABASE'),
     autoLoadEntities: true,
-    synchronize: !isProduction,
+    // synchronize: !isProduction,
     entities: [__dirname + '/../**/*.entity.{ts,js}'],
     ssl: false,
   };
