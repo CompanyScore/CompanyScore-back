@@ -7,4 +7,7 @@ export class WorkEducation {
 
   @Column()
   label: string;
+
+  @Column()
+  number: number;
 }

@@ -11,6 +11,10 @@ export class WorkEducationService {
   ) {}
 
   findAll(): Promise<WorkEducation[]> {
-    return this.workEducationRepository.find({ order: { id: 'ASC' } });
+    return this.workEducationRepository.find({
+      order: {
+        number: 'ASC',
+      },
+    });
   }
 }

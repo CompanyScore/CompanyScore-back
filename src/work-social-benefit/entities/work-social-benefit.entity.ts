@@ -7,4 +7,7 @@ export class WorkSocialBenefit {
 
   @Column()
   label: string;
+
+  @Column()
+  number: number;
 }
