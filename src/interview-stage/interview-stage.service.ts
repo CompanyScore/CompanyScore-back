@@ -11,6 +11,10 @@ export class InterviewStageService {
   ) {}
 
   findAll(): Promise<InterviewStage[]> {
-    return this.interviewStageRepository.find();
+    return this.interviewStageRepository.find({
+      order: {
+        number: 'ASC',
+      },
+    });
   }
 }

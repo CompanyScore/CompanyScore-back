@@ -11,6 +11,10 @@ export class WorkSocialBenefitService {
   ) {}
 
   findAll() {
-    return this.workSocialBenefitRepository.find({ order: { id: 'ASC' } });
+    return this.workSocialBenefitRepository.find({
+      order: {
+        number: 'ASC',
+      },
+    });
   }
 }

@@ -7,4 +7,7 @@ export class InterviewStage {
 
   @Column()
   label: string;
+
+  @Column()
+  number: number;
 }
