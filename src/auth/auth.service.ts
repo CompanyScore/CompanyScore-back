@@ -12,14 +12,14 @@ import * as ms from 'ms';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { SpacesService } from 'src/providers/space.service';
+import { R2Service } from 'src/providers/r2.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    private readonly spacesService: SpacesService,
+    private readonly r2Service: R2Service,
   ) {}
 
   async validateUser(profile: any) {
@@ -30,7 +30,6 @@ export class AuthService {
         linkedinId: profile.sub,
         name: profile.name,
         email: profile.email,
-        country: profile.locale?.country,
       };
 
       if (profile.picture) {
@@ -41,7 +40,7 @@ export class AuthService {
         const avatarArrayBuffer: ArrayBuffer = data;
         const avatarBuffer: Buffer = Buffer.from(avatarArrayBuffer);
         const avatarKey = `users/avatars/${uuidv4()}.jpg`;
-        await this.spacesService.saveFile(avatarKey, avatarBuffer);
+        await this.r2Service.saveFile(avatarKey, avatarBuffer);
         createUserData.avatar = avatarKey;
       }
 
