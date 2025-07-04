@@ -22,6 +22,7 @@ import { TaskFormModule } from './task-form/task-form.module';
 import { InterviewFormModule } from './interview-form/interview-form.module';
 import { InternshipFormModule } from './internship-form/internship-form.module';
 import { WorkFormModule } from './work-form/work-form.module';
+import { BranchModule } from './branch/branch.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { WorkFormModule } from './work-form/work-form.module';
     UsersModule,
     AuthModule,
     PositionsModule,
+    BranchModule,
     InterviewStageModule,
     WorkEducationModule,
     WorkSocialBenefitModule,
