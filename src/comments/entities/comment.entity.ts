@@ -4,94 +4,83 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
+  JoinColumn,
+  OneToOne,
+  Unique,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity'; // Импортируем сущность User
+import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/companies/entities/company.entity';
+import { TaskForm } from 'src/task-form/entities/task-form.entity';
+import { InterviewForm } from 'src/interview-form/entities/interview-form.entity';
+import { InternshipForm } from 'src/internship-form/entities/internship-form.entity';
+import { WorkForm } from 'src/work-form/entities/work-form.entity';
 
 @Entity()
+@Unique(['user', 'company']) // ⚠️ ограничение: один пользователь — один отзыв на компанию
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  position: string;
-
-  @Column()
-  gradeYear: number;
-
-  @Column()
-  gradeMonth: number;
-
-  @Column()
-  taskText: string;
-
-  @Column()
-  taskRating: number;
-
-  @Column()
-  interviewText: string;
-
-  @Column()
-  interviewRating: number;
-
-  @Column()
-  workRatingTeam: number;
-
-  @Column()
-  workRatingManagement: number;
-
-  @Column()
-  workRatingStack: number;
-
-  @Column()
-  workRatingProject: number;
-
-  @Column()
-  workRatingWorkFormat: number;
-
-  @Column()
-  workRatingFinanceSalary: number;
-
-  @Column()
-  workRatingFinanceMedicine: number;
-
-  @Column()
-  workRatingFinancePremium: number;
-
-  @Column()
-  workRatingFinanceBonuses: number;
-
-  @Column()
-  workRatingFinanceStocks: number;
-
-  @Column()
-  workRatingFinanceDividends: number;
-
-  @Column()
-  workRatingOtherEducation: number;
-
-  @Column()
-  workRatingOtherEvents: number;
-
-  @Column()
-  recommendationIsRecommended: boolean;
-
-  @Column()
-  recommendationReasonJoined: string;
-
-  @Column()
-  recommendationReasonLeft: string;
-
-  @CreateDateColumn()
-  createDate: Date; // Автоматически заполняется текущей датой при создании записи
-
-  @Column({ default: false })
-  isDeleted: boolean;
-
   // Связь с пользователем
-  @ManyToOne(() => User, user => user.comments)
+  @ManyToOne(() => User, user => user.comments, { eager: true })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Company, company => company.comments)
+  @Column()
+  userId: string;
+
+  // Связь с компанией
+  @ManyToOne(() => Company, company => company.comments, { eager: true })
+  @JoinColumn({ name: 'companyId' })
   company: Company;
+
+  @Column()
+  companyId: string;
+
+  @Column()
+  companyCountry: string;
+
+  @Column()
+  companyCity: string;
+
+  @Column()
+  userPosition: string;
+
+  @Column()
+  userGradeYears: number;
+
+  @Column()
+  userGradeMonths: number;
+
+  @Column()
+  isAnonym: number;
+
+  @Column()
+  isRecommended: number;
+
+  @Column('text')
+  reasonJoined: string;
+
+  @Column('text')
+  reasonLeft: string;
+
+  // Связи с подформами
+  @OneToOne(() => TaskForm, { cascade: true, eager: true })
+  @JoinColumn()
+  task: TaskForm;
+
+  @OneToOne(() => InterviewForm, { cascade: true, eager: true })
+  @JoinColumn()
+  interview: InterviewForm;
+
+  @OneToOne(() => InternshipForm, { cascade: true, eager: true })
+  @JoinColumn()
+  internship: InternshipForm;
+
+  @OneToOne(() => WorkForm, { cascade: true, eager: true })
+  @JoinColumn()
+  work: WorkForm;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

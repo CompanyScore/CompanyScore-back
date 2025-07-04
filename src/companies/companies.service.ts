@@ -6,7 +6,7 @@ import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
-import { SpacesService } from 'src/providers/space.service';
+import { R2Service } from 'src/providers/r2.service';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 
@@ -15,7 +15,7 @@ export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private companyRepository: Repository<Company>,
-    private readonly spacesService: SpacesService,
+    private readonly r2Service: R2Service,
   ) {}
 
   async create(
@@ -27,7 +27,7 @@ export class CompaniesService {
       const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
 
       // Загружаем логотип в R2
-      await this.spacesService.saveFile(logoKey, logoFile.buffer);
+      await this.r2Service.saveFile(logoKey, logoFile.buffer);
 
       // Указываем путь к файлу в базе данных (используем ссылку на R2)
       createCompanyDto.logo = logoKey;
@@ -183,14 +183,14 @@ export class CompaniesService {
       // Если компания уже имеет логотип, удаляем старое изображение из R2
       if (company.logo) {
         const oldKey = company.logo;
-        await this.spacesService.deleteFile(oldKey);
+        await this.r2Service.deleteFile(oldKey);
       }
 
       // Генерация нового ключа для логотипа в R2
       const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
 
       // Загружаем новый логотип в R2
-      await this.spacesService.saveFile(logoKey, logoFile.buffer);
+      await this.r2Service.saveFile(logoKey, logoFile.buffer);
 
       // Обновляем ссылку на новый логотип в базе данных
       updateCompanyDto.logo = logoKey;

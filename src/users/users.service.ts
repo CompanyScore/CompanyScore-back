@@ -6,7 +6,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-import { SpacesService } from 'src/providers/space.service';
+import { R2Service } from 'src/providers/r2.service';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 
@@ -17,7 +17,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly spacesService: SpacesService,
+    private readonly r2Service: R2Service,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -102,11 +102,11 @@ export class UsersService {
       const oldKey = user.avatar;
 
       if (oldKey) {
-        await this.spacesService.deleteFile(oldKey);
+        await this.r2Service.deleteFile(oldKey);
       }
 
       const avatarKey = `users/avatars/${uuidv4()}${path.extname(avatarFile.originalname)}`;
-      await this.spacesService.saveFile(avatarKey, avatarFile.buffer);
+      await this.r2Service.saveFile(avatarKey, avatarFile.buffer);
 
       updateUserDto.avatar = avatarKey;
     }

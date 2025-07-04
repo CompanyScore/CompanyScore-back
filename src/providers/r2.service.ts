@@ -11,22 +11,22 @@ import {
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class SpacesService {
+export class R2Service {
   constructor(private readonly configService: ConfigService) {}
 
-  private readonly logger = new Logger(SpacesService.name);
+  private readonly logger = new Logger(R2Service.name);
 
-  private readonly bucketName = this.configService.get<string>(
-    'DO_SPACE_BUCKET_NAME',
-  );
+  private readonly bucketName =
+    this.configService.get<string>('R2_BUCKET_NAME');
 
   private readonly s3 = new S3Client({
-    region: 'ams3', // замените на свой регион
-    endpoint: this.configService.get<string>('DO_SPACE_ENDPOINT'), // например: https://ams3.digitaloceanspaces.com
+    region: this.configService.get<string>('R2_REGION'), // например, "auto" или "us-east-1"
+    endpoint: this.configService.get<string>('R2_ENDPOINT'),
     credentials: {
-      accessKeyId: this.configService.get<string>('DO_SPACE_ACCESS_KEY'),
-      secretAccessKey: this.configService.get<string>('DO_SPACE_SECRET_KEY'),
+      accessKeyId: this.configService.get<string>('R2_ACCESS_KEY'),
+      secretAccessKey: this.configService.get<string>('R2_SECRET_KEY'),
     },
+    forcePathStyle: true, // ВАЖНО для Cloudflare R2
   });
 
   async saveFile(key: string, buffer: Buffer): Promise<void> {
@@ -37,13 +37,13 @@ export class SpacesService {
         Key: key,
         Body: buffer,
         ContentType: this.getContentType(key),
-        ACL: 'public-read',
+        ACL: 'public-read', // НЕ ОБЯЗАТЕЛЬНО, можно удалить если используешь signed URL
       });
 
       const result = await this.s3.send(command);
       this.logger.log(`Файл сохранён: ${JSON.stringify(result)}`);
     } catch (error: any) {
-      this.logger.error('❌ Ошибка при загрузке файла в DigitalOcean Spaces');
+      this.logger.error('❌ Ошибка при загрузке файла в Cloudflare R2');
       this.logger.error(error.name, error.message, error.stack);
       throw new InternalServerErrorException('Ошибка при сохранении файла');
     }
@@ -58,10 +58,7 @@ export class SpacesService {
 
       await this.s3.send(command);
     } catch (error) {
-      this.logger.error(
-        'Ошибка при удалении файла из DigitalOcean Spaces',
-        error,
-      );
+      this.logger.error('Ошибка при удалении файла из Cloudflare R2', error);
       this.logger.error(error.name, error.message, error.stack);
       throw new InternalServerErrorException('Ошибка при удалении файла');
     }
