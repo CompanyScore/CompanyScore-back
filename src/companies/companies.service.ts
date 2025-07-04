@@ -22,6 +22,14 @@ export class CompaniesService {
     createCompanyDto: CreateCompanyDto,
     logoFile: Express.Multer.File,
   ): Promise<string> {
+    const exsistingCompany = await this.companyRepository.findOne({
+      where: { name: createCompanyDto.name },
+    });
+
+    if (exsistingCompany) {
+      throw new BadRequestException('Компания с таким именем уже существует');
+    }
+
     if (logoFile) {
       // Генерация ключа для R2
       const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
@@ -71,7 +79,7 @@ export class CompaniesService {
 
     const [companies, total] = await this.companyRepository.findAndCount({
       where: whereCondition,
-      relations: ['comments'],
+      relations: ['comments', 'branches'],
       take,
       skip,
     });
@@ -86,6 +94,13 @@ export class CompaniesService {
         description: company.description,
         rating: company.rating,
         commentsIds: company.comments.map(comment => comment.id.toString()),
+        branches: company.branches.map(branch => ({
+          id: branch.id,
+          name: branch.name,
+          country: branch.country,
+          city: branch.city,
+          address: branch.address,
+        })),
       })),
       total, // общее количество элементов
       page,
@@ -112,6 +127,13 @@ export class CompaniesService {
       description: company.description,
       rating: company.rating,
       commentsIds: company.comments.map(comment => comment.id),
+      branches: company.branches.map(branch => ({
+        id: branch.id,
+        name: branch.name,
+        country: branch.country,
+        city: branch.city,
+        address: branch.address,
+      })),
     }));
   }
 
@@ -139,7 +161,7 @@ export class CompaniesService {
   async findOne(id: string): Promise<any> {
     const company = await this.companyRepository.findOne({
       where: { id },
-      relations: ['comments'],
+      relations: ['comments', 'branches'],
     });
 
     // Рассчитываем средний рейтинг
