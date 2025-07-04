@@ -18,6 +18,10 @@ import { PositionsModule } from './positions/positions.module';
 import { InterviewStageModule } from './interview-stage/interview-stage.module';
 import { WorkEducationModule } from './work-education/work-education.module';
 import { WorkSocialBenefitModule } from './work-social-benefit/work-social-benefit.module';
+import { TaskFormModule } from './task-form/task-form.module';
+import { InterviewFormModule } from './interview-form/interview-form.module';
+import { InternshipFormModule } from './internship-form/internship-form.module';
+import { WorkFormModule } from './work-form/work-form.module';
 
 @Module({
   imports: [
@@ -52,6 +56,10 @@ import { WorkSocialBenefitModule } from './work-social-benefit/work-social-benef
     InterviewStageModule,
     WorkEducationModule,
     WorkSocialBenefitModule,
+    TaskFormModule,
+    InterviewFormModule,
+    InternshipFormModule,
+    WorkFormModule,
   ],
   controllers: [],
   providers: [

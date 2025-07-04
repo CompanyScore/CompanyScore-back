@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+// import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './entities/comment.entity';
 import { Repository } from 'typeorm';
@@ -118,44 +118,15 @@ export class CommentsService {
     return {
       data: comments.map(comment => ({
         id: comment.id,
-        position: comment.position,
+        position: comment.userPosition,
         grade: {
-          years: comment.gradeYear,
-          months: comment.gradeMonth,
-        },
-        task: {
-          text: comment.taskText,
-          rating: comment.taskRating,
-        },
-        interview: {
-          text: comment.interviewText,
-          rating: comment.interviewRating,
-        },
-        work: {
-          rating: {
-            team: comment.workRatingTeam,
-            management: comment.workRatingManagement,
-            stack: comment.workRatingStack,
-            project: comment.workRatingProject,
-            workFormat: comment.workRatingWorkFormat,
-          },
-          finance: {
-            salary: comment.workRatingFinanceSalary,
-            medicine: comment.workRatingFinanceMedicine,
-            premium: comment.workRatingFinancePremium,
-            bonuses: comment.workRatingFinanceBonuses,
-            stocks: comment.workRatingFinanceStocks,
-            dividends: comment.workRatingFinanceDividends,
-          },
-          other: {
-            education: comment.workRatingOtherEducation,
-            events: comment.workRatingOtherEvents,
-          },
+          years: comment.userGradeYears,
+          months: comment.userGradeMonths,
         },
         recommendation: {
-          isRecommended: comment.recommendationIsRecommended,
-          reasonJoined: comment.recommendationReasonJoined,
-          reasonLeft: comment.recommendationReasonLeft,
+          isRecommended: comment.isRecommended,
+          reasonJoined: comment.reasonJoined,
+          reasonLeft: comment.reasonLeft,
         },
         user: {
           id: comment.user.id, // ID пользователя
@@ -172,105 +143,5 @@ export class CommentsService {
       page, // Текущая страница
       limit, // Лимит на странице
     };
-  }
-
-  async findOne(id: string): Promise<any> {
-    const comment = await this.commentRepository.findOne({
-      where: { id },
-      relations: ['user', 'company'],
-    });
-
-    if (!comment) {
-      throw new BadRequestException(`Комментарий не найден!`);
-    }
-
-    return {
-      id: comment.id,
-      position: comment.position,
-      grade: {
-        years: comment.gradeYear,
-        months: comment.gradeMonth,
-      },
-      task: {
-        text: comment.taskText,
-        rating: comment.taskRating,
-      },
-      interview: {
-        text: comment.interviewText,
-        rating: comment.interviewRating,
-      },
-      work: {
-        rating: {
-          team: comment.workRatingTeam,
-          management: comment.workRatingManagement,
-          stack: comment.workRatingStack,
-          project: comment.workRatingProject,
-          workFormat: comment.workRatingWorkFormat,
-        },
-        finance: {
-          salary: comment.workRatingFinanceSalary,
-          medicine: comment.workRatingFinanceMedicine,
-          premium: comment.workRatingFinancePremium,
-          bonuses: comment.workRatingFinanceBonuses,
-          stocks: comment.workRatingFinanceStocks,
-          dividends: comment.workRatingFinanceDividends,
-        },
-        other: {
-          education: comment.workRatingOtherEducation,
-          events: comment.workRatingOtherEvents,
-        },
-      },
-      recommendation: {
-        isRecommended: comment.recommendationIsRecommended,
-        reasonJoined: comment.recommendationReasonJoined,
-        reasonLeft: comment.recommendationReasonLeft,
-      },
-      user: {
-        id: comment.user.id, // ID пользователя
-        name: comment.user.name, // Имя пользователя
-        avatar: comment.user.avatar, // Фото пользователя
-      },
-      company: {
-        id: comment.company.id,
-        name: comment.company.name,
-        logo: comment.company.logo,
-      },
-    };
-  }
-
-  async update(
-    id: string,
-    updateCommentDto: UpdateCommentDto,
-  ): Promise<string> {
-    const comment = this.commentRepository.find({
-      where: { id },
-      relations: ['user', 'company'],
-    });
-
-    if (!comment) {
-      throw new BadRequestException(`Комментарий не найден!`);
-    }
-
-    await this.commentRepository.update(id, updateCommentDto);
-
-    return 'Отзыв обновлен';
-  }
-
-  async remove(id: string): Promise<string> {
-    const comment = await this.commentRepository.findOne({
-      where: { id },
-      relations: ['company'],
-    });
-
-    if (!comment) {
-      throw new NotFoundException(`Комментарий не найден!`);
-    }
-
-    await this.commentRepository.delete(id);
-
-    // Обновляем рейтинг компании после удаления комментария
-    await this.updateCompanyRating(comment.company.id);
-
-    return 'Отзыв удален';
   }
 }
