@@ -12,6 +12,7 @@ import * as ms from 'ms';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
 import { R2Service } from 'src/providers/r2.service';
 
 @Injectable()
@@ -22,7 +23,40 @@ export class AuthService {
     private readonly r2Service: R2Service,
   ) {}
 
-  async validateUser(profile: any) {
+  async validateUser(email: string, password: string) {
+    const user = await this.usersService.findOneByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid email or passowrd');
+    }
+
+    const userWithTokens = await this.login(user);
+    return userWithTokens;
+  }
+
+  async registerUser(createUserDto: CreateUserDto) {
+    const existsingUser = await this.usersService.findOneByEmail(
+      createUserDto.email,
+    );
+    if (existsingUser) {
+      throw new BadRequestException('User with this email already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const newUser = await this.usersService.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+
+    const userWithTokens = await this.login(newUser);
+    return userWithTokens;
+  }
+
+  async validateUserByLinkedin(profile: any) {
     let user = await this.usersService.findOneByLinkedin(profile.sub);
 
     if (!user) {
