@@ -1,21 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TaskForm } from './entities/comment_task.entity';
+import { CommentTask } from './entities/comment_task.entity';
 import { Repository } from 'typeorm';
 import { CreateTaskFormDto } from './dto/create_comment_task.dto';
 import { Comment } from 'src/comments/entities/comment.entity';
 
 @Injectable()
-export class TaskFormService {
+export class CommentTaskService {
   constructor(
-    @InjectRepository(TaskForm)
-    private readonly taskFormRepository: Repository<TaskForm>,
+    @InjectRepository(CommentTask)
+    private readonly taskFormRepository: Repository<CommentTask>,
 
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
   ) {}
 
-  async create(commentId: string, dto: CreateTaskFormDto): Promise<TaskForm> {
+  async create(
+    commentId: string,
+    dto: CreateTaskFormDto,
+  ): Promise<CommentTask> {
     const comment = await this.commentRepository.findOne({
       where: { id: commentId },
     });

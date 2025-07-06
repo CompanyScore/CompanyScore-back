@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/companies/entities/company.entity';
-import { TaskForm } from 'src/comment_task/entities/comment_task.entity';
+import { CommentTask } from 'src/comment_task/entities/comment_task.entity';
 import { CommentInterview } from 'src/comment_interview/entities/comment_interview.entity';
 import { InternshipForm } from 'src/internship-form/entities/internship-form.entity';
 import { WorkForm } from 'src/work-form/entities/work-form.entity';
@@ -59,9 +59,9 @@ export class Comment {
   reasonLeft: string;
 
   // Связи с подформами
-  @OneToOne(() => TaskForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentTask, { cascade: true, eager: true })
   @JoinColumn()
-  task: TaskForm;
+  task: CommentTask;
 
   @OneToOne(() => CommentInterview, { cascade: true, eager: true })
   @JoinColumn()

@@ -18,7 +18,7 @@ import { PositionsModule } from './positions/positions.module';
 import { InterviewStageModule } from './interview_stage/interview_stage.module';
 import { WorkEducationModule } from './work-education/work-education.module';
 import { WorkSocialBenefitModule } from './work-social-benefit/work-social-benefit.module';
-import { TaskFormModule } from './comment_task/comment_task.module';
+import { CommentTaskModule } from './comment_task/comment_task.module';
 import { CommentInterviewModule } from './comment_interview/comment_interview.module';
 import { InternshipFormModule } from './internship-form/internship-form.module';
 import { WorkFormModule } from './work-form/work-form.module';
@@ -56,7 +56,7 @@ import { WorkFormModule } from './work-form/work-form.module';
     InterviewStageModule,
     WorkEducationModule,
     WorkSocialBenefitModule,
-    TaskFormModule,
+    CommentTaskModule,
     CommentInterviewModule,
     InternshipFormModule,
     WorkFormModule,
