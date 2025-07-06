@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { InterviewStageService } from './interview-stage.service';
+import { InterviewStageService } from './interview_stage.service';
 
 @Controller('interview-stage')
 export class InterviewStageController {

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { InterviewStageService } from './interview-stage.service';
-import { InterviewStageController } from './interview-stage.controller';
+import { InterviewStageService } from './interview_stage.service';
+import { InterviewStageController } from './interview_stage.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InterviewStage } from './entities/interview-stage.entity';
+import { InterviewStage } from './entities/interview_stage.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([InterviewStage])],

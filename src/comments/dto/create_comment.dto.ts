@@ -8,12 +8,6 @@ export class CreateCommentDto {
   companyId: string;
 
   @IsString()
-  companyCountry: string;
-
-  @IsString()
-  companyCity: string;
-
-  @IsString()
   userPosition: string;
 
   @IsInt()

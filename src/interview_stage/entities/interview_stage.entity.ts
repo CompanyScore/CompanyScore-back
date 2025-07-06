@@ -10,4 +10,7 @@ export class InterviewStage {
 
   @Column()
   number: number;
+
+  @Column()
+  mark: number;
 }

@@ -15,11 +15,11 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { getDatabaseConfig } from './config/database.config';
 import { PositionsModule } from './positions/positions.module';
-import { InterviewStageModule } from './interview-stage/interview-stage.module';
+import { InterviewStageModule } from './interview_stage/interview_stage.module';
 import { WorkEducationModule } from './work-education/work-education.module';
 import { WorkSocialBenefitModule } from './work-social-benefit/work-social-benefit.module';
 import { TaskFormModule } from './comment_task/comment_task.module';
-import { InterviewFormModule } from './interview-form/interview-form.module';
+import { CommentInterviewModule } from './comment_interview/comment_interview.module';
 import { InternshipFormModule } from './internship-form/internship-form.module';
 import { WorkFormModule } from './work-form/work-form.module';
 
@@ -57,7 +57,7 @@ import { WorkFormModule } from './work-form/work-form.module';
     WorkEducationModule,
     WorkSocialBenefitModule,
     TaskFormModule,
-    InterviewFormModule,
+    CommentInterviewModule,
     InternshipFormModule,
     WorkFormModule,
   ],

@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { InterviewFormStageItem } from './interview-form-stage-item.entity';
+import { InterviewStageLink } from './interview_stage_link.entity';
 
-@Entity()
-export class InterviewForm {
+@Entity('comment_interview')
+export class CommentInterview {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -27,9 +27,9 @@ export class InterviewForm {
   @Column()
   feedback: number;
 
-  @OneToMany(() => InterviewFormStageItem, item => item.interviewForm, {
+  @OneToMany(() => InterviewStageLink, item => item.commentInterview, {
     cascade: true,
     eager: true,
   })
-  stages: InterviewFormStageItem[];
+  stages: InterviewStageLink[];
 }

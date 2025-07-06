@@ -11,7 +11,7 @@ import {
 import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/companies/entities/company.entity';
 import { TaskForm } from 'src/comment_task/entities/comment_task.entity';
-import { InterviewForm } from 'src/interview-form/entities/interview-form.entity';
+import { CommentInterview } from 'src/comment_interview/entities/comment_interview.entity';
 import { InternshipForm } from 'src/internship-form/entities/internship-form.entity';
 import { WorkForm } from 'src/work-form/entities/work-form.entity';
 
@@ -36,12 +36,6 @@ export class Comment {
 
   @Column()
   companyId: string;
-
-  @Column()
-  companyCountry: string;
-
-  @Column()
-  companyCity: string;
 
   @Column()
   userPosition: string;
@@ -69,9 +63,9 @@ export class Comment {
   @JoinColumn()
   task: TaskForm;
 
-  @OneToOne(() => InterviewForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentInterview, { cascade: true, eager: true })
   @JoinColumn()
-  interview: InterviewForm;
+  interview: CommentInterview;
 
   @OneToOne(() => InternshipForm, { cascade: true, eager: true })
   @JoinColumn()
