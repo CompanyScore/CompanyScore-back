@@ -33,8 +33,11 @@ export class User {
   @Column({ nullable: true })
   avatar?: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   email: string;
+
+  @Column({ nullable: true })
+  password?: string;
 
   @Column({ default: 'Моя должность' })
   position: string;
