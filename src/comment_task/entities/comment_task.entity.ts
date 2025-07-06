@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity('comment_task')
 export class TaskForm {
   @PrimaryGeneratedColumn('uuid')
   id: string;

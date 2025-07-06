@@ -1,5 +1,5 @@
 import { IsString, IsUUID, IsInt, Min, Max, Length } from 'class-validator';
-
+import { CreateTaskFormDto } from 'src/comment_task/dto/create_comment_task.dto';
 export class CreateCommentDto {
   @IsUUID()
   userId: string;
@@ -42,4 +42,6 @@ export class CreateCommentDto {
   @IsString()
   @Length(10, 1000)
   reasonLeft: string;
+
+  task: CreateTaskFormDto;
 }
