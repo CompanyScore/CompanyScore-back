@@ -8,7 +8,7 @@ export class CreateCommentDto {
   companyId: string;
 
   @IsString()
-  userPosition: string;
+  userPositionId: string;
 
   @IsInt()
   @Min(0)
