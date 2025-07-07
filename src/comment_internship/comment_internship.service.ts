@@ -17,7 +17,7 @@ export class CommentInternshipService {
   ) {}
 
   async create(dto: CreateCommentInternshipDto): Promise<CommentInternship> {
-    const { commentId, period, ...rest } = dto;
+    const { commentId, ...rest } = dto;
 
     const comment = await this.commentRepository.findOne({
       where: { id: commentId },
@@ -26,8 +26,6 @@ export class CommentInternshipService {
 
     const internship = this.commentInternshipRepository.create({
       ...rest,
-      periodFrom: new Date(period.from),
-      periodTo: new Date(period.to),
     });
 
     const saved = await this.commentInternshipRepository.save(internship);
