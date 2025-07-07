@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { WorkEducationService } from './work-education.service';
+import { WorkEducationService } from './work_education.service';
 
 @Controller('work-education')
 export class WorkEducationController {

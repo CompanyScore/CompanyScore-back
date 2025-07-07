@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { WorkSocialBenefit } from './entities/work-social-benefit.entity';
+import { WorkSocialBenefit } from './entities/work_social_benefit.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

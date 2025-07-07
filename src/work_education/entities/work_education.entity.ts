@@ -10,4 +10,7 @@ export class WorkEducation {
 
   @Column()
   number: number;
+
+  @Column()
+  mark: number;
 }

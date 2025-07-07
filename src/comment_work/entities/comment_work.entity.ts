@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { WorkEducationItem } from './work-education-item.entity';
-import { WorkSocialBenefitItem } from './work-social-benefit-item.entity';
+import { WorkEducationLink } from './work_education_link.entity';
+import { WorkSocialBenefitLink } from './work_social_benefit_link.entity';
 
-@Entity()
-export class WorkForm {
+@Entity('comment_work')
+export class CommentWork {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -60,11 +60,11 @@ export class WorkForm {
   @Column()
   secondaryEvents: number;
 
-  @OneToMany(() => WorkEducationItem, item => item.workForm, {
+  @OneToMany(() => WorkEducationLink, item => item.commentWork, {
     cascade: true,
     eager: true,
   })
-  educationItems: WorkEducationItem[];
+  educations: WorkEducationLink[];
 
   // FINANCE
   @Column()
@@ -85,9 +85,9 @@ export class WorkForm {
   @Column()
   financeProfitShareValue: number;
 
-  @OneToMany(() => WorkSocialBenefitItem, item => item.workForm, {
+  @OneToMany(() => WorkSocialBenefitLink, item => item.commentWork, {
     cascade: true,
     eager: true,
   })
-  socialBenefits: WorkSocialBenefitItem[];
+  socialBenefits: WorkSocialBenefitLink[];
 }

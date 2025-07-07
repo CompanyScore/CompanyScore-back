@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { WorkSocialBenefitService } from './work-social-benefit.service';
-import { WorkSocialBenefitController } from './work-social-benefit.controller';
+import { WorkSocialBenefitService } from './work_social_benefit.service';
+import { WorkSocialBenefitController } from './work_social_benefit.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WorkSocialBenefit } from './entities/work-social-benefit.entity';
+import { WorkSocialBenefit } from './entities/work_social_benefit.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([WorkSocialBenefit])],

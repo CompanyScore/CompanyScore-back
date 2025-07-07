@@ -10,4 +10,7 @@ export class WorkSocialBenefit {
 
   @Column()
   number: number;
+
+  @Column()
+  mark: number;
 }

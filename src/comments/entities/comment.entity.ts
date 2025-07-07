@@ -13,7 +13,7 @@ import { Company } from 'src/companies/entities/company.entity';
 import { CommentTask } from 'src/comment_task/entities/comment_task.entity';
 import { CommentInterview } from 'src/comment_interview/entities/comment_interview.entity';
 import { CommentInternship } from 'src/comment_internship/entities/comment_internship.entity';
-import { WorkForm } from 'src/work-form/entities/work-form.entity';
+import { CommentWork } from 'src/comment_work/entities/comment_work.entity';
 
 @Entity()
 @Unique(['user', 'company']) // ⚠️ ограничение: один пользователь — один отзыв на компанию
@@ -71,9 +71,9 @@ export class Comment {
   @JoinColumn()
   internship: CommentInternship;
 
-  @OneToOne(() => WorkForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentWork, { cascade: true, eager: true })
   @JoinColumn()
-  work: WorkForm;
+  work: CommentWork;
 
   @CreateDateColumn()
   createdAt: Date;
