@@ -1,5 +1,6 @@
 // src/interview-form/dto/create-interview-form.dto.ts
 import {
+  IsUUID,
   IsBoolean,
   IsInt,
   IsNotEmpty,
@@ -10,6 +11,9 @@ import {
 } from 'class-validator';
 
 export class CreateCommentInterviewDto {
+  @IsUUID()
+  commentId: string;
+
   @IsNotEmpty()
   @IsBoolean()
   isInterview: boolean;

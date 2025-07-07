@@ -20,7 +20,7 @@ import { WorkEducationModule } from './work-education/work-education.module';
 import { WorkSocialBenefitModule } from './work-social-benefit/work-social-benefit.module';
 import { CommentTaskModule } from './comment_task/comment_task.module';
 import { CommentInterviewModule } from './comment_interview/comment_interview.module';
-import { InternshipFormModule } from './internship-form/internship-form.module';
+import { CommentInternshipModule } from './comment_internship/comment_internship.module';
 import { WorkFormModule } from './work-form/work-form.module';
 
 @Module({
@@ -58,7 +58,7 @@ import { WorkFormModule } from './work-form/work-form.module';
     WorkSocialBenefitModule,
     CommentTaskModule,
     CommentInterviewModule,
-    InternshipFormModule,
+    CommentInternshipModule,
     WorkFormModule,
   ],
   controllers: [],

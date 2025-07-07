@@ -9,12 +9,11 @@ export class CommentInterviewController {
   ) {}
 
   @Post()
-  async create(@Body() dto: CreateCommentInterviewDto & { commentId: string }) {
-    const result = await this.commentInterviewService.create(
-      dto.commentId,
-      dto,
-    );
+  async create(@Body() dto: CreateCommentInterviewDto) {
+    const result = await this.commentInterviewService.create(dto);
+
     if (!result) throw new NotFoundException('Комментарий не найден');
+
     return result;
   }
 

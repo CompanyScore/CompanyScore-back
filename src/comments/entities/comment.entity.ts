@@ -12,7 +12,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/companies/entities/company.entity';
 import { CommentTask } from 'src/comment_task/entities/comment_task.entity';
 import { CommentInterview } from 'src/comment_interview/entities/comment_interview.entity';
-import { InternshipForm } from 'src/internship-form/entities/internship-form.entity';
+import { CommentInternship } from 'src/comment_internship/entities/comment_internship.entity';
 import { WorkForm } from 'src/work-form/entities/work-form.entity';
 
 @Entity()
@@ -67,9 +67,9 @@ export class Comment {
   @JoinColumn()
   interview: CommentInterview;
 
-  @OneToOne(() => InternshipForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentInternship, { cascade: true, eager: true })
   @JoinColumn()
-  internship: InternshipForm;
+  internship: CommentInternship;
 
   @OneToOne(() => WorkForm, { cascade: true, eager: true })
   @JoinColumn()

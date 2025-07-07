@@ -21,41 +21,37 @@ export class CommentInterviewService {
     private readonly interviewStageLinkRepository: Repository<InterviewStageLink>,
   ) {}
 
-  async create(
-    commentId: string,
-    dto: CreateCommentInterviewDto,
-  ): Promise<CommentInterview> {
+  async create(dto: CreateCommentInterviewDto): Promise<CommentInterview> {
+    const { commentId, stages, ...rest } = dto;
+
     const comment = await this.commentRepository.findOne({
       where: { id: commentId },
     });
+
     if (!comment) throw new NotFoundException('Комментарий не найден');
 
-    // 1. Создаём commentInterview без stages
     const commentInterview = this.commentInterviewRepository.create({
-      ...dto,
-      stages: [], // временно пусто
+      ...rest,
+      stages: [],
     });
+
     const savedInterview =
       await this.commentInterviewRepository.save(commentInterview);
 
-    // 2. Генерируем массив stage-link сущностей
-    const stageLinks = dto.stages.map(stageId =>
+    const stageLinks = stages.map(stageId =>
       this.interviewStageLinkRepository.create({
         stageId,
         commentInterview: savedInterview,
       }),
     );
 
-    // 3. Сохраняем stage-link
     await this.interviewStageLinkRepository.save(stageLinks);
 
-    // 4. Повторно запрашиваем commentInterview с жадной загрузкой stages
     const result = await this.commentInterviewRepository.findOne({
       where: { id: savedInterview.id },
       relations: ['stages'],
     });
 
-    // 5. Привязываем к comment
     comment.interview = result!;
     await this.commentRepository.save(comment);
 
