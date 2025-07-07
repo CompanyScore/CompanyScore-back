@@ -14,6 +14,7 @@ import { CommentTask } from 'src/comment_task/entities/comment_task.entity';
 import { CommentInterview } from 'src/comment_interview/entities/comment_interview.entity';
 import { CommentInternship } from 'src/comment_internship/entities/comment_internship.entity';
 import { CommentWork } from 'src/comment_work/entities/comment_work.entity';
+import { Position } from 'src/positions/entities/position.entity';
 
 @Entity()
 @Unique(['user', 'company']) // ⚠️ ограничение: один пользователь — один отзыв на компанию
@@ -37,8 +38,12 @@ export class Comment {
   @Column()
   companyId: string;
 
+  @ManyToOne(() => Position, { eager: true })
+  @JoinColumn({ name: 'userPositionId' })
+  userPosition: Position;
+
   @Column()
-  userPosition: string;
+  userPositionId: string;
 
   @Column()
   userGradeYears: number;
