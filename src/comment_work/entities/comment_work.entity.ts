@@ -9,10 +9,10 @@ export class CommentWork {
 
   // PRIMARY
   @Column({ type: 'date' })
-  primaryFrom: Date;
+  primaryDateFrom: Date;
 
   @Column({ type: 'date' })
-  primaryTo: Date;
+  primaryDateTo: Date;
 
   @Column()
   primaryManagement: number;

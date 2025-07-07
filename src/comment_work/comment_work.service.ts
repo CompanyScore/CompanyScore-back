@@ -32,8 +32,8 @@ export class CommentWorkService {
     if (!comment) throw new NotFoundException('Комментарий не найден');
 
     const workForm = this.commentWorkRepository.create({
-      primaryFrom: dto.primary.periodFrom,
-      primaryTo: dto.primary.periodTo,
+      primaryDateFrom: dto.primary.dateFrom,
+      primaryDateTo: dto.primary.dateTo,
       primaryManagement: dto.primary.management,
       primaryTeam: dto.primary.team,
       primaryProject: dto.primary.project,

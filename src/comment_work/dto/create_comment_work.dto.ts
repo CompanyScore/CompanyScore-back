@@ -13,11 +13,11 @@ import { Type } from 'class-transformer';
 class PrimaryDto {
   @IsNotEmpty()
   @IsDateString()
-  periodFrom: Date;
+  dateFrom: Date;
 
   @IsNotEmpty()
   @IsDateString()
-  periodTo: Date;
+  dateTo: Date;
 
   @IsInt()
   @Min(0)

@@ -5,10 +5,8 @@ import {
   Max,
   Min,
   IsNotEmpty,
-  ValidateNested,
+  IsDateString,
 } from 'class-validator';
-import { PeriodDto } from './period.dto';
-import { Type } from 'class-transformer';
 
 export class CreateCommentInternshipDto {
   @IsUUID()
@@ -18,10 +16,13 @@ export class CreateCommentInternshipDto {
   @IsBoolean()
   isInternship: boolean;
 
-  @ValidateNested()
-  @Type(() => PeriodDto)
   @IsNotEmpty()
-  period: PeriodDto;
+  @IsDateString()
+  dateFrom: Date;
+
+  @IsNotEmpty()
+  @IsDateString()
+  dateTo: Date;
 
   @IsNotEmpty()
   @IsInt()

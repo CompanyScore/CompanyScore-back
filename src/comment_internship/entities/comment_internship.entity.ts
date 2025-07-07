@@ -9,10 +9,10 @@ export class CommentInternship {
   isInternship: boolean;
 
   @Column({ type: 'date' })
-  periodFrom: Date;
+  dateFrom: Date;
 
   @Column({ type: 'date' })
-  periodTo: Date;
+  dateTo: Date;
 
   @Column()
   isUseful: number;
