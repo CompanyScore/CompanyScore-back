@@ -24,6 +24,7 @@ import { CommentInternshipModule } from './comment_internship/comment_internship
 import { CommentWorkModule } from './comment_work/comment_work.module';
 import { CountryModule } from './country/country.module';
 import { CityModule } from './city/city.module';
+import { BranchModule } from './branch/branch.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { CityModule } from './city/city.module';
     UsersModule,
     AuthModule,
     PositionsModule,
+    BranchModule,
     InterviewStageModule,
     WorkEducationModule,
     WorkSocialBenefitModule,
