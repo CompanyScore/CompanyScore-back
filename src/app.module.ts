@@ -15,8 +15,6 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { getDatabaseConfig } from './config/database.config';
 import { PositionsModule } from './positions/positions.module';
-import { WorkEducationModule } from './work_education/work_education.module';
-import { WorkSocialBenefitModule } from './work_social_benefit/work_social_benefit.module';
 import { CommentTaskModule } from './comment_task/comment_task.module';
 import { CommentInterviewModule } from './comment_interview/comment_interview.module';
 import { CommentInternshipModule } from './comment_internship/comment_internship.module';
@@ -56,8 +54,6 @@ import { CommentWorkFinanceModule } from './comment_work_finance/comment_work_fi
     UsersModule,
     AuthModule,
     PositionsModule,
-    WorkEducationModule,
-    WorkSocialBenefitModule,
     CommentTaskModule,
     CommentInterviewModule,
     CommentInternshipModule,
