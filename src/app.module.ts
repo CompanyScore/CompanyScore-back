@@ -21,6 +21,8 @@ import { CommentTaskModule } from './comment_task/comment_task.module';
 import { CommentInterviewModule } from './comment_interview/comment_interview.module';
 import { CommentInternshipModule } from './comment_internship/comment_internship.module';
 import { CommentWorkModule } from './comment_work/comment_work.module';
+import { CountryModule } from './country/country.module';
+import { CityModule } from './city/city.module';
 
 @Module({
   imports: [
@@ -58,6 +60,8 @@ import { CommentWorkModule } from './comment_work/comment_work.module';
     CommentInterviewModule,
     CommentInternshipModule,
     CommentWorkModule,
+    CountryModule,
+    CityModule,
   ],
   controllers: [],
   providers: [
