@@ -6,8 +6,6 @@ import {
   IsNotEmpty,
   Min,
   Max,
-  IsArray,
-  IsString,
 } from 'class-validator';
 
 export class CreateCommentInterviewDto {
@@ -55,7 +53,30 @@ export class CreateCommentInterviewDto {
   feedback: number;
 
   @IsNotEmpty()
-  @IsArray()
-  @IsString({ each: true })
-  stages: string[];
+  @IsBoolean()
+  isTestStage: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isVideoStage: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isHrStage: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isTaskStage: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isTechStage: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isTeamStage: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isFinalStage: boolean;
 }
