@@ -35,7 +35,6 @@ export class CommentInterviewService {
 
     const result = await this.commentInterviewRepository.findOne({
       where: { id: savedInterview.id },
-      relations: ['stages'],
     });
 
     comment.interview = result!;

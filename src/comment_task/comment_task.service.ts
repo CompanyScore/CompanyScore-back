@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentTask } from './entities/comment_task.entity';
 import { Repository } from 'typeorm';
-import { CreateTaskFormDto } from './dto/create_comment_task.dto';
+import { CreateCommentTaskDto } from './dto/create_comment_task.dto';
 import { Comment } from 'src/comments/entities/comment.entity';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class CommentTaskService {
 
   async create(
     commentId: string,
-    dto: CreateTaskFormDto,
+    dto: CreateCommentTaskDto,
   ): Promise<CommentTask> {
     const comment = await this.commentRepository.findOne({
       where: { id: commentId },

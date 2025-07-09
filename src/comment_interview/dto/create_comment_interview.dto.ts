@@ -19,37 +19,37 @@ export class CreateCommentInterviewDto {
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  @Max(10)
+  @Max(1000)
   correspondedPosition: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  @Max(10)
+  @Max(1000)
   clearlyStages: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  @Max(10)
+  @Max(1000)
   talkedPolitely: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  @Max(10)
+  @Max(1000)
   realWork: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  @Max(10)
+  @Max(1000)
   interviewTime: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  @Max(10)
+  @Max(1000)
   feedback: number;
 
   @IsNotEmpty()

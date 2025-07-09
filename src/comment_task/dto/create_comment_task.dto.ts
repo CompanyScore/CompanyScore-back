@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsBoolean, IsInt, Min, Max } from 'class-validator';
 
-export class CreateTaskFormDto {
+export class CreateCommentTaskDto {
   @IsNotEmpty()
   @IsBoolean()
   isTask: boolean;

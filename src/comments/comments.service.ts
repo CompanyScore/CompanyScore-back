@@ -10,18 +10,42 @@ import { Comment } from './entities/comment.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/companies/entities/company.entity';
+import { CommentTask } from 'src/comment_task/entities/comment_task.entity';
+import { CommentInterview } from 'src/comment_interview/entities/comment_interview.entity';
+import { CommentInternship } from 'src/comment_internship/entities/comment_internship.entity';
+import { CommentWorkPrimary } from 'src/comment_work_primary/entities/comment_work_primary.entity';
+import { CommentWorkSecondary } from 'src/comment_work_secondary/entities/comment_work_secondary.entity';
+import { CommentWorkFinance } from 'src/comment_work_finance/entities/comment_work_finance.entity';
 
 @Injectable()
 export class CommentsService {
   constructor(
-    @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>,
-
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
 
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
+
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
+
+    @InjectRepository(CommentTask)
+    private readonly taskRepository: Repository<CommentTask>,
+
+    @InjectRepository(CommentInterview)
+    private readonly interviewRepository: Repository<CommentInterview>,
+
+    @InjectRepository(CommentInternship)
+    private readonly internshipRepository: Repository<CommentInternship>,
+
+    @InjectRepository(CommentWorkPrimary)
+    private readonly workPrimaryRepository: Repository<CommentWorkPrimary>,
+
+    @InjectRepository(CommentWorkSecondary)
+    private readonly workSecondaryRepository: Repository<CommentWorkSecondary>,
+
+    @InjectRepository(CommentWorkFinance)
+    private readonly workFinanceRepository: Repository<CommentWorkFinance>,
   ) {}
 
   async updateCompanyRating(companyId: string): Promise<string> {
@@ -31,15 +55,6 @@ export class CommentsService {
     });
 
     if (!company) return;
-
-    // const ratings = company.comments
-    //   .map((comment) => comment.rating)
-    //   .filter((rating) => rating !== null);
-
-    // const averageRating =
-    //   ratings.length > 0
-    //     ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length
-    //     : 0;
 
     await this.companyRepository.update(companyId, { rating: 0 });
 
@@ -55,7 +70,7 @@ export class CommentsService {
       throw new BadRequestException('userId и companyId обязательны!');
     }
 
-    // Проверяем, есть ли уже комментарий от этого пользователя для этой компании
+    // Проверка на уникальность
     const existingComment = await this.commentRepository.findOne({
       where: { user: { id: userId }, company: { id: companyId } },
     });
@@ -66,6 +81,7 @@ export class CommentsService {
       );
     }
 
+    // Получаем компанию и пользователя
     const company = await this.companyRepository.findOne({
       where: { id: companyId },
       relations: ['comments'],
@@ -81,16 +97,51 @@ export class CommentsService {
       throw new NotFoundException(`Пользователь не найден!`);
     }
 
-    // Создаем новый комментарий
+    // Деструктурируем вложенные формы
+    const {
+      task,
+      interview,
+      internship,
+      workPrimary,
+      workSecondary,
+      workFinance,
+      ...rest
+    } = createCommentDto;
+
+    // Создаём комментарий
     const comment = this.commentRepository.create({
-      ...createCommentDto,
+      ...rest,
       user,
       company,
     });
 
+    if (task) {
+      comment.task = this.taskRepository.create(task);
+    }
+
+    if (interview) {
+      comment.interview = this.interviewRepository.create(interview);
+    }
+
+    if (internship) {
+      comment.internship = this.internshipRepository.create(internship);
+    }
+
+    if (workPrimary) {
+      comment.workPrimary = this.workPrimaryRepository.create(workPrimary);
+    }
+
+    if (workSecondary) {
+      comment.workSecondary =
+        this.workSecondaryRepository.create(workSecondary);
+    }
+
+    if (workFinance) {
+      comment.workFinance = this.workFinanceRepository.create(workFinance);
+    }
+
     const createdComment = await this.commentRepository.save(comment);
 
-    // Обновляем рейтинг компании
     // await this.updateCompanyRating(companyId);
 
     return createdComment.id;

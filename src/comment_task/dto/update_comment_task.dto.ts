@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateTaskFormDto } from './create_comment_task.dto';
+import { CreateCommentTaskDto } from './create_comment_task.dto';
 
-export class UpdateTaskFormDto extends PartialType(CreateTaskFormDto) {}
+export class UpdateTaskFormDto extends PartialType(CreateCommentTaskDto) {}

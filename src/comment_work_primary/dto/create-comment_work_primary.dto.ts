@@ -1,21 +1,6 @@
-import {
-  IsUUID,
-  IsBoolean,
-  IsInt,
-  Max,
-  Min,
-  IsNotEmpty,
-  IsDateString,
-} from 'class-validator';
+import { IsDateString, IsInt, Min, Max, IsNotEmpty } from 'class-validator';
 
-export class CreateCommentInternshipDto {
-  @IsUUID()
-  commentId: string;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  isInternship: boolean;
-
+export class CreateCommentWorkPrimaryDto {
   @IsNotEmpty()
   @IsDateString()
   dateFrom: Date;
@@ -28,41 +13,52 @@ export class CreateCommentInternshipDto {
   @IsInt()
   @Min(0)
   @Max(1000)
-  isUseful: number;
+  management: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(1000)
-  clearlyOrganized: number;
+  team: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(1000)
-  correspondedInternLevel: number;
+  project: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(1000)
-  developingAssignment: number;
+  stack: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(1000)
-  supportSupervisor: number;
+  workingSchedule: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(1000)
-  isPaid: number;
+  workFormat: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(1000)
-  isOffer: number;
+  stability: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(0)
+  @Max(1000)
+  salaryPoints: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(0)
+  salaryValue: number;
 }

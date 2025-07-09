@@ -20,9 +20,11 @@ import { WorkSocialBenefitModule } from './work_social_benefit/work_social_benef
 import { CommentTaskModule } from './comment_task/comment_task.module';
 import { CommentInterviewModule } from './comment_interview/comment_interview.module';
 import { CommentInternshipModule } from './comment_internship/comment_internship.module';
-import { CommentWorkModule } from './comment_work/comment_work.module';
 import { CountryModule } from './country/country.module';
 import { CityModule } from './city/city.module';
+import { CommentWorkPrimaryModule } from './comment_work_primary/comment_work_primary.module';
+import { CommentWorkSecondaryModule } from './comment_work_secondary/comment_work_secondary.module';
+import { CommentWorkFinanceModule } from './comment_work_finance/comment_work_finance.module';
 
 @Module({
   imports: [
@@ -59,9 +61,11 @@ import { CityModule } from './city/city.module';
     CommentTaskModule,
     CommentInterviewModule,
     CommentInternshipModule,
-    CommentWorkModule,
     CountryModule,
     CityModule,
+    CommentWorkPrimaryModule,
+    CommentWorkSecondaryModule,
+    CommentWorkFinanceModule,
   ],
   controllers: [],
   providers: [
