@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Like, Repository } from 'typeorm';
 
@@ -9,6 +13,8 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { R2Service } from 'src/providers/r2.service';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import { Country } from 'src/country/entities/country.entity';
+import { City } from 'src/city/entities/city.entity';
 
 @Injectable()
 export class CompaniesService {
@@ -16,6 +22,12 @@ export class CompaniesService {
     @InjectRepository(Company)
     private companyRepository: Repository<Company>,
     private readonly r2Service: R2Service,
+
+    @InjectRepository(Country)
+    private countryRepository: Repository<Country>,
+
+    @InjectRepository(City)
+    private cityRepository: Repository<City>,
   ) {}
 
   async create(
@@ -33,8 +45,32 @@ export class CompaniesService {
       createCompanyDto.logo = logoKey;
     }
 
+    const country = await this.countryRepository.findOneBy({
+      id: createCompanyDto.country,
+    });
+    if (!country) {
+      throw new NotFoundException('Такой страны не существует!');
+    }
+
+    const city = await this.cityRepository.findOne({
+      where: { name: createCompanyDto.city },
+      relations: ['country'],
+    });
+
+    if (!city) {
+      throw new NotFoundException('Такого города не существует!');
+    }
+
+    if (city.country.id !== country.id) {
+      throw new NotFoundException('Город не принадлежит этой стране!');
+    }
+
     // Сохраняем компанию в базу данных
-    const createdCompany = await this.companyRepository.save(createCompanyDto);
+    const createdCompany = await this.companyRepository.save({
+      ...createCompanyDto,
+      country,
+      city,
+    });
 
     return createdCompany.id;
   }
@@ -118,18 +154,19 @@ export class CompaniesService {
   async findLocations(): Promise<Record<string, string[]>> {
     const companies = await this.companyRepository.find({
       select: ['country', 'city'],
+      relations: ['country', 'city'],
     });
 
     const result: Record<string, string[]> = {};
 
     companies.forEach(company => {
-      if (!result[company.country]) {
-        result[company.country] = [];
+      if (!result[company.country.name]) {
+        result[company.country.name] = [];
       }
 
       // Добавляем только уникальные города
-      if (!result[company.country].includes(company.city)) {
-        result[company.country].push(company.city);
+      if (!result[company.country.name].includes(company.city.name)) {
+        result[company.country.name].push(company.city.name);
       }
     });
 
@@ -139,7 +176,7 @@ export class CompaniesService {
   async findOne(id: string): Promise<any> {
     const company = await this.companyRepository.findOne({
       where: { id },
-      relations: ['comments'],
+      relations: ['comments', 'country', 'city'],
     });
 
     // Рассчитываем средний рейтинг
@@ -196,8 +233,34 @@ export class CompaniesService {
       updateCompanyDto.logo = logoKey;
     }
 
+    const country = await this.countryRepository.findOne({
+      where: { id: updateCompanyDto.country },
+    });
+
+    if (!country) {
+      throw new NotFoundException('Такой страны не существует!');
+    }
+
+    const city = await this.cityRepository.findOne({
+      where: { name: updateCompanyDto.city },
+      relations: ['country'],
+    });
+
+    if (!city) {
+      throw new NotFoundException('Такого города не существует!');
+    }
+
+    if (city.country.id !== country.id) {
+      throw new NotFoundException('Город не принадлежит этой стране!');
+    }
+
+    const updatedData = {
+      ...updateCompanyDto,
+      country,
+      city,
+    };
     // Обновляем информацию о компании в базе данных
-    await this.companyRepository.update(id, updateCompanyDto);
+    await this.companyRepository.update(id, updatedData);
 
     return 'Компания обновлена';
   }
