@@ -107,7 +107,7 @@ export class CompaniesService {
 
     const [companies, total] = await this.companyRepository.findAndCount({
       where: whereCondition,
-      relations: ['comments'],
+      relations: ['comments', 'country', 'city'],
       take,
       skip,
     });
