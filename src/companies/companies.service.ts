@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -83,34 +83,38 @@ export class CompaniesService {
     page: number,
     limit: number,
   ): Promise<any> {
-    const whereCondition: any = {};
-
-    if (name) {
-      whereCondition.name = ILike(`%${name}%`);
-    }
-
-    if (rating) {
-      whereCondition.rating = Number(rating);
-    }
-
-    if (country) {
-      whereCondition.country = Like(`%${country}%`);
-    }
-
-    if (city) {
-      whereCondition.city = Like(`%${city}%`);
-    }
-
     // Убедимся, что лимит и страница имеют значения по умолчанию
     const take = limit || 10; // количество элементов на странице (по умолчанию 10)
     const skip = (page - 1) * take || 0; // пропуск элементов (по умолчанию 0)
 
-    const [companies, total] = await this.companyRepository.findAndCount({
-      where: whereCondition,
-      relations: ['comments', 'country', 'city'],
-      take,
-      skip,
-    });
+    const query = this.companyRepository
+      .createQueryBuilder('company')
+      .leftJoinAndSelect('company.country', 'country')
+      .leftJoinAndSelect('company.city', 'city')
+      .leftJoinAndSelect('company.comments', 'comment')
+      .where('company.isDeleted = false');
+
+    if (name) {
+      query.andWhere('company.name ILIKE :name', { name: `%${name}%` });
+    }
+
+    if (rating) {
+      query.andWhere('compant.rating = :rating', { rating: Number(rating) });
+    }
+
+    if (country) {
+      query.andWhere('country.name ILIKE :country', {
+        country: `%${country}%`,
+      });
+    }
+
+    if (city) {
+      query.andWhere('city.name ILIKE :city', { city: `%${city}%` });
+    }
+
+    query.skip(skip).take(take);
+
+    const [companies, total] = await query.getManyAndCount();
 
     return {
       data: companies.map(company => ({
