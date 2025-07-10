@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 
@@ -15,7 +7,6 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ transform: true }))
   create(@UserId() userId: string, @Body() createCommentDto: any) {
     console.log('createCommentDto', createCommentDto);
 
