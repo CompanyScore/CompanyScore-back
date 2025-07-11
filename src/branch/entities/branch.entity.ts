@@ -24,6 +24,9 @@ export class Branch {
   @Column({ nullable: true })
   address?: string;
 
+  @Column({ type: 'float', default: 0 })
+  rating?: number;
+
   @CreateDateColumn()
   createDate: Date;
 
