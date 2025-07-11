@@ -155,7 +155,7 @@ export class CompaniesService {
 
     const [companies] = await this.companyRepository.findAndCount({
       where: whereCondition,
-      relations: ['comments'],
+      relations: ['comments', 'branches'],
       take: 7, // Ограничиваем выборку 7 записями
       order: { createDate: 'DESC' }, // Сортировка по дате создания (от новых к старым)
     });
