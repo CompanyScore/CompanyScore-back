@@ -108,7 +108,7 @@ export class CompaniesService {
     }
 
     if (rating) {
-      query.andWhere('compant.rating = :rating', { rating: Number(rating) });
+      query.andWhere('company.rating = :rating', { rating: Number(rating) });
     }
 
     if (country) {
