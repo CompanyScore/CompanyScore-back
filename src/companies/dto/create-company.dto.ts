@@ -1,12 +1,4 @@
-import {
-  IsString,
-  IsOptional,
-  IsNumber,
-  IsBoolean,
-  IsNotEmpty,
-  IsDate,
-  IsIn,
-} from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsIn } from 'class-validator';
 import { Ratings } from 'src/constants';
 
 export class CreateCompanyDto {
@@ -32,11 +24,4 @@ export class CreateCompanyDto {
   @IsNumber()
   @IsIn(Ratings, { message: 'Рэйтинг может быть только от 1 до 5' })
   rating?: number;
-
-  @IsNotEmpty()
-  @IsDate()
-  createDate?: Date;
-
-  @IsBoolean()
-  isDeleted?: boolean;
 }
