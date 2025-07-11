@@ -4,8 +4,12 @@ import {
   Column,
   OneToMany,
   CreateDateColumn,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Comment } from '../../comments/entities/comment.entity';
+import { Country } from 'src/country/entities/country.entity';
+import { City } from 'src/city/entities/city.entity';
 
 @Entity()
 export class Company {
@@ -18,11 +22,13 @@ export class Company {
   @Column({ nullable: true })
   logo?: string;
 
-  @Column()
-  country: string;
+  @ManyToOne(() => Country)
+  @JoinColumn()
+  country: Country;
 
-  @Column()
-  city: string;
+  @ManyToOne(() => City)
+  @JoinColumn()
+  city: City;
 
   @Column({ nullable: true })
   description?: string;
