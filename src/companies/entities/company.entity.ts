@@ -8,6 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Comment } from '../../comments/entities/comment.entity';
+import { Branch } from 'src/branch/entities/branch.entity';
 import { Country } from 'src/country/entities/country.entity';
 import { City } from 'src/city/entities/city.entity';
 
@@ -16,7 +17,7 @@ export class Company {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column({ nullable: true })
@@ -35,6 +36,9 @@ export class Company {
 
   @Column({ type: 'float', default: 0 })
   rating?: number;
+
+  @OneToMany(() => Branch, branch => branch.company)
+  branches: Branch[];
 
   @CreateDateColumn()
   createDate: Date;

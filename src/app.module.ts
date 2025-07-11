@@ -23,6 +23,7 @@ import { CityModule } from './city/city.module';
 import { CommentWorkPrimaryModule } from './comment_work_primary/comment_work_primary.module';
 import { CommentWorkSecondaryModule } from './comment_work_secondary/comment_work_secondary.module';
 import { CommentWorkFinanceModule } from './comment_work_finance/comment_work_finance.module';
+import { BranchModule } from './branch/branch.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { CommentWorkFinanceModule } from './comment_work_finance/comment_work_fi
     }),
     CommentsModule,
     CompaniesModule,
+    BranchModule,
     UsersModule,
     AuthModule,
     PositionsModule,

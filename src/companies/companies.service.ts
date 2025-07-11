@@ -34,6 +34,14 @@ export class CompaniesService {
     createCompanyDto: CreateCompanyDto,
     logoFile: Express.Multer.File,
   ): Promise<string> {
+    const exsistingCompany = await this.companyRepository.findOne({
+      where: { name: createCompanyDto.name },
+    });
+
+    if (exsistingCompany) {
+      throw new BadRequestException('Компания с таким именем уже существует');
+    }
+
     if (logoFile) {
       // Генерация ключа для R2
       const logoKey = `companies/logos/${uuidv4()}${path.extname(logoFile.originalname)}`;
@@ -92,6 +100,7 @@ export class CompaniesService {
       .leftJoinAndSelect('company.country', 'country')
       .leftJoinAndSelect('company.city', 'city')
       .leftJoinAndSelect('company.comments', 'comment')
+      .leftJoinAndSelect('company.branches', 'branch')
       .where('company.isDeleted = false');
 
     if (name) {
@@ -99,7 +108,7 @@ export class CompaniesService {
     }
 
     if (rating) {
-      query.andWhere('compant.rating = :rating', { rating: Number(rating) });
+      query.andWhere('company.rating = :rating', { rating: Number(rating) });
     }
 
     if (country) {
@@ -126,6 +135,14 @@ export class CompaniesService {
         description: company.description,
         rating: company.rating,
         commentsIds: company.comments.map(comment => comment.id.toString()),
+        branches: company.branches.map(branch => ({
+          id: branch.id,
+          name: branch.name,
+          country: branch.country,
+          city: branch.city,
+          address: branch.address,
+          rating: branch.rating,
+        })),
       })),
       total, // общее количество элементов
       page,
@@ -152,6 +169,14 @@ export class CompaniesService {
       description: company.description,
       rating: company.rating,
       commentsIds: company.comments.map(comment => comment.id),
+      branches: company.branches.map(branch => ({
+        id: branch.id,
+        name: branch.name,
+        country: branch.country,
+        city: branch.city,
+        address: branch.address,
+        rating: branch.rating,
+      })),
     }));
   }
 
@@ -180,7 +205,7 @@ export class CompaniesService {
   async findOne(id: string): Promise<any> {
     const company = await this.companyRepository.findOne({
       where: { id },
-      relations: ['comments', 'country', 'city'],
+      relations: ['comments', 'branches'],
     });
 
     // Рассчитываем средний рейтинг
@@ -206,6 +231,14 @@ export class CompaniesService {
       description: company.description,
       // rating: averageRating,
       commentsIds: company.comments.map(comment => comment.id),
+      branches: company.branches.map(branch => ({
+        id: branch.id,
+        name: branch.name,
+        country: branch.country,
+        city: branch.city,
+        address: branch.address,
+        rating: branch.rating,
+      })),
     };
   }
 
