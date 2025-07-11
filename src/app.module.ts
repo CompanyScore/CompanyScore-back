@@ -12,6 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesGuard } from './auth/role.guard';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { getDatabaseConfig } from './config/database.config';
 import { PositionsModule } from './positions/positions.module';
@@ -45,6 +46,7 @@ import { CommentWorkFinanceModule } from './comment_work_finance/comment_work_fi
       inject: [ConfigService],
       useFactory: getDatabaseConfig,
     }),
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'files'), // Путь к папке с изображениями
       serveRoot: '/files', // Путь, по которому будут доступны файлы

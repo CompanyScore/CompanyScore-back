@@ -6,9 +6,6 @@ export class CommentTask {
   id: string;
 
   @Column()
-  isTask: boolean;
-
-  @Column()
   requirementsForTask: number;
 
   @Column()
@@ -25,4 +22,7 @@ export class CommentTask {
 
   @Column()
   feedback: number;
+
+  @Column({ type: 'int', default: 0 })
+  rating: number;
 }
