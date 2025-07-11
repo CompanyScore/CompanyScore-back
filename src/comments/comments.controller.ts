@@ -16,7 +16,7 @@ export class CommentsController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  create(@Body() createCommentDto: any, @UserId() userId: string) {
+  create(@UserId() userId: string, @Body() createCommentDto: any) {
     console.log('createCommentDto', createCommentDto);
 
     const { companyId } = createCommentDto;

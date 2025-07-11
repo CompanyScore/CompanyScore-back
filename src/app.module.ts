@@ -15,13 +15,14 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { getDatabaseConfig } from './config/database.config';
 import { PositionsModule } from './positions/positions.module';
-import { InterviewStageModule } from './interview-stage/interview-stage.module';
-import { WorkEducationModule } from './work-education/work-education.module';
-import { WorkSocialBenefitModule } from './work-social-benefit/work-social-benefit.module';
-import { TaskFormModule } from './task-form/task-form.module';
-import { InterviewFormModule } from './interview-form/interview-form.module';
-import { InternshipFormModule } from './internship-form/internship-form.module';
-import { WorkFormModule } from './work-form/work-form.module';
+import { CommentTaskModule } from './comment_task/comment_task.module';
+import { CommentInterviewModule } from './comment_interview/comment_interview.module';
+import { CommentInternshipModule } from './comment_internship/comment_internship.module';
+import { CountryModule } from './country/country.module';
+import { CityModule } from './city/city.module';
+import { CommentWorkPrimaryModule } from './comment_work_primary/comment_work_primary.module';
+import { CommentWorkSecondaryModule } from './comment_work_secondary/comment_work_secondary.module';
+import { CommentWorkFinanceModule } from './comment_work_finance/comment_work_finance.module';
 
 @Module({
   imports: [
@@ -53,13 +54,14 @@ import { WorkFormModule } from './work-form/work-form.module';
     UsersModule,
     AuthModule,
     PositionsModule,
-    InterviewStageModule,
-    WorkEducationModule,
-    WorkSocialBenefitModule,
-    TaskFormModule,
-    InterviewFormModule,
-    InternshipFormModule,
-    WorkFormModule,
+    CommentTaskModule,
+    CommentInterviewModule,
+    CommentInternshipModule,
+    CountryModule,
+    CityModule,
+    CommentWorkPrimaryModule,
+    CommentWorkSecondaryModule,
+    CommentWorkFinanceModule,
   ],
   controllers: [],
   providers: [

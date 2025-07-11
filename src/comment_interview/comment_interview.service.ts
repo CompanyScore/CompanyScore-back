@@ -1,0 +1,49 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Comment } from 'src/comments/entities/comment.entity';
+import { CommentInterview } from './entities/comment_interview.entity';
+
+import { CreateCommentInterviewDto } from './dto/create_comment_interview.dto';
+
+@Injectable()
+export class CommentInterviewService {
+  constructor(
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
+
+    @InjectRepository(CommentInterview)
+    private readonly commentInterviewRepository: Repository<CommentInterview>,
+  ) {}
+
+  async create(dto: CreateCommentInterviewDto): Promise<CommentInterview> {
+    const { commentId, ...rest } = dto;
+
+    const comment = await this.commentRepository.findOne({
+      where: { id: commentId },
+    });
+
+    if (!comment) throw new NotFoundException('Комментарий не найден');
+
+    const commentInterview = this.commentInterviewRepository.create({
+      ...rest,
+    });
+
+    const savedInterview =
+      await this.commentInterviewRepository.save(commentInterview);
+
+    const result = await this.commentInterviewRepository.findOne({
+      where: { id: savedInterview.id },
+    });
+
+    comment.interview = result!;
+    await this.commentRepository.save(comment);
+
+    return result!;
+  }
+
+  async findAll(): Promise<CommentInterview[]> {
+    return this.commentInterviewRepository.find();
+  }
+}

@@ -10,10 +10,13 @@ import {
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Company } from 'src/companies/entities/company.entity';
-import { TaskForm } from 'src/task-form/entities/task-form.entity';
-import { InterviewForm } from 'src/interview-form/entities/interview-form.entity';
-import { InternshipForm } from 'src/internship-form/entities/internship-form.entity';
-import { WorkForm } from 'src/work-form/entities/work-form.entity';
+import { CommentTask } from 'src/comment_task/entities/comment_task.entity';
+import { CommentInterview } from 'src/comment_interview/entities/comment_interview.entity';
+import { CommentInternship } from 'src/comment_internship/entities/comment_internship.entity';
+import { Position } from 'src/positions/entities/position.entity';
+import { CommentWorkPrimary } from 'src/comment_work_primary/entities/comment_work_primary.entity';
+import { CommentWorkSecondary } from 'src/comment_work_secondary/entities/comment_work_secondary.entity';
+import { CommentWorkFinance } from 'src/comment_work_finance/entities/comment_work_finance.entity';
 
 @Entity()
 @Unique(['user', 'company']) // ⚠️ ограничение: один пользователь — один отзыв на компанию
@@ -37,14 +40,12 @@ export class Comment {
   @Column()
   companyId: string;
 
-  @Column()
-  companyCountry: string;
+  @ManyToOne(() => Position, { eager: true })
+  @JoinColumn({ name: 'userPositionId' })
+  userPosition: Position;
 
   @Column()
-  companyCity: string;
-
-  @Column()
-  userPosition: string;
+  userPositionId: string;
 
   @Column()
   userGradeYears: number;
@@ -65,21 +66,41 @@ export class Comment {
   reasonLeft: string;
 
   // Связи с подформами
-  @OneToOne(() => TaskForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentTask, { cascade: true, eager: true })
   @JoinColumn()
-  task: TaskForm;
+  task: CommentTask;
 
-  @OneToOne(() => InterviewForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentInterview, { cascade: true, eager: true })
   @JoinColumn()
-  interview: InterviewForm;
+  interview: CommentInterview;
 
-  @OneToOne(() => InternshipForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentInternship, { cascade: true, eager: true })
   @JoinColumn()
-  internship: InternshipForm;
+  internship: CommentInternship;
 
-  @OneToOne(() => WorkForm, { cascade: true, eager: true })
+  @OneToOne(() => CommentWorkPrimary, {
+    cascade: true,
+    eager: true,
+    nullable: true,
+  })
   @JoinColumn()
-  work: WorkForm;
+  workPrimary: CommentWorkPrimary;
+
+  @OneToOne(() => CommentWorkSecondary, {
+    cascade: true,
+    eager: true,
+    nullable: true,
+  })
+  @JoinColumn()
+  workSecondary: CommentWorkSecondary;
+
+  @OneToOne(() => CommentWorkFinance, {
+    cascade: true,
+    eager: true,
+    nullable: true,
+  })
+  @JoinColumn()
+  workFinance: CommentWorkFinance;
 
   @CreateDateColumn()
   createdAt: Date;
