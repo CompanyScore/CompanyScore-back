@@ -8,8 +8,6 @@ import {
   BadRequestException,
   Query,
   Body,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
@@ -61,7 +59,6 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  @UsePipes(new ValidationPipe({ transform: true }))
   async register(@Body() registerDto: RegisterDto, @Response() res) {
     const userWithTokens = await this.authService.registerUser(registerDto);
 
