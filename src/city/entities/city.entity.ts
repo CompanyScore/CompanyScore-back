@@ -1,5 +1,11 @@
 import { Country } from 'src/country/entities/country.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class City {
@@ -10,5 +16,6 @@ export class City {
   name: string;
 
   @ManyToOne(() => Country, country => country.cities)
+  @JoinColumn({ name: 'country_id' })
   country: Country;
 }
