@@ -1,8 +1,11 @@
+import { City } from 'src/city/entities/city.entity';
 import { Company } from 'src/companies/entities/company.entity';
+import { Country } from 'src/country/entities/country.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -15,11 +18,13 @@ export class Branch {
   @Column()
   name: string;
 
-  @Column()
-  country: string;
+  @ManyToOne(() => Country)
+  @JoinColumn()
+  country: Country;
 
-  @Column()
-  city: string;
+  @ManyToOne(() => City)
+  @JoinColumn()
+  city: City;
 
   @Column({ nullable: true })
   address?: string;

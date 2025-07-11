@@ -100,6 +100,7 @@ export class CompaniesService {
       .leftJoinAndSelect('company.country', 'country')
       .leftJoinAndSelect('company.city', 'city')
       .leftJoinAndSelect('company.comments', 'comment')
+      .leftJoinAndSelect('company.branches', 'branch')
       .where('company.isDeleted = false');
 
     if (name) {
@@ -122,11 +123,7 @@ export class CompaniesService {
 
     query.skip(skip).take(take);
 
-    const [companies, total] = await this.companyRepository.findAndCount({
-      relations: ['comments'],
-      take,
-      skip,
-    });
+    const [companies, total] = await query.getManyAndCount();
 
     return {
       data: companies.map(company => ({
@@ -144,6 +141,7 @@ export class CompaniesService {
           country: branch.country,
           city: branch.city,
           address: branch.address,
+          rating: branch.rating,
         })),
       })),
       total, // общее количество элементов
@@ -177,6 +175,7 @@ export class CompaniesService {
         country: branch.country,
         city: branch.city,
         address: branch.address,
+        rating: branch.rating,
       })),
     }));
   }
@@ -206,7 +205,7 @@ export class CompaniesService {
   async findOne(id: string): Promise<any> {
     const company = await this.companyRepository.findOne({
       where: { id },
-      relations: ['comments'],
+      relations: ['comments', 'branches'],
     });
 
     // Рассчитываем средний рейтинг
@@ -232,6 +231,14 @@ export class CompaniesService {
       description: company.description,
       // rating: averageRating,
       commentsIds: company.comments.map(comment => comment.id),
+      branches: company.branches.map(branch => ({
+        id: branch.id,
+        name: branch.name,
+        country: branch.country,
+        city: branch.city,
+        address: branch.address,
+        rating: branch.rating,
+      })),
     };
   }
 
