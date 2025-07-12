@@ -7,16 +7,19 @@ import {
   IsDate,
   IsIn,
 } from 'class-validator';
-import { Ratings } from 'src/constants';
+import { CompanyStatuses, CompanyTypes, Ratings } from 'src/constants';
 
 export class CreateCompanyDto {
   @IsString()
-  @IsOptional()
-  name?: string;
+  name: string;
 
   @IsOptional()
   @IsString()
   logo?: string;
+
+  @IsOptional()
+  @IsString()
+  slug: string;
 
   @IsString()
   country: string;
@@ -26,12 +29,36 @@ export class CreateCompanyDto {
 
   @IsOptional()
   @IsString()
-  description?: string;
+  legal_name: string;
+
+  @IsOptional()
+  @IsString()
+  industry: string;
+
+  @IsOptional()
+  @IsString()
+  size: string;
+
+  @IsOptional()
+  @IsString()
+  website: string;
 
   @IsOptional()
   @IsNumber()
   @IsIn(Ratings, { message: 'Рэйтинг может быть только от 1 до 5' })
   rating?: number;
+
+  @IsOptional()
+  @IsIn(Object.values(CompanyStatuses), {
+    message: 'Статус должен быть из: active, inactive, close',
+  })
+  status?: CompanyStatuses;
+
+  @IsOptional()
+  @IsIn(Object.values(CompanyTypes), {
+    message: 'Тип должен быть одним из: holding, susbdiairy, branch',
+  })
+  type?: CompanyTypes;
 
   @IsNotEmpty()
   @IsDate()

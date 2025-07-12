@@ -1,3 +1,15 @@
+export enum CompanyStatuses {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  CLOSE = 'close',
+}
+
+export enum CompanyTypes {
+  HOLDING = 'holding',
+  SUBSIDIARY = 'subsidiary',
+  BRANCH = 'branch',
+}
+
 export const Positions = [
   // Разработка
   'Frontend Developer',

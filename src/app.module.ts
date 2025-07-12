@@ -24,6 +24,7 @@ import { CommentWorkPrimaryModule } from './comment_work_primary/comment_work_pr
 import { CommentWorkSecondaryModule } from './comment_work_secondary/comment_work_secondary.module';
 import { CommentWorkFinanceModule } from './comment_work_finance/comment_work_finance.module';
 import { BranchModule } from './branch/branch.module';
+import { AwardsModule } from './awards/awards.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { BranchModule } from './branch/branch.module';
     CommentWorkPrimaryModule,
     CommentWorkSecondaryModule,
     CommentWorkFinanceModule,
+    AwardsModule,
   ],
   controllers: [],
   providers: [
