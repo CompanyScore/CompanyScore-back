@@ -132,17 +132,8 @@ export class CompaniesService {
         country: company.country,
         city: company.city,
         logo: company.logo,
-        description: company.description,
         rating: company.rating,
         commentsIds: company.comments.map(comment => comment.id.toString()),
-        branches: company.branches.map(branch => ({
-          id: branch.id,
-          name: branch.name,
-          country: branch.country,
-          city: branch.city,
-          address: branch.address,
-          rating: branch.rating,
-        })),
       })),
       total, // общее количество элементов
       page,
@@ -166,17 +157,8 @@ export class CompaniesService {
       country: company.country,
       city: company.city,
       logo: company.logo,
-      description: company.description,
       rating: company.rating,
       commentsIds: company.comments.map(comment => comment.id),
-      branches: company.branches.map(branch => ({
-        id: branch.id,
-        name: branch.name,
-        country: branch.country,
-        city: branch.city,
-        address: branch.address,
-        rating: branch.rating,
-      })),
     }));
   }
 
@@ -228,17 +210,8 @@ export class CompaniesService {
       country: company.country,
       city: company.city,
       logo: company.logo,
-      description: company.description,
       // rating: averageRating,
       commentsIds: company.comments.map(comment => comment.id),
-      branches: company.branches.map(branch => ({
-        id: branch.id,
-        name: branch.name,
-        country: branch.country,
-        city: branch.city,
-        address: branch.address,
-        rating: branch.rating,
-      })),
     };
   }
 
